@@ -2,6 +2,8 @@ cmake_minimum_required( VERSION 3.20 )
 
 project( raymino CXX )
 
+add_subdirectory(ext)
+
 option( WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON )
 option( ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF )
 option( ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF )
