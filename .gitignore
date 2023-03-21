@@ -1,0 +1,6 @@
+Debug/
+Release/
+/*build*/
+/out/
+.*/
+/CMakeSettings.json
