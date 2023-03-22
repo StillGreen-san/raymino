@@ -2,6 +2,12 @@ cmake_minimum_required( VERSION 3.20 )
 
 project( raymino C CXX )
 
+if (EMSCRIPTEN)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1")
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif ()
+
 add_subdirectory(ext)
 
 option( WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF )
