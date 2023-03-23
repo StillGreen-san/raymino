@@ -15,7 +15,7 @@ raymino::App::App()
 void UpdateDraw(void* app)
 {
 	raymino::App& self = *static_cast<raymino::App*>(app);
-	self.scene->UpdateDraw(self);
+	self.currentScene->UpdateDraw(self);
 }
 
 void raymino::App::Run()
