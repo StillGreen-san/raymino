@@ -2,7 +2,7 @@
 
 int main()
 {
-	raymino::App app = raymino::App::Make<raymino::Scene::Cellular>();
+	raymino::App app = raymino::App::Make<raymino::Scene::Game>();
 
 	app.Run();
 

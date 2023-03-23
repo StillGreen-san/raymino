@@ -18,7 +18,8 @@ struct IScene
  */
 enum class Scene
 {
-	Cellular
+	Cellular,
+	Game,
 };
 
 /**
