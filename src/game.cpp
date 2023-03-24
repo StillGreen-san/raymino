@@ -38,7 +38,7 @@ unsigned unusedBottomRows(const Grid& mino)
 	auto rit = mino.getCells().rbegin();
 	const unsigned cols = mino.getSize().width;
 	unsigned unused = 0;
-	for(unsigned col = 0; rit != rend; ++rit, ++unused)
+	for(unsigned col = 0; rit != rend; ++rit)
 	{
 		if(*rit)
 		{
@@ -88,9 +88,10 @@ void Game::update(App& app)
 	{
 	case State::Drop:
 		time += ::GetFrameTime();
-		if(time > 1.0f)
+		if(time > delay)
 		{
 			dropMino();
+			time -= delay;
 		}
 		break;
 	case State::Set:
@@ -121,7 +122,8 @@ void Game::drawPlayfield()
 		{
 			if(activeMino.color.getAt({x, y}))
 			{
-				::DrawRectangle((x + activeMino.position.x) * 30, (y + activeMino.position.y) * 30, 29, 29,
+				::DrawRectangle((x + activeMino.position.x) * 30,
+				    (y + (activeMino.position.y - activeMino.color.getSize().height)) * 30, 29, 29,
 				    colors[activeMino.color.getAt({x, y})]);
 			}
 		}
@@ -157,15 +159,15 @@ ActiveMino Game::takeNextMino()
 	{
 		nextMinos = shuffledBaseMinos();
 	}
-	ActiveMino next(nextMinos.front(), getStartPosition(nextMinos.front()), 42);
+	ActiveMino next(nextMinos.front(), getStartPosition(nextMinos.front()), 1);
 	nextMinos.erase(nextMinos.begin());
 	return next;
 }
 
 XY Game::getStartPosition(const Grid& mino)
 {
-	return {4 - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino))),
-	    (static_cast<int>(mino.getSize().width) + 1) / 2};
+	return {(static_cast<int>(mino.getSize().width) + 1) / 2,
+	    4 - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
 
 template<>

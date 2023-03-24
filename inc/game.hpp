@@ -42,5 +42,6 @@ struct Game : IScene
 	ActiveMino activeMino{takeNextMino()};
 	State state{State::Drop};
 	float time = 0;
+	float delay = 0.6f;
 };
 } // namespace raymino
