@@ -4,8 +4,8 @@ namespace raymino
 {
 struct XY
 {
-	unsigned x;
-	unsigned y;
+	int x;
+	int y;
 };
 struct Size
 {

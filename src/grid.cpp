@@ -8,6 +8,11 @@
 
 namespace raymino
 {
+size_t index1D(unsigned x, unsigned y, unsigned width)
+{
+	return (y * width) + x;
+}
+
 Grid::Grid(Size size, uint8_t fill) : cells(size.area(), fill), size{size}
 {
 }
@@ -25,6 +30,31 @@ Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.s
 {
 	cells.reserve(other.cells.size());
 	std::transform(other.cells.begin(), other.cells.end(), std::back_insert_iterator(cells), std::move(func));
+}
+
+bool Grid::overlapAt(XY topLeft, const Grid& other) const
+{
+	for(int x = 0; x < other.size.width; ++x)
+	{
+		for(int y = 0; y < other.size.height; ++y)
+		{
+			const unsigned check = other.cells[index1D(x, y, other.size.width)];
+			if(getAt({x + topLeft.x, y + topLeft.y}) + check > check)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+uint8_t Grid::getAt(XY topLeft) const
+{
+	if(topLeft.x < 0 || topLeft.x > size.width || topLeft.y > size.height)
+	{
+		return 0xFF;
+	}
+	return cells[index1D(topLeft.x, topLeft.y, size.width)];
 }
 
 void Grid::transformCells(std::function<TTransformFunc> func)

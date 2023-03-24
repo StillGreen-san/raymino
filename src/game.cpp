@@ -97,7 +97,8 @@ ActiveMino Game::takeNextMino()
 
 XY Game::getStartPosition(const Grid& mino)
 {
-	return {4 - (mino.getSize().height - unusedBottomRows(mino)), (mino.getSize().width + 1) / 2};
+	return {4 - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino))),
+	    (static_cast<int>(mino.getSize().width) + 1) / 2};
 }
 
 template<>

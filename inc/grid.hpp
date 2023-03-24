@@ -20,9 +20,10 @@ public:
 	Grid(Size size, const std::vector<uint8_t>& grid);
 	Grid(const Grid& other, std::function<TTransformFunc> func);
 	Grid subGrid(Rect rect) const;
-	bool overlapAt(XY topLeft, const Grid& other, std::function<TOverlapFunc> check) const;
+	bool overlapAt(XY topLeft, const Grid& other) const;
 	bool isSqaure() const;
 	Size getSize() const;
+	uint8_t getAt(XY topLeft) const;
 	void transformCells(std::function<TTransformFunc> func);
 	void rotate(int steps);
 	void setAt(XY topLeft, const Grid& other);
