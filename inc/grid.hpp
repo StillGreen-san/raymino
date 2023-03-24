@@ -9,16 +9,22 @@ namespace raymino
 class Grid
 {
 public:
+	using TOverlapFunc = bool(uint8_t lhs, uint8_t rhs);
+	using TTransformFunc = uint8_t(uint8_t);
 	Grid() = delete;
 	Grid(Size size, uint8_t fill);
-	Grid(Size size, std::vector<uint8_t> grid);
+	/**
+	 * @throws std::logic_error on size mismatch
+	 */
+	Grid(Size size, const std::vector<uint8_t>& grid);
+	Grid(const Grid& other, TTransformFunc func);
 	Grid subGrid(Rect rect) const;
-	void rotate(int steps);
-	void setAt(XY topLeft, const Grid& other);
-	using TOverlapFunc = bool(uint8_t lhs, uint8_t rhs);
 	bool overlapAt(XY topLeft, const Grid& other, TOverlapFunc check) const;
 	bool isSqaure() const;
 	Size getSize() const;
+	void transformCells(TTransformFunc func);
+	void rotate(int steps);
+	void setAt(XY topLeft, const Grid& other);
 	std::vector<uint8_t>::iterator begin();
 	std::vector<uint8_t>::iterator end();
 private:
