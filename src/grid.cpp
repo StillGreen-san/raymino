@@ -34,9 +34,9 @@ Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.s
 
 bool Grid::overlapAt(XY topLeft, const Grid& other) const
 {
-	for(int x = 0; x < other.size.width; ++x)
+	for(int y = 0; y < other.size.height; ++y)
 	{
-		for(int y = 0; y < other.size.height; ++y)
+		for(int x = 0; x < other.size.width; ++x)
 		{
 			const unsigned check = other.cells[index1D(x, y, other.size.width)];
 			if(getAt({x + topLeft.x, y + topLeft.y}) + check > check)
@@ -55,6 +55,25 @@ uint8_t Grid::getAt(XY topLeft) const
 		return 0xFF;
 	}
 	return cells[index1D(topLeft.x, topLeft.y, size.width)];
+}
+
+void Grid::setAt(XY topLeft, const Grid& other)
+{
+	for(int y = 0; y < other.size.height; ++y)
+	{
+		for(int x = 0; x < other.size.width; ++x)
+		{
+			if(topLeft.x + x >= size.width)
+			{
+				break;
+			}
+			if(topLeft.x + x > 0 && topLeft.y + y < size.height)
+			{
+				cells[index1D(x + topLeft.x, y + topLeft.y, other.size.width)] =
+				    other.cells[index1D(x, y, other.size.width)];
+			}
+		}
+	}
 }
 
 void Grid::transformCells(std::function<TTransformFunc> func)

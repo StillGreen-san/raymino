@@ -59,8 +59,42 @@ ActiveMino::ActiveMino(const Grid& mino, XY position, uint8_t color) :
 {
 }
 
+void Game::dropMino()
+{
+	const XY nextPosition{activeMino.position.x, activeMino.position.y + 1};
+	if(playArea.overlapAt(nextPosition, activeMino.collision))
+	{
+		state = State::Set;
+	}
+	else
+	{
+		activeMino.position = nextPosition;
+	}
+}
+
+void Game::setMino()
+{
+	playArea.setAt(activeMino.position, activeMino.color);
+	activeMino = takeNextMino();
+	if(playArea.overlapAt({activeMino.position.x, activeMino.position.y + 1}, activeMino.collision))
+	{
+		state = State::Over;
+	}
+}
+
 void Game::update(App& app)
 {
+	switch(state)
+	{
+	case State::Drop:
+		dropMino();
+		break;
+	case State::Set:
+		setMino();
+		break;
+	case State::Over:
+		break;
+	}
 }
 
 void Game::draw()
