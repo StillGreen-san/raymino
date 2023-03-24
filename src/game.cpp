@@ -87,7 +87,11 @@ void Game::update(App& app)
 	switch(state)
 	{
 	case State::Drop:
-		dropMino();
+		time += ::GetFrameTime();
+		if(time > 1.0f)
+		{
+			dropMino();
+		}
 		break;
 	case State::Set:
 		setMino();
@@ -97,11 +101,40 @@ void Game::update(App& app)
 	}
 }
 
+void Game::drawPlayfield()
+{
+	::DrawRectangle(0, 0, 300, 600, ::RColor::Gray());
+
+	Color colors[2]{RColor::LightGray(), RColor::DarkGray()};
+
+	for(int y = 0; y < 20; ++y)
+	{
+		for(int x = 0; x < 10; ++x)
+		{
+			::DrawRectangle(x * 30, y * 30, 29, 29, colors[playArea.getAt({x, y + 4})]);
+		}
+	}
+
+	for(int y = 0; y < activeMino.color.getSize().height; ++y)
+	{
+		for(int x = 0; x < activeMino.color.getSize().width; ++x)
+		{
+			if(activeMino.color.getAt({x, y}))
+			{
+				::DrawRectangle((x + activeMino.position.x) * 30, (y + activeMino.position.y) * 30, 29, 29,
+				    colors[activeMino.color.getAt({x, y})]);
+			}
+		}
+	}
+}
+
 void Game::draw()
 {
 	::BeginDrawing();
 
 	::ClearBackground(::RColor::LightGray());
+
+	drawPlayfield();
 
 	::EndDrawing();
 }

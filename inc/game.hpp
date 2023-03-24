@@ -27,6 +27,7 @@ struct Game : IScene
 	void dropMino();
 	void setMino();
 	void update(App& app);
+	void drawPlayfield();
 	void draw();
 	void UpdateDraw(App& app) override;
 	std::vector<Grid> shuffledBaseMinos();
@@ -40,5 +41,6 @@ struct Game : IScene
 	std::vector<Grid> nextMinos{shuffledBaseMinos()};
 	ActiveMino activeMino{takeNextMino()};
 	State state{State::Drop};
+	float time = 0;
 };
 } // namespace raymino

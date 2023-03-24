@@ -48,9 +48,14 @@ bool Grid::overlapAt(XY topLeft, const Grid& other) const
 	return false;
 }
 
+Size Grid::getSize() const
+{
+	return size;
+}
+
 uint8_t Grid::getAt(XY topLeft) const
 {
-	if(topLeft.x < 0 || topLeft.x > size.width || topLeft.y > size.height)
+	if(topLeft.x < 0 || topLeft.x >= size.width || topLeft.y >= size.height)
 	{
 		return 0xFF;
 	}
