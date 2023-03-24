@@ -26,8 +26,14 @@ public:
 	void transformCells(std::function<TTransformFunc> func);
 	void rotate(int steps);
 	void setAt(XY topLeft, const Grid& other);
-	std::vector<uint8_t>::iterator begin();
-	std::vector<uint8_t>::iterator end();
+	[[nodiscard]] std::vector<uint8_t>& getCells()
+	{
+		return cells;
+	}
+	[[nodiscard]] const std::vector<uint8_t>& getCells() const
+	{
+		return cells;
+	}
 
 private:
 	std::vector<uint8_t> cells;

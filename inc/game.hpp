@@ -24,7 +24,6 @@ struct ActiveMino
 
 struct Game : IScene
 {
-	Game();
 	void dropMino();
 	void setMino();
 	void update(App& app);
@@ -32,6 +31,7 @@ struct Game : IScene
 	void UpdateDraw(App& app) override;
 	std::vector<Grid> shuffledBaseMinos();
 	ActiveMino takeNextMino();
+	XY getStartPosition(const Grid& mino);
 	Grid playArea{{10, 20 + 4}, 0};
 	std::vector<Grid> baseMinos{{{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}},
 	    {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}, {{2, 2}, {1, 1, 1, 1}},
