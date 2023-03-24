@@ -9,7 +9,8 @@
 namespace raymino
 {
 Grid::Grid(Size size, uint8_t fill) : cells(size.area(), fill), size{size}
-{}
+{
+}
 
 Grid::Grid(Size size, const std::vector<uint8_t>& grid) : size{size}
 {
@@ -20,14 +21,14 @@ Grid::Grid(Size size, const std::vector<uint8_t>& grid) : size{size}
 	cells = grid;
 }
 
-Grid::Grid(const Grid& other, Grid::TTransformFunc func) : size{other.size}
+Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.size}
 {
 	cells.reserve(other.cells.size());
-	std::transform(other.cells.begin(), other.cells.end(), std::back_insert_iterator(cells), func);
+	std::transform(other.cells.begin(), other.cells.end(), std::back_insert_iterator(cells), std::move(func));
 }
 
-void Grid::transformCells(Grid::TTransformFunc func)
+void Grid::transformCells(std::function<TTransformFunc> func)
 {
-	std::transform(cells.begin(), cells.end(), cells.begin(), func);
+	std::transform(cells.begin(), cells.end(), cells.begin(), std::move(func));
 }
 } // namespace raymino

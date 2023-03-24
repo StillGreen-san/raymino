@@ -13,6 +13,29 @@
 
 namespace raymino
 {
+struct IfSet
+{
+	uint8_t newVal;
+	uint8_t operator()(uint8_t oldVal) const
+	{
+		if(oldVal)
+		{
+			return newVal;
+		}
+		return oldVal;
+	}
+};
+
+bool bitAndTest(uint8_t lhs, uint8_t rhs)
+{
+	return lhs & rhs;
+}
+
+ActiveMino::ActiveMino(const Grid& mino, XY position, uint8_t color) :
+    color{mino, IfSet{color}}, collision{mino, IfSet{0xFF}}, position{position}
+{
+}
+
 void Game::update(App& app)
 {
 }

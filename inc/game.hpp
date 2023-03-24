@@ -15,11 +15,11 @@ enum class State
 };
 struct ActiveMino
 {
-	ActiveMino(const Grid& mino);
+	ActiveMino() = delete;
+	ActiveMino(const Grid& mino, XY position, uint8_t color);
 	Grid color;
 	Grid collision;
 	XY position;
-	static bool doesOverlap(uint8_t lhs, uint8_t rhs);
 };
 
 struct Game : IScene
