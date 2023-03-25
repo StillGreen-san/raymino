@@ -21,4 +21,10 @@ struct Size
 struct Rect : XY, Size
 {
 };
+template<typename TIterator>
+struct Range
+{
+	TIterator begin;
+	TIterator end;
+};
 } // namespace raymino
