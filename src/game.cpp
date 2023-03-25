@@ -61,7 +61,14 @@ ActiveMino::ActiveMino(const Grid& mino, XY position, uint8_t color) :
 
 void Game::dropMino()
 {
-	const XY nextPosition{activeMino.position.x, activeMino.position.y + 1};
+	const int xDir = (::IsKeyDown(KEY_LEFT) ? -1 : 0) + (::IsKeyDown(KEY_RIGHT) ? 1 : 0);
+	const int yDir = xDir == 0 ? 1 : 0;
+	XY nextPosition{activeMino.position.x + xDir, activeMino.position.y + yDir};
+	if(nextPosition.x < 0 || nextPosition.x > 10 - activeMino.color.getSize().width)
+	{
+		nextPosition.x = activeMino.position.x;
+		nextPosition.y += 1;
+	}
 	if(playArea.overlapAt(nextPosition, activeMino.collision))
 	{
 		state = State::Set;
@@ -74,11 +81,20 @@ void Game::dropMino()
 
 void Game::setMino()
 {
+	if(activeMino.position.y == getStartPosition(activeMino.color).y)
+	{
+		state = State::Over;
+		return;
+	}
 	playArea.setAt(activeMino.position, activeMino.color);
 	activeMino = takeNextMino();
 	if(playArea.overlapAt({activeMino.position.x, activeMino.position.y + 1}, activeMino.collision))
 	{
 		state = State::Over;
+	}
+	else
+	{
+		state = State::Drop;
 	}
 }
 
@@ -87,7 +103,7 @@ void Game::update(App& app)
 	switch(state)
 	{
 	case State::Drop:
-		time += ::GetFrameTime();
+		time += ::GetFrameTime() * (::IsKeyDown(KEY_DOWN) ? 3 : 1);
 		if(time > delay)
 		{
 			dropMino();
@@ -98,6 +114,11 @@ void Game::update(App& app)
 		setMino();
 		break;
 	case State::Over:
+		if(::IsKeyReleased(KEY_HOME))
+		{
+			state = State::Drop;
+			playArea = Grid(playArea.getSize(), 0);
+		}
 		break;
 	}
 }
@@ -123,7 +144,7 @@ void Game::drawPlayfield()
 			if(activeMino.color.getAt({x, y}))
 			{
 				::DrawRectangle((x + activeMino.position.x) * 30,
-				    (y + (activeMino.position.y - activeMino.color.getSize().height)) * 30, 29, 29,
+				    (y + activeMino.position.y - 4) * 30, 29, 29,
 				    colors[activeMino.color.getAt({x, y})]);
 			}
 		}
@@ -137,6 +158,11 @@ void Game::draw()
 	::ClearBackground(::RColor::LightGray());
 
 	drawPlayfield();
+
+	if(state == State::Over)
+	{
+		::DrawText("GAME OVER", 150, 250, 45, RED);
+	}
 
 	::EndDrawing();
 }
@@ -166,7 +192,7 @@ ActiveMino Game::takeNextMino()
 
 XY Game::getStartPosition(const Grid& mino)
 {
-	return {(static_cast<int>(mino.getSize().width) + 1) / 2,
+	return {5 - ((static_cast<int>(mino.getSize().width) + 1) / 2),
 	    4 - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
 

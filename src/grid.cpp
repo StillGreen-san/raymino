@@ -38,8 +38,9 @@ bool Grid::overlapAt(XY topLeft, const Grid& other) const
 	{
 		for(int x = 0; x < other.size.width; ++x)
 		{
-			const unsigned check = other.cells[index1D(x, y, other.size.width)];
-			if(getAt({x + topLeft.x, y + topLeft.y}) + check > check)
+			const auto otherCell = other.getAt({x, y});
+			const auto thisCell = getAt({x + topLeft.x, y + topLeft.y});
+			if(thisCell & otherCell)
 			{
 				return true;
 			}
@@ -74,8 +75,9 @@ void Grid::setAt(XY topLeft, const Grid& other)
 			}
 			if(topLeft.x + x > 0 && topLeft.y + y < size.height)
 			{
-				cells[index1D(x + topLeft.x, y + topLeft.y, other.size.width)] =
-				    other.cells[index1D(x, y, other.size.width)];
+				const auto thisIndex = index1D(x + topLeft.x, y + topLeft.y, size.width);
+				const auto otherIndex = index1D(x, y, other.size.width);
+				cells[thisIndex] |= other.cells[otherIndex];
 			}
 		}
 	}
