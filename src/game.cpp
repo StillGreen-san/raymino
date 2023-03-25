@@ -61,6 +61,18 @@ ActiveMino::ActiveMino(const Grid& mino, XY position, uint8_t color) :
 
 void Game::dropMino()
 {
+	const int rDir = (::IsKeyDown(KEY_A) ? -1 : 0) + (::IsKeyDown(KEY_D) ? 1 : 0);
+	if(rDir != 0)
+	{
+		Grid rotated = activeMino.collision;
+		rotated.rotate(rDir);
+		if(!playArea.overlapAt(activeMino.position, rotated))
+		{
+			activeMino.color.rotate(rDir);
+			activeMino.collision = rotated;
+		}
+	}
+
 	const int xDir = (::IsKeyDown(KEY_LEFT) ? -1 : 0) + (::IsKeyDown(KEY_RIGHT) ? 1 : 0);
 	const int yDir = xDir == 0 ? 1 : 0;
 	XY nextPosition{activeMino.position.x + xDir, activeMino.position.y + yDir};
