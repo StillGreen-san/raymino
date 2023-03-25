@@ -73,7 +73,7 @@ void Grid::setAt(XY topLeft, const Grid& other)
 			{
 				break;
 			}
-			if(topLeft.x + x > 0 && topLeft.y + y < size.height)
+			if(topLeft.x + x >= 0 && topLeft.y + y < size.height)
 			{
 				const auto thisIndex = index1D(x + topLeft.x, y + topLeft.y, size.width);
 				const auto otherIndex = index1D(x, y, other.size.width);
