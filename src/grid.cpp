@@ -83,6 +83,45 @@ void Grid::setAt(XY topLeft, const Grid& other)
 	}
 }
 
+void Grid::rotate(int steps)
+{// TODO NxM
+	steps %= 4;
+	while(steps != 0)
+	{
+		if(steps < 0)
+		{
+			reverseRows();
+			transpose();
+			++steps;
+		}
+		else
+		{
+			transpose();
+			reverseRows();
+			--steps;
+		}
+	}
+}
+
+void Grid::transpose()
+{
+	for(int y = 0; y < size.height; ++y)
+	{
+		for(int x = y; x < size.width; ++x)
+		{
+			std::swap(cells[index1D(x, y, size.width)], cells[index1D(y, x, size.width)]);
+		}
+	}
+}
+
+void Grid::reverseRows()
+{
+	for(ptrdiff_t row = 0; row < size.height; ++row)
+	{
+		std::reverse(next(cells.begin(), row * size.width), next(cells.begin(), (row + 1) * size.width));
+	}
+}
+
 void Grid::transformCells(std::function<TTransformFunc> func)
 {
 	std::transform(cells.begin(), cells.end(), cells.begin(), std::move(func));

@@ -26,6 +26,8 @@ public:
 	uint8_t getAt(XY topLeft) const;
 	void transformCells(std::function<TTransformFunc> func);
 	void rotate(int steps);
+	void transpose();
+	void reverseRows();
 	void setAt(XY topLeft, const Grid& other);
 	[[nodiscard]] std::vector<uint8_t>& getCells()
 	{
