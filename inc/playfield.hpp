@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <functional>
+#include <iterator>
 #include <vector>
 
 namespace raymino
@@ -22,7 +23,8 @@ public:
 
 	using FieldConstIterator = std::vector<uint8_t>::const_iterator;
 	using MinoConstIterator = std::vector<Grid>::const_iterator;
-	using ShuffleBaseMinosFunc = std::vector<Grid>(const std::vector<Grid>& baseMinos);
+	using ShuffleBaseMinosFunc = void(const std::vector<Grid>& baseMinos,
+	    std::back_insert_iterator<std::vector<Grid>> nextMinosInserter, size_t minCount);
 	using StartingPositionFunc = XY(const Grid& nextMino, unsigned fieldWidth);
 
 	Playfield() = delete;
@@ -40,9 +42,9 @@ public:
 private:
 	std::vector<Grid> baseMinos;
 	Grid field;
-	std::vector<Grid> nextMinos;
+	mutable std::vector<Grid> nextMinos;
 	ActiveMino activeMino;
-	std::function<ShuffleBaseMinosFunc> shuffledBaseMinos;
+	std::function<ShuffleBaseMinosFunc> shuffleBaseMinos;
 	std::function<StartingPositionFunc> getStartPosition;
 };
 } // namespace raymino
