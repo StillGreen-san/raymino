@@ -34,8 +34,8 @@ bool bitAndTest(uint8_t lhs, uint8_t rhs)
 
 unsigned unusedBottomRows(const Grid& mino)
 {
-	const auto rend = mino.getCells().rend();
-	auto rit = mino.getCells().rbegin();
+	const auto rend = mino.rend();
+	auto rit = mino.rbegin();
 	const unsigned cols = mino.getSize().width;
 	unsigned unused = 0;
 	for(unsigned col = 0; rit != rend; ++rit)

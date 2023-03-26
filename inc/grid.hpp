@@ -29,13 +29,29 @@ public:
 	void transpose();
 	void reverseRows();
 	void setAt(XY topLeft, const Grid& other);
-	[[nodiscard]] std::vector<uint8_t>& getCells()
+	[[nodiscard]] auto begin()
 	{
-		return cells;
+		return cells.begin();
 	}
-	[[nodiscard]] const std::vector<uint8_t>& getCells() const
+	[[nodiscard]] auto end()
 	{
-		return cells;
+		return cells.end();
+	}
+	[[nodiscard]] auto begin() const
+	{
+		return cells.begin();
+	}
+	[[nodiscard]] auto end() const
+	{
+		return cells.end();
+	}
+	[[nodiscard]] auto rbegin() const
+	{
+		return cells.rbegin();
+	}
+	[[nodiscard]] auto rend() const
+	{
+		return cells.rend();
 	}
 
 private:
