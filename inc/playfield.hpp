@@ -28,7 +28,7 @@ public:
 	using StartingPositionFunc = XY(const Grid& nextMino, unsigned fieldWidth);
 
 	Playfield() = delete;
-	Playfield(std::vector<Grid> baseMinos, std::function<ShuffleBaseMinosFunc> shuffledBaseMinos,
+	Playfield(Size size, std::vector<Grid> baseMinos, std::function<ShuffleBaseMinosFunc> shuffleBaseMinos,
 	    std::function<StartingPositionFunc> getStartPosition);
 
 	size_t getHiddenHeight() const;
@@ -36,7 +36,13 @@ public:
 	Range<FieldConstIterator> getField(bool includeHidden) const;
 	const ActiveMino& getActiveMino() const;
 
+	/**
+	 * @return true if moved successfully
+	 */
 	bool moveActiveMino(XY translation, int rotation);
+	/**
+	 * @return false if next Mino overlaps at spawn
+	 */
 	bool lockActiveMino();
 
 private:
