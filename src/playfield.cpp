@@ -15,11 +15,6 @@ std::vector<Grid>&& processBaseMinos(std::vector<Grid>& baseMinos)
 	{
 		throw std::invalid_argument("no base minos");
 	}
-	auto largest = std::max_element(baseMinos.begin(), baseMinos.end(), largerHeight);
-	if(largest != begin(baseMinos))
-	{
-		std::swap(*largest, *begin(baseMinos));
-	}
 	return std::move(baseMinos);
 }
 std::vector<Grid> initNextMinos(
@@ -43,16 +38,10 @@ Playfield::ActiveMino takeNextMino(
 Playfield::Playfield(Size size, std::vector<Grid> baseMinos, std::function<ShuffleBaseMinosFunc> shuffleBaseMinos,
     std::function<StartingPositionFunc> getStartPosition) :
     baseMinos{processBaseMinos(baseMinos)},
-    field({size.width, size.height + baseMinos.front().getSize().height}, emptyCell),
-    nextMinos{initNextMinos(this->baseMinos, shuffleBaseMinos)}, activeMino{takeNextMino(
-                                                                     this->field, this->nextMinos, getStartPosition)},
+    field(size, emptyCell), nextMinos{initNextMinos(this->baseMinos, shuffleBaseMinos)},
+    activeMino{takeNextMino(this->field, this->nextMinos, getStartPosition)},
     shuffleBaseMinos{std::move(shuffleBaseMinos)}, getStartPosition{std::move(getStartPosition)}
 {
-}
-
-size_t Playfield::getHiddenHeight() const
-{
-	return baseMinos.front().getSize().height;
 }
 
 Range<Playfield::MinoConstIterator> Playfield::getNextMinos(size_t count) const
@@ -65,13 +54,9 @@ Range<Playfield::MinoConstIterator> Playfield::getNextMinos(size_t count) const
 	return {std::begin(nextMinos), std::next(std::begin(nextMinos), count)};
 }
 
-Range<Playfield::FieldConstIterator> Playfield::getField(bool includeHidden) const
+Range<Playfield::FieldConstIterator> Playfield::getField() const
 {
-	if(includeHidden)
-	{
-		return {std::begin(field), std::end(field)};
-	}
-	return {std::next(std::begin(field), getHiddenHeight()), std::end(field)};
+	return {std::begin(field), std::end(field)};
 }
 
 const Playfield::ActiveMino& Playfield::getActiveMino() const

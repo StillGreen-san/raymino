@@ -31,9 +31,8 @@ public:
 	Playfield(Size size, std::vector<Grid> baseMinos, std::function<ShuffleBaseMinosFunc> shuffleBaseMinos,
 	    std::function<StartingPositionFunc> getStartPosition);
 
-	size_t getHiddenHeight() const;
 	Range<MinoConstIterator> getNextMinos(size_t count) const;
-	Range<FieldConstIterator> getField(bool includeHidden) const;
+	Range<FieldConstIterator> getField() const;
 	const ActiveMino& getActiveMino() const;
 
 	/**
