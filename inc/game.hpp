@@ -2,6 +2,7 @@
 #include "grid.hpp"
 #include "playfield.hpp"
 #include "scenes.hpp"
+#include "timer.hpp"
 #include "types.hpp"
 
 #include <vector>
@@ -24,7 +25,8 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth);
 struct Game : IScene
 {
 	void dropMino();
-	void moveMino();
+	void moveMino(float delta);
+	void rotateMino(float delta);
 	void setMino();
 	void update(App& app);
 	void drawPlayfield();
@@ -36,7 +38,8 @@ struct Game : IScene
 	        {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}},
 	    shuffleBaseMinos, getStartPosition};
 	State state{State::Drop};
-	float time = 0;
-	float delay = 0.1666f;
+	Timer dropDelay{};
+	Timer moveDelay{1.f/3.f};
+	Timer rotateDelay{1.f/3.f};
 };
 } // namespace raymino

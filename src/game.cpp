@@ -4,6 +4,7 @@
 #include "grid.hpp"
 #include "playfield.hpp"
 #include "scenes.hpp"
+#include "timer.hpp"
 #include "types.hpp"
 
 #include <raygui.h>
@@ -70,16 +71,38 @@ void Game::dropMino()
 	}
 }
 
-void Game::moveMino()
+void Game::moveMino(float delta)
 {
-	const int rDir = (::IsKeyReleased(KEY_A) ? -1 : 0) + (::IsKeyReleased(KEY_D) ? 1 : 0);
-	if(rDir != 0)
+	if(const int xDir = (::IsKeyPressed(KEY_LEFT) ? -1 : 0) + (::IsKeyPressed(KEY_RIGHT) ? 1 : 0); xDir != 0)
+	{
+		playfield.moveActiveMino({xDir, 0}, 0);
+		moveDelay.elapsed = 0;
+	}
+	else
+	{
+		if(const int xDir = (::IsKeyDown(KEY_LEFT) ? -1 : 0) + (::IsKeyDown(KEY_RIGHT) ? 1 : 0);
+		    xDir != 0 && moveDelay.tick(delta))
+		{
+			playfield.moveActiveMino({xDir, 0}, 0);
+		}
+	}
+}
+
+void Game::rotateMino(float delta)
+{
+	if(const int rDir = (::IsKeyPressed(KEY_A) ? -1 : 0) + (::IsKeyPressed(KEY_D) ? 1 : 0); rDir != 0)
 	{
 		playfield.moveActiveMino({0, 0}, rDir);
+		rotateDelay.elapsed = 0;
 	}
-
-	const int xDir = (::IsKeyReleased(KEY_LEFT) ? -1 : 0) + (::IsKeyReleased(KEY_RIGHT) ? 1 : 0);
-	playfield.moveActiveMino({xDir, 0}, 0);
+	else
+	{
+		if(const int rDir = (::IsKeyDown(KEY_A) ? -1 : 0) + (::IsKeyDown(KEY_D) ? 1 : 0);
+		    rDir != 0 && rotateDelay.tick(delta))
+		{
+			playfield.moveActiveMino({0, 0}, rDir);
+		}
+	}
 }
 
 void Game::setMino()
@@ -96,15 +119,16 @@ void Game::setMino()
 
 void Game::update(App& app)
 {
+	const float delta = ::GetFrameTime();
 	switch(state)
 	{
 	case State::Drop:
-		moveMino();
-		time += ::GetFrameTime() * (::IsKeyDown(KEY_DOWN) ? 3 : 1);
-		if(time > delay)
+		dropDelay.delay = ::IsKeyDown(KEY_DOWN) ? 1.f/10.f : 1.f/3.f;
+		moveMino(delta);
+		rotateMino(delta);
+		if(dropDelay.tick(delta))
 		{
 			dropMino();
-			time -= delay;
 		}
 		break;
 	case State::Set:
