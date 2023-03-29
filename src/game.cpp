@@ -79,10 +79,7 @@ void Game::moveMino()
 	}
 
 	const int xDir = (::IsKeyReleased(KEY_LEFT) ? -1 : 0) + (::IsKeyReleased(KEY_RIGHT) ? 1 : 0);
-	if(!playfield.moveActiveMino({xDir, 0}, 0))
-	{
-		state = State::Set;
-	}
+	playfield.moveActiveMino({xDir, 0}, 0);
 }
 
 void Game::setMino()
