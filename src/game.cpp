@@ -64,15 +64,22 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth)
 
 void Game::dropMino()
 {
-	const int rDir = (::IsKeyDown(KEY_A) ? -1 : 0) + (::IsKeyDown(KEY_D) ? 1 : 0);
+	if(!playfield.moveActiveMino({0, 1}, 0))
+	{
+		state = State::Set;
+	}
+}
+
+void Game::moveMino()
+{
+	const int rDir = (::IsKeyReleased(KEY_A) ? -1 : 0) + (::IsKeyReleased(KEY_D) ? 1 : 0);
 	if(rDir != 0)
 	{
 		playfield.moveActiveMino({0, 0}, rDir);
 	}
 
-	const int xDir = (::IsKeyDown(KEY_LEFT) ? -1 : 0) + (::IsKeyDown(KEY_RIGHT) ? 1 : 0);
-	const int yDir = xDir == 0 ? 1 : 0;
-	if(!playfield.moveActiveMino({xDir, yDir}, 0))
+	const int xDir = (::IsKeyReleased(KEY_LEFT) ? -1 : 0) + (::IsKeyReleased(KEY_RIGHT) ? 1 : 0);
+	if(!playfield.moveActiveMino({xDir, 0}, 0))
 	{
 		state = State::Set;
 	}
@@ -95,6 +102,7 @@ void Game::update(App& app)
 	switch(state)
 	{
 	case State::Drop:
+		moveMino();
 		time += ::GetFrameTime() * (::IsKeyDown(KEY_DOWN) ? 3 : 1);
 		if(time > delay)
 		{

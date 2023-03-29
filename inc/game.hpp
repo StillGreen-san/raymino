@@ -24,6 +24,7 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth);
 struct Game : IScene
 {
 	void dropMino();
+	void moveMino();
 	void setMino();
 	void update(App& app);
 	void drawPlayfield();
