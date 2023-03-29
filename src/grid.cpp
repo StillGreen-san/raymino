@@ -71,7 +71,7 @@ void Grid::setAt(XY topLeft, const Grid& other)
 		{
 			if(topLeft.x + x >= size.width)
 			{
-				break;
+				continue;
 			}
 			if(topLeft.x + x >= 0 && topLeft.y + y < size.height)
 			{
