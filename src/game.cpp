@@ -109,6 +109,7 @@ void Game::setMino()
 {
 	if(playfield.lockActiveMino())
 	{
+		const unsigned linesCleared = playfield.clearFullLines();
 		state = State::Drop;
 	}
 	else

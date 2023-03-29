@@ -5,9 +5,9 @@
 
 namespace raymino
 {
-bool largerHeight(const Grid& lhs, const Grid& rhs)
+bool notZero(uint8_t thing)
 {
-	return lhs.getSize().height < rhs.getSize().height;
+	return thing != 0;
 }
 std::vector<Grid>&& processBaseMinos(std::vector<Grid>& baseMinos)
 {
@@ -91,5 +91,34 @@ bool Playfield::lockActiveMino()
 	}
 	activeMino = takeNextMino(field, nextMinos, getStartPosition);
 	return !field.overlapAt(activeMino.position, activeMino.collision);
+}
+
+unsigned Playfield::clearFullLines()
+{
+	const unsigned width = field.getSize().width;
+	auto lineCheckBegin = std::as_const(field).rbegin();
+	auto lineCheckEnd = std::next(lineCheckBegin, width);
+	auto lineWriteBegin = field.rbegin();
+	auto lineWriteEnd = std::next(lineWriteBegin, width);
+	const auto fieldEnd = std::as_const(field).rend();
+	unsigned linesCleared = 0;
+
+	while(lineCheckEnd != fieldEnd)
+	{
+		if(std::all_of(lineCheckBegin, lineCheckEnd, notZero))
+		{
+			++linesCleared;
+		}
+		else
+		{
+			std::copy(lineCheckBegin, lineCheckEnd, lineWriteBegin);
+			std::advance(lineWriteBegin, width);
+			std::advance(lineWriteEnd, width);
+		}
+		std::advance(lineCheckBegin, width);
+		std::advance(lineCheckEnd, width);
+	}
+
+	return linesCleared;
 }
 } // namespace raymino

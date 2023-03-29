@@ -46,6 +46,8 @@ public:
 	 */
 	bool lockActiveMino();
 
+	unsigned clearFullLines();
+
 private:
 	std::vector<Grid> baseMinos;
 	Grid field;

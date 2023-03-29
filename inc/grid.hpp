@@ -53,6 +53,14 @@ public:
 	{
 		return cells.rend();
 	}
+	[[nodiscard]] auto rbegin()
+	{
+		return cells.rbegin();
+	}
+	[[nodiscard]] auto rend()
+	{
+		return cells.rend();
+	}
 
 private:
 	std::vector<uint8_t> cells;
