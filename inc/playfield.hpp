@@ -35,6 +35,8 @@ public:
 	Range<FieldConstIterator> getField() const;
 	const ActiveMino& getActiveMino() const;
 
+	void resetField();
+
 	/**
 	 * @return true if moved successfully
 	 */

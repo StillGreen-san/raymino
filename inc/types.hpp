@@ -8,6 +8,12 @@ struct XY
 {
 	int x;
 	int y;
+	XY& operator+=(XY other) noexcept
+	{
+		x += other.x;
+		y += other.y;
+		return *this;
+	}
 };
 struct Size
 {

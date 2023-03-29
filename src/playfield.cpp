@@ -64,17 +64,21 @@ const Playfield::ActiveMino& Playfield::getActiveMino() const
 	return activeMino;
 }
 
+void Playfield::resetField()
+{
+	field = Grid(field.getSize(), 0);
+}
+
 bool Playfield::moveActiveMino(XY translation, int rotation)
 {
-	Grid next = activeMino.collision;
-	if(rotation != 0)
-	{
-		next.rotate(rotation);
-	}
-	if(field.overlapAt({activeMino.position.x + translation.x, activeMino.position.y + translation.y}, next))
+	ActiveMino next = activeMino;
+	next.collision.rotate(rotation);
+	next.position += translation;
+	if(field.overlapAt(next.position, next.collision))
 	{
 		return false;
 	}
+	activeMino = next;
 	return true;
 }
 
@@ -85,7 +89,7 @@ bool Playfield::lockActiveMino()
 	{
 		shuffleBaseMinos(baseMinos, std::back_inserter(nextMinos), baseMinos.size());
 	}
-	takeNextMino(field, nextMinos, getStartPosition);
+	activeMino = takeNextMino(field, nextMinos, getStartPosition);
 	return !field.overlapAt(activeMino.position, activeMino.collision);
 }
 } // namespace raymino
