@@ -2,6 +2,7 @@
 
 #include "app.hpp"
 #include "grid.hpp"
+#include "playfield.hpp"
 #include "scenes.hpp"
 #include "types.hpp"
 
@@ -9,29 +10,12 @@
 #include <raylib-cpp.hpp>
 #include <rres-raylib.h>
 
+#include <numeric>
 #include <random>
 #include <vector>
 
 namespace raymino
 {
-struct IfSet
-{
-	uint8_t newVal;
-	uint8_t operator()(uint8_t oldVal) const
-	{
-		if(oldVal)
-		{
-			return newVal;
-		}
-		return oldVal;
-	}
-};
-
-bool bitAndTest(uint8_t lhs, uint8_t rhs)
-{
-	return lhs & rhs;
-}
-
 unsigned unusedBottomRows(const Grid& mino)
 {
 	const auto rend = mino.rend();
@@ -54,9 +38,28 @@ unsigned unusedBottomRows(const Grid& mino)
 	return unused;
 }
 
-ActiveMino::ActiveMino(const Grid& mino, XY position, uint8_t color) :
-    color{mino, IfSet{color}}, collision{mino, IfSet{0xFF}}, position{position}
+void shuffleBaseMinos(
+    const std::vector<Grid>& baseMinos, std::back_insert_iterator<std::vector<Grid>> nextMinosInserter, size_t minCount)
 {
+	std::default_random_engine rng{std::random_device{}()};
+	size_t inserted = 0;
+	while(inserted < minCount)
+	{
+		std::vector<Grid> copy = baseMinos;
+		std::shuffle(copy.begin(), copy.end(), rng);
+		std::for_each(copy.begin(), copy.end(),
+		    [&](Grid& mino)
+		    {
+			    nextMinosInserter = std::move(mino);
+		    });
+		inserted += baseMinos.size();
+	}
+}
+
+XY getStartPosition(const Grid& mino, unsigned fieldWidth)
+{
+	return {static_cast<int>(fieldWidth / 2) - (static_cast<int>(mino.getSize().width + 1) / 2),
+	    HIDDEN_HEIGHT - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
 
 void Game::dropMino()
@@ -64,49 +67,26 @@ void Game::dropMino()
 	const int rDir = (::IsKeyDown(KEY_A) ? -1 : 0) + (::IsKeyDown(KEY_D) ? 1 : 0);
 	if(rDir != 0)
 	{
-		Grid rotated = activeMino.collision;
-		rotated.rotate(rDir);
-		if(!playArea.overlapAt(activeMino.position, rotated))
-		{
-			activeMino.color.rotate(rDir);
-			activeMino.collision = rotated;
-		}
+		playfield.moveActiveMino({0, 0}, rDir);
 	}
 
 	const int xDir = (::IsKeyDown(KEY_LEFT) ? -1 : 0) + (::IsKeyDown(KEY_RIGHT) ? 1 : 0);
 	const int yDir = xDir == 0 ? 1 : 0;
-	XY nextPosition{activeMino.position.x + xDir, activeMino.position.y + yDir};
-	if(nextPosition.x < 0 || nextPosition.x > 10 - activeMino.color.getSize().width)
-	{
-		nextPosition.x = activeMino.position.x;
-		nextPosition.y += 1;
-	}
-	if(playArea.overlapAt(nextPosition, activeMino.collision))
+	if(!playfield.moveActiveMino({xDir, yDir}, 0))
 	{
 		state = State::Set;
-	}
-	else
-	{
-		activeMino.position = nextPosition;
 	}
 }
 
 void Game::setMino()
 {
-	if(activeMino.position.y == getStartPosition(activeMino.color).y)
+	if(playfield.lockActiveMino())
 	{
-		state = State::Over;
-		return;
-	}
-	playArea.setAt(activeMino.position, activeMino.color);
-	activeMino = takeNextMino();
-	if(playArea.overlapAt({activeMino.position.x, activeMino.position.y + 1}, activeMino.collision))
-	{
-		state = State::Over;
+		state = State::Drop;
 	}
 	else
 	{
-		state = State::Drop;
+		state = State::Over;
 	}
 }
 
@@ -129,7 +109,7 @@ void Game::update(App& app)
 		if(::IsKeyReleased(KEY_HOME))
 		{
 			state = State::Drop;
-			playArea = Grid(playArea.getSize(), 0);
+			playfield.resetField();
 		}
 		break;
 	}
@@ -141,23 +121,28 @@ void Game::drawPlayfield()
 
 	Color colors[2]{RColor::LightGray(), RColor::DarkGray()};
 
+	Range field = playfield.getField();
+	std::advance(field.begin, HIDDEN_HEIGHT * 10);
+
 	for(int y = 0; y < 20; ++y)
 	{
 		for(int x = 0; x < 10; ++x)
 		{
-			::DrawRectangle(x * 30, y * 30, 29, 29, colors[playArea.getAt({x, y + 4})]);
+			::DrawRectangle(x * 30, y * 30, 29, 29, colors[*field.begin]);
+			++field.begin;
 		}
 	}
 
-	for(int y = 0; y < activeMino.color.getSize().height; ++y)
+	const Playfield::ActiveMino& activeMino = playfield.getActiveMino();
+
+	for(int y = 0; y < activeMino.collision.getSize().height; ++y)
 	{
-		for(int x = 0; x < activeMino.color.getSize().width; ++x)
+		for(int x = 0; x < activeMino.collision.getSize().width; ++x)
 		{
-			if(activeMino.color.getAt({x, y}))
+			if(activeMino.collision.getAt({x, y}))
 			{
-				::DrawRectangle((x + activeMino.position.x) * 30,
-				    (y + activeMino.position.y - 4) * 30, 29, 29,
-				    colors[activeMino.color.getAt({x, y})]);
+				::DrawRectangle((x + activeMino.position.x) * 30, (y + activeMino.position.y - 4) * 30, 29, 29,
+				    colors[activeMino.collision.getAt({x, y})]);
 			}
 		}
 	}
@@ -183,29 +168,6 @@ void Game::UpdateDraw(App& app)
 {
 	update(app);
 	draw();
-}
-
-std::vector<Grid> Game::shuffledBaseMinos()
-{
-	std::shuffle(baseMinos.begin(), baseMinos.end(), std::default_random_engine{std::random_device{}()});
-	return baseMinos;
-}
-
-ActiveMino Game::takeNextMino()
-{
-	if(nextMinos.empty())
-	{
-		nextMinos = shuffledBaseMinos();
-	}
-	ActiveMino next(nextMinos.front(), getStartPosition(nextMinos.front()), 1);
-	nextMinos.erase(nextMinos.begin());
-	return next;
-}
-
-XY Game::getStartPosition(const Grid& mino)
-{
-	return {5 - ((static_cast<int>(mino.getSize().width) + 1) / 2),
-	    4 - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
 
 template<>

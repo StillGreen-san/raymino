@@ -19,7 +19,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CompilerWarnings.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ProjectSettings.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake )
 
-add_executable(${PROJECT_NAME} src/main.cpp src/cellular.cpp src/app.cpp src/game.cpp src/grid.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/cellular.cpp src/app.cpp src/game.cpp src/grid.cpp src/playfield.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE inc)
 target_compile_features( ${PROJECT_NAME} PRIVATE cxx_std_17 )
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib::lib raylib::cpp raylib::gui raylib::res)
