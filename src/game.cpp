@@ -134,7 +134,7 @@ void Game::setMino()
 {
 	if(playfield.lockActiveMino())
 	{
-		const unsigned linesCleared = playfield.clearFullLines();
+		score += playfield.clearFullLines();
 		state = State::Drop;
 	}
 	else
@@ -149,14 +149,17 @@ void Game::update(App& app)
 	switch(state)
 	{
 	case State::Drop:
-		dropDelay.delay = ::IsKeyDown(KEY_DOWN) ? delays[6] : delays[2];
+	{
+		const size_t dropSpeed = ::IsKeyDown(KEY_DOWN) ? (score / 8) + 6 : (score / 8) + 2;
+		dropDelay.delay = delays[std::min(dropSpeed, maxSpeedLevel)];
 		moveMino(delta);
 		rotateMino(delta);
 		if(dropDelay.tick(delta))
 		{
 			dropMino();
 		}
-		break;
+	}
+	break;
 	case State::Set:
 		setMino();
 		break;
@@ -165,6 +168,7 @@ void Game::update(App& app)
 		{
 			state = State::Drop;
 			playfield.resetField();
+			score = 0;
 		}
 		break;
 	}

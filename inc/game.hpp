@@ -40,5 +40,6 @@ struct Game : IScene
 	Timer dropDelay{};
 	Timer moveDelay{delays[2]};
 	Timer rotateDelay{delays[2]};
+	size_t score = 0;
 };
 } // namespace raymino
