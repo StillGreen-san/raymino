@@ -151,15 +151,13 @@ void Game::drawPlayfield()
 
 	Color colors[2]{RColor::LightGray(), RColor::DarkGray()};
 
-	Range field = playfield.getField();
-	std::advance(field.begin, HIDDEN_HEIGHT * 10);
+	const Grid& field = playfield.getField();
 
 	for(int y = 0; y < 20; ++y)
 	{
 		for(int x = 0; x < 10; ++x)
 		{
-			::DrawRectangle(x * 30, y * 30, 29, 29, colors[*field.begin]);
-			++field.begin;
+			::DrawRectangle(x * 30, y * 30, 29, 29, colors[field.getAt({x, y + HIDDEN_HEIGHT})]);
 		}
 	}
 

@@ -54,9 +54,9 @@ Range<Playfield::MinoConstIterator> Playfield::getNextMinos(size_t count) const
 	return {std::begin(nextMinos), std::next(std::begin(nextMinos), count)};
 }
 
-Range<Playfield::FieldConstIterator> Playfield::getField() const
+const Grid& Playfield::getField() const
 {
-	return {std::begin(field), std::end(field)};
+	return field;
 }
 
 const Playfield::ActiveMino& Playfield::getActiveMino() const

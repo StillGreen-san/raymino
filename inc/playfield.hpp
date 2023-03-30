@@ -32,7 +32,7 @@ public:
 	    std::function<StartingPositionFunc> getStartPosition);
 
 	Range<MinoConstIterator> getNextMinos(size_t count) const;
-	Range<FieldConstIterator> getField() const;
+	const Grid& getField() const;
 	const ActiveMino& getActiveMino() const;
 
 	void resetField();
