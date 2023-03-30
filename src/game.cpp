@@ -149,7 +149,7 @@ void Game::update(App& app)
 	switch(state)
 	{
 	case State::Drop:
-		dropDelay.delay = ::IsKeyDown(KEY_DOWN) ? 1.f / 10.f : 1.f / 3.f;
+		dropDelay.delay = ::IsKeyDown(KEY_DOWN) ? delays[6] : delays[2];
 		moveMino(delta);
 		rotateMino(delta);
 		if(dropDelay.tick(delta))

@@ -38,7 +38,7 @@ struct Game : IScene
 	    shuffleBaseMinos, getStartPosition};
 	State state{State::Drop};
 	Timer dropDelay{};
-	Timer moveDelay{1.f/3.f};
-	Timer rotateDelay{1.f/3.f};
+	Timer moveDelay{delays[2]};
+	Timer rotateDelay{delays[2]};
 };
 } // namespace raymino
