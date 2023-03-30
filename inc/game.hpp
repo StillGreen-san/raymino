@@ -29,7 +29,6 @@ struct Game : IScene
 	void rotateMino(float delta);
 	void setMino();
 	void update(App& app);
-	void drawPlayfield();
 	void draw();
 	void UpdateDraw(App& app) override;
 	Playfield playfield{{10, 20 + HIDDEN_HEIGHT},

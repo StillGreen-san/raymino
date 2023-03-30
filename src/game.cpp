@@ -15,6 +15,31 @@
 #include <random>
 #include <vector>
 
+namespace
+{
+void draw(const raymino::Grid& grid, int yOffset, raymino::XY at, int cellSize, bool background)
+{
+	const raymino::Size gridSize = grid.getSize();
+	const int width = gridSize.width * cellSize;
+	const int height = (gridSize.height - yOffset) * cellSize;
+	const Color colors[]{background ? LIGHTGRAY : BLANK, DARKGRAY, GRAY};
+
+	if(background)
+	{
+		::DrawRectangle(at.x, at.y, width, height, colors[2]);
+	}
+
+	for(int y = 0; y < gridSize.height; ++y)
+	{
+		for(int x = 0; x < gridSize.width; ++x)
+		{
+			const uint8_t colorId = grid.getAt({x, y + yOffset});
+			::DrawRectangle((x + at.x) * cellSize, (y + at.y) * cellSize, cellSize - 1, cellSize - 1, colors[colorId]);
+		}
+	}
+}
+} // namespace
+
 namespace raymino
 {
 unsigned unusedBottomRows(const Grid& mino)
@@ -124,7 +149,7 @@ void Game::update(App& app)
 	switch(state)
 	{
 	case State::Drop:
-		dropDelay.delay = ::IsKeyDown(KEY_DOWN) ? 1.f/10.f : 1.f/3.f;
+		dropDelay.delay = ::IsKeyDown(KEY_DOWN) ? 1.f / 10.f : 1.f / 3.f;
 		moveMino(delta);
 		rotateMino(delta);
 		if(dropDelay.tick(delta))
@@ -145,44 +170,16 @@ void Game::update(App& app)
 	}
 }
 
-void Game::drawPlayfield()
-{
-	::DrawRectangle(0, 0, 300, 600, ::RColor::Gray());
-
-	Color colors[2]{RColor::LightGray(), RColor::DarkGray()};
-
-	const Grid& field = playfield.getField();
-
-	for(int y = 0; y < 20; ++y)
-	{
-		for(int x = 0; x < 10; ++x)
-		{
-			::DrawRectangle(x * 30, y * 30, 29, 29, colors[field.getAt({x, y + HIDDEN_HEIGHT})]);
-		}
-	}
-
-	const Playfield::ActiveMino& activeMino = playfield.getActiveMino();
-
-	for(int y = 0; y < activeMino.collision.getSize().height; ++y)
-	{
-		for(int x = 0; x < activeMino.collision.getSize().width; ++x)
-		{
-			if(activeMino.collision.getAt({x, y}))
-			{
-				::DrawRectangle((x + activeMino.position.x) * 30, (y + activeMino.position.y - 4) * 30, 29, 29,
-				    colors[activeMino.collision.getAt({x, y})]);
-			}
-		}
-	}
-}
-
 void Game::draw()
 {
 	::BeginDrawing();
 
 	::ClearBackground(::RColor::LightGray());
 
-	drawPlayfield();
+	::draw(playfield.getField(), HIDDEN_HEIGHT, {0, 0}, 30, true);
+
+	const Playfield::ActiveMino& activeMino = playfield.getActiveMino();
+	::draw(activeMino.collision, 0, {activeMino.position.x, activeMino.position.y - HIDDEN_HEIGHT}, 30, false);
 
 	if(state == State::Over)
 	{
