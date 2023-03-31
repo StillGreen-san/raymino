@@ -11,6 +11,7 @@
 #include <raylib-cpp.hpp>
 #include <rres-raylib.h>
 
+#include <charconv>
 #include <numeric>
 #include <random>
 #include <vector>
@@ -200,6 +201,11 @@ void Game::draw()
 	    activeMino.collision, 0, {activeMino.position.x * 30, (activeMino.position.y - HIDDEN_HEIGHT) * 30}, 30, false);
 
 	::draw(playfield.getNextMinos(8), {330, 25}, 26, 16);
+
+	::DrawText("SCORE:", 450, 30, 30, DARKGRAY);
+	std::array<char, 16> buffer{};
+	std::to_chars(buffer.data(), buffer.data() + (buffer.size() - 1), score);
+	::DrawText(buffer.data(), 450, 60, 30, DARKGRAY);
 
 	if(state == State::Over)
 	{
