@@ -49,7 +49,7 @@ Range<Playfield::MinoConstIterator> Playfield::getNextMinos(size_t count) const
 	if(nextMinos.size() < count)
 	{
 		nextMinos.reserve(count);
-		shuffleBaseMinos(baseMinos, std::back_inserter(nextMinos), nextMinos.size() - count);
+		shuffleBaseMinos(baseMinos, std::back_inserter(nextMinos), count - nextMinos.size());
 	}
 	return {std::begin(nextMinos), std::next(std::begin(nextMinos), count)};
 }

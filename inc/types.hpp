@@ -30,7 +30,23 @@ struct Rect : XY, Size
 template<typename TIterator>
 struct Range
 {
-	TIterator begin;
-	TIterator end;
+	TIterator first;
+	TIterator last;
+	[[nodiscard]] auto begin()
+	{
+		return first;
+	}
+	[[nodiscard]] auto end()
+	{
+		return last;
+	}
+	[[nodiscard]] auto begin() const
+	{
+		return first;
+	}
+	[[nodiscard]] auto end() const
+	{
+		return last;
+	}
 };
 } // namespace raymino

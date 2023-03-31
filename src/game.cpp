@@ -34,8 +34,21 @@ void draw(const raymino::Grid& grid, int yOffset, raymino::XY at, int cellSize, 
 		for(int x = 0; x < gridSize.width; ++x)
 		{
 			const uint8_t colorId = grid.getAt({x, y + yOffset});
-			::DrawRectangle((x + at.x) * cellSize, (y + at.y) * cellSize, cellSize - 1, cellSize - 1, colors[colorId]);
+			::DrawRectangle((x * cellSize) + at.x, (y * cellSize) + at.y, cellSize - 1, cellSize - 1, colors[colorId]);
 		}
+	}
+}
+
+void draw(
+    raymino::Range<raymino::Playfield::MinoConstIterator> range, raymino::XY at, int firstCellSize, int restCellSize)
+{
+	draw(*range.first, 0, at, firstCellSize, false);
+	at.y += (range.first->getSize().height * firstCellSize) + restCellSize;
+	++range.first;
+	for(const raymino::Grid& mino : range)
+	{
+		draw(mino, 0, at, restCellSize, false);
+		at.y += (mino.getSize().height * restCellSize) + restCellSize;
 	}
 }
 } // namespace
@@ -183,7 +196,10 @@ void Game::draw()
 	::draw(playfield.getField(), HIDDEN_HEIGHT, {0, 0}, 30, true);
 
 	const Playfield::ActiveMino& activeMino = playfield.getActiveMino();
-	::draw(activeMino.collision, 0, {activeMino.position.x, activeMino.position.y - HIDDEN_HEIGHT}, 30, false);
+	::draw(
+	    activeMino.collision, 0, {activeMino.position.x * 30, (activeMino.position.y - HIDDEN_HEIGHT) * 30}, 30, false);
+
+	::draw(playfield.getNextMinos(8), {330, 25}, 26, 16);
 
 	if(state == State::Over)
 	{
