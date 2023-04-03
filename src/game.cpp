@@ -156,6 +156,24 @@ std::vector<Grid> makeBaseMinos()
 	    colorize({{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}, colors[RED]),
 	};
 }
+
+void kickRotate(Playfield& playfield, int8_t rotation)
+{
+	static constexpr std::array<XY, 25> leftRotations{{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {-1, 0}, {-1, 1},
+	    {-1, 2}, {2, 0}, {-2, 0}, {2, 1}, {-2, 1}, {2, 2}, {-2, 2}, {0, -1}, {1, -1}, {-1, -1}, {2, -1}, {-2, -1},
+	    {0, -2}, {1, -2}, {-1, -2}, {2, -2}, {-2, -2}}};
+	static constexpr std::array<XY, 25> rightRotations{{{0, 0}, {0, 1}, {0, 2}, {-1, 0}, {-1, 1}, {-1, 2}, {1, 0},
+	    {1, 1}, {1, 2}, {-2, 0}, {2, 0}, {-2, 1}, {2, 1}, {-2, 2}, {2, 2}, {0, -1}, {-1, -1}, {1, -1}, {-2, -1},
+	    {2, -1}, {0, -2}, {-1, -2}, {1, -2}, {-2, -2}, {2, -2}}};
+	const auto& kicks = rotation < 0 ? leftRotations : rightRotations;
+	for(XY const kick : kicks)
+	{
+		if(playfield.moveActiveMino(kick, rotation))
+		{
+			break;
+		}
+	}
+}
 } // namespace
 
 namespace raymino
@@ -185,13 +203,20 @@ void Game::moveMino(float delta)
 
 void Game::rotateMino(float delta)
 {
+
 	const KeyAction::Return action = rotate.tick(delta);
+	if(action.value == 0)
+	{
+		return;
+	}
 	switch(action.state)
 	{
 	case KeyAction::State::Pressed:
 	case KeyAction::State::Repeated:
-		playfield.moveActiveMino({0, 0}, action.value);
-		break;
+	{
+		kickRotate(playfield, action.value);
+	}
+	break;
 	default:
 		break;
 	}
