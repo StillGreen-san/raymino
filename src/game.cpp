@@ -18,9 +18,13 @@
 
 namespace
 {
-void draw(const raymino::Grid& grid, int yOffset, raymino::XY at, int cellSize, bool background)
+using namespace raymino;
+
+constexpr int HIDDEN_HEIGHT = 4;
+
+void draw(const Grid& grid, int yOffset, XY at, int cellSize, bool background)
 {
-	const raymino::Size gridSize = grid.getSize();
+	const Size gridSize = grid.getSize();
 	const int width = gridSize.width * cellSize;
 	const int height = (gridSize.height - yOffset) * cellSize;
 	const Color colors[]{background ? LIGHTGRAY : BLANK, DARKGRAY, GRAY};
@@ -40,22 +44,18 @@ void draw(const raymino::Grid& grid, int yOffset, raymino::XY at, int cellSize, 
 	}
 }
 
-void draw(
-    raymino::Range<raymino::Playfield::MinoConstIterator> range, raymino::XY at, int firstCellSize, int restCellSize)
+void draw(Range<Playfield::MinoConstIterator> range, XY at, int firstCellSize, int restCellSize)
 {
 	draw(*range.first, 0, at, firstCellSize, false);
 	at.y += (range.first->getSize().height * firstCellSize) + restCellSize;
 	++range.first;
-	for(const raymino::Grid& mino : range)
+	for(const Grid& mino : range)
 	{
 		draw(mino, 0, at, restCellSize, false);
 		at.y += (mino.getSize().height * restCellSize) + restCellSize;
 	}
 }
-} // namespace
 
-namespace raymino
-{
 unsigned unusedBottomRows(const Grid& mino)
 {
 	const auto rend = mino.rend();
@@ -101,6 +101,10 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth)
 	return {static_cast<int>(fieldWidth / 2) - (static_cast<int>(mino.getSize().width + 1) / 2),
 	    HIDDEN_HEIGHT - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
+} // namespace
+
+namespace raymino
+{
 
 void Game::dropMino()
 {
@@ -221,9 +225,22 @@ void Game::UpdateDraw(App& app)
 	draw();
 }
 
+Game::Game(Playfield playfield, State state, Timer dropDelay, Timer moveDelay, Timer rotateDelay, size_t score) :
+    playfield{std::move(playfield)}, state{state}, dropDelay{dropDelay}, moveDelay{moveDelay}, rotateDelay{rotateDelay},
+    score{score}
+{
+}
+
 template<>
 std::unique_ptr<IScene> MakeScene<Scene::Game>()
 {
-	return std::make_unique<Game>();
+	return std::make_unique<Game>(Playfield{Size{10, 20 + HIDDEN_HEIGHT},
+	                                  std::vector<Grid>{{{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}},
+	                                      {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}},
+	                                      {{2, 2}, {1, 1, 1, 1}}, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}},
+	                                      {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}},
+	                                  std::function<Playfield::ShuffleBaseMinosFunc>{shuffleBaseMinos},
+	                                  std::function<Playfield::StartingPositionFunc>{getStartPosition}},
+	    State::Drop, Timer{}, Timer{delays[2]}, Timer{delays[2]}, 0);
 }
 } // namespace raymino
