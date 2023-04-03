@@ -126,35 +126,29 @@ void Game::dropMino()
 
 void Game::moveMino(float delta)
 {
-	if(const int xDir = (::IsKeyPressed(KEY_LEFT) ? -1 : 0) + (::IsKeyPressed(KEY_RIGHT) ? 1 : 0); xDir != 0)
+	const KeyAction::Return action = move.tick(delta);
+	switch(action.state)
 	{
-		playfield.moveActiveMino({xDir, 0}, 0);
-		moveDelay.elapsed = 0;
-	}
-	else
-	{
-		if(const int xDir = (::IsKeyDown(KEY_LEFT) ? -1 : 0) + (::IsKeyDown(KEY_RIGHT) ? 1 : 0);
-		    xDir != 0 && moveDelay.tick(delta))
-		{
-			playfield.moveActiveMino({xDir, 0}, 0);
-		}
+	case KeyAction::State::Pressed:
+	case KeyAction::State::Repeated:
+		playfield.moveActiveMino({action.value, 0}, 0);
+		break;
+	default:
+		break;
 	}
 }
 
 void Game::rotateMino(float delta)
 {
-	if(const int rDir = (::IsKeyPressed(KEY_A) ? -1 : 0) + (::IsKeyPressed(KEY_D) ? 1 : 0); rDir != 0)
+	const KeyAction::Return action = rotate.tick(delta);
+	switch(action.state)
 	{
-		playfield.moveActiveMino({0, 0}, rDir);
-		rotateDelay.elapsed = 0;
-	}
-	else
-	{
-		if(const int rDir = (::IsKeyDown(KEY_A) ? -1 : 0) + (::IsKeyDown(KEY_D) ? 1 : 0);
-		    rDir != 0 && rotateDelay.tick(delta))
-		{
-			playfield.moveActiveMino({0, 0}, rDir);
-		}
+	case KeyAction::State::Pressed:
+	case KeyAction::State::Repeated:
+		playfield.moveActiveMino({0, 0}, action.value);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -179,7 +173,7 @@ void Game::update([[maybe_unused]] App& app)
 	case State::Drop:
 	{
 		const size_t scoredIdx = (score / 8) + BASE_DELAY_IDX;
-		const size_t dropIdx = ::IsKeyDown(KEY_DOWN) ? scoredIdx + 4 : scoredIdx;
+		const size_t dropIdx = drop.tick(delta).value ? scoredIdx + 4 : scoredIdx;
 		dropDelay.delay = delays[std::min(dropIdx, maxSpeedLevel)];
 		moveMino(delta);
 		rotateMino(delta);
@@ -236,9 +230,8 @@ void Game::UpdateDraw(App& app)
 	draw();
 }
 
-Game::Game(Playfield playfield, State state, Timer dropDelay, Timer moveDelay, Timer rotateDelay, size_t score) :
-    playfield{std::move(playfield)}, state{state}, dropDelay{dropDelay}, moveDelay{moveDelay}, rotateDelay{rotateDelay},
-    score{score}
+Game::Game(Playfield playfield, State state, Timer dropDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score) :
+    playfield{std::move(playfield)}, state{state}, drop{drop}, move{move}, rotate{rotate}, score{score}
 {
 }
 
@@ -248,6 +241,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Game>()
 	return std::make_unique<Game>(Playfield{Size{FIELD_WIDTH, FIELD_HEIGHT + HIDDEN_HEIGHT}, makeBaseMinos(),
 	                                  std::function<Playfield::ShuffleBaseMinosFunc>{shuffleBaseMinos},
 	                                  std::function<Playfield::StartingPositionFunc>{getStartPosition}},
-	    State::Drop, Timer{}, Timer{delays[BASE_DELAY_IDX]}, Timer{delays[BASE_DELAY_IDX]}, 0);
+	    State::Drop, Timer{}, KeyAction{0, KEY_DOWN}, KeyAction{delays[BASE_DELAY_IDX], KEY_RIGHT, KEY_LEFT},
+	    KeyAction{delays[BASE_DELAY_IDX], KEY_D, KEY_A}, 0);
 }
 } // namespace raymino

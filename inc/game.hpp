@@ -1,5 +1,6 @@
 #include "app.hpp"
 #include "grid.hpp"
+#include "input.hpp"
 #include "playfield.hpp"
 #include "scenes.hpp"
 #include "timer.hpp"
@@ -18,8 +19,7 @@ enum class State
 
 struct Game : IScene
 {
-	Game(Playfield playfield, State state, Timer dropDelay, Timer moveDelay,
-	    Timer rotateDelay, size_t score);
+	Game(Playfield playfield, State state, Timer dropDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score);
 	void dropMino();
 	void moveMino(float delta);
 	void rotateMino(float delta);
@@ -30,8 +30,9 @@ struct Game : IScene
 	Playfield playfield;
 	State state;
 	Timer dropDelay;
-	Timer moveDelay;
-	Timer rotateDelay;
+	KeyAction drop;
+	KeyAction move;
+	KeyAction rotate;
 	size_t score;
 };
 } // namespace raymino
