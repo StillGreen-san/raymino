@@ -11,6 +11,12 @@
 #include <raylib-cpp.hpp>
 #include <rres-raylib.h>
 
+bool constexpr operator<(Color lhs, Color rhs) noexcept
+{
+	return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
+}
+
+#include <algorithm>
 #include <charconv>
 #include <numeric>
 #include <random>
@@ -25,19 +31,42 @@ constexpr int FIELD_WIDTH = 10;
 constexpr int FIELD_HEIGHT = 20;
 constexpr size_t BASE_DELAY_IDX = 2;
 
+template<size_t TColorNum>
+struct Colors
+{
+	Colors() = delete;
+	explicit Colors(std::array<Color, TColorNum> colors) : colors{colors}
+	{
+		std::sort(this->colors.begin(), this->colors.end());
+	}
+	uint8_t operator[](Color color)
+	{
+		const auto colorIt = std::lower_bound(colors.begin(), colors.end(), color);
+		return std::distance(begin(colors), colorIt);
+	}
+	Color& operator[](uint8_t idx)
+	{
+		return colors[idx];
+	}
+	std::array<Color, TColorNum> colors;
+};
+Colors colors{
+    std::array{LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE,
+        BLUE, DARKBLUE, PURPLE, VIOLET, DARKPURPLE, BEIGE, BROWN, DARKBROWN, WHITE, BLACK, BLANK, MAGENTA, RAYWHITE}};
+
 void draw(const Grid& grid, int yOffset, XY at, int cellSize, bool background)
 {
 	const Size gridSize = grid.getSize();
 	const int width = gridSize.width * cellSize;
 	const int height = (gridSize.height - yOffset) * cellSize;
-	const Color colors[]{background ? LIGHTGRAY : BLANK, DARKGRAY, GRAY};
+	colors[0] = background ? LIGHTGRAY : BLANK;
 
 	if(background)
 	{
-		::DrawRectangle(at.x, at.y, width, height, colors[2]);
+		::DrawRectangle(at.x, at.y, width, height, colors[colors[GRAY]]);
 	}
 
-	for(int y = 0; y < gridSize.height; ++y)
+	for(int y = 0; y < gridSize.height - yOffset; ++y)
 	{
 		for(int x = 0; x < gridSize.width; ++x)
 		{
@@ -105,11 +134,27 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth)
 	    HIDDEN_HEIGHT - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
 
+Grid colorize(Grid grid, uint8_t color)
+{
+	grid.transformCells(
+	    [color](uint8_t current)
+	    {
+		    return current ? color : current;
+	    });
+	return grid;
+}
+
 std::vector<Grid> makeBaseMinos()
 {
-	return {{{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}, {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}},
-	    {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}, {{2, 2}, {1, 1, 1, 1}}, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}},
-	    {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}};
+	return {
+	    colorize({{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}, colors[SKYBLUE]),
+	    colorize({{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}, colors[BLUE]),
+	    colorize({{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}, colors[ORANGE]),
+	    colorize({{2, 2}, {1, 1, 1, 1}}, colors[YELLOW]),
+	    colorize({{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}, colors[GREEN]),
+	    colorize({{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, colors[PINK]),
+	    colorize({{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}, colors[RED]),
+	};
 }
 } // namespace
 
@@ -230,8 +275,10 @@ void Game::UpdateDraw(App& app)
 	draw();
 }
 
-Game::Game(Playfield playfield, State state, Timer dropDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score) :
-    playfield{std::move(playfield)}, state{state}, drop{drop}, move{move}, rotate{rotate}, score{score}
+Game::Game(
+    Playfield playfield, State state, Timer dropDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score) :
+    playfield{std::move(playfield)},
+    state{state}, dropDelay{dropDelay}, drop{drop}, move{move}, rotate{rotate}, score{score}
 {
 }
 

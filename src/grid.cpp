@@ -40,7 +40,7 @@ bool Grid::overlapAt(XY topLeft, const Grid& other) const
 		{
 			const auto otherCell = other.getAt({x, y});
 			const auto thisCell = getAt({x + topLeft.x, y + topLeft.y});
-			if(thisCell & otherCell)
+			if(thisCell && otherCell)
 			{
 				return true;
 			}
