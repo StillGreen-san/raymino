@@ -13,7 +13,7 @@ struct Cellular : raymino::IScene
 		return {(::GetRenderWidth() / 2.0f) - (buttonWidth / 2.0f),
 		    (::GetRenderHeight() / 2.0f) - (buttonHeight / 2.0f), buttonWidth, buttonHeight};
 	}
-	void UpdateDraw(raymino::App& app) override
+	void UpdateDraw([[maybe_unused]] raymino::App& app) override
 	{
 		if(IsWindowResized())
 		{

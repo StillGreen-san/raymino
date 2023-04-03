@@ -171,7 +171,7 @@ void Game::setMino()
 	}
 }
 
-void Game::update(App& app)
+void Game::update([[maybe_unused]] App& app)
 {
 	const float delta = ::GetFrameTime();
 	switch(state)

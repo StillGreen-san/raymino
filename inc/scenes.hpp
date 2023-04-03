@@ -9,7 +9,7 @@ namespace raymino
  */
 struct IScene
 {
-	virtual void UpdateDraw(struct App& app) = 0;
+	virtual void UpdateDraw(class App& app) = 0;
 	virtual ~IScene() = default;
 };
 
