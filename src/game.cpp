@@ -21,6 +21,9 @@ namespace
 using namespace raymino;
 
 constexpr int HIDDEN_HEIGHT = 4;
+constexpr int FIELD_WIDTH = 10;
+constexpr int FIELD_HEIGHT = 20;
+constexpr size_t BASE_DELAY_IDX = 2;
 
 void draw(const Grid& grid, int yOffset, XY at, int cellSize, bool background)
 {
@@ -101,6 +104,13 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth)
 	return {static_cast<int>(fieldWidth / 2) - (static_cast<int>(mino.getSize().width + 1) / 2),
 	    HIDDEN_HEIGHT - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
+
+std::vector<Grid> makeBaseMinos()
+{
+	return {{{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}, {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}},
+	    {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}, {{2, 2}, {1, 1, 1, 1}}, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}},
+	    {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}};
+}
 } // namespace
 
 namespace raymino
@@ -168,8 +178,9 @@ void Game::update(App& app)
 	{
 	case State::Drop:
 	{
-		const size_t dropSpeed = ::IsKeyDown(KEY_DOWN) ? (score / 8) + 6 : (score / 8) + 2;
-		dropDelay.delay = delays[std::min(dropSpeed, maxSpeedLevel)];
+		const size_t scoredIdx = (score / 8) + BASE_DELAY_IDX;
+		const size_t dropIdx = ::IsKeyDown(KEY_DOWN) ? scoredIdx + 4 : scoredIdx;
+		dropDelay.delay = delays[std::min(dropIdx, maxSpeedLevel)];
 		moveMino(delta);
 		rotateMino(delta);
 		if(dropDelay.tick(delta))
@@ -234,13 +245,9 @@ Game::Game(Playfield playfield, State state, Timer dropDelay, Timer moveDelay, T
 template<>
 std::unique_ptr<IScene> MakeScene<Scene::Game>()
 {
-	return std::make_unique<Game>(Playfield{Size{10, 20 + HIDDEN_HEIGHT},
-	                                  std::vector<Grid>{{{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}},
-	                                      {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}},
-	                                      {{2, 2}, {1, 1, 1, 1}}, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}},
-	                                      {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}},
+	return std::make_unique<Game>(Playfield{Size{FIELD_WIDTH, FIELD_HEIGHT + HIDDEN_HEIGHT}, makeBaseMinos(),
 	                                  std::function<Playfield::ShuffleBaseMinosFunc>{shuffleBaseMinos},
 	                                  std::function<Playfield::StartingPositionFunc>{getStartPosition}},
-	    State::Drop, Timer{}, Timer{delays[2]}, Timer{delays[2]}, 0);
+	    State::Drop, Timer{}, Timer{delays[BASE_DELAY_IDX]}, Timer{delays[BASE_DELAY_IDX]}, 0);
 }
 } // namespace raymino
