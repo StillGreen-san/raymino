@@ -170,6 +170,7 @@ void kickRotate(Playfield& playfield, int8_t rotation)
 	{
 		if(playfield.moveActiveMino(kick, rotation))
 		{
+			playfield.moveActiveMino({0, 1}, 0);
 			break;
 		}
 	}
@@ -183,7 +184,11 @@ void Game::dropMino()
 {
 	if(!playfield.moveActiveMino({0, 1}, 0))
 	{
-		state = State::Set;
+		if(state != State::Lock)
+		{
+			lockDelay.elapsed = 0;
+		}
+		state = State::Lock;
 	}
 }
 
@@ -238,12 +243,26 @@ void Game::setMino()
 void Game::update([[maybe_unused]] App& app)
 {
 	const float delta = ::GetFrameTime();
+	const KeyAction::Return dropState = drop.tick(delta);
 	switch(state)
 	{
+	case State::Lock:
+	{
+		if(dropState.value || lockDelay.tick(delta))
+		{
+			state = State::Drop;
+			dropMino();
+			if(state == State::Lock)
+			{
+				state = State::Set;
+			}
+			break;
+		}
+	}
 	case State::Drop:
 	{
 		const size_t scoredIdx = (score / 8) + BASE_DELAY_IDX;
-		const size_t dropIdx = drop.tick(delta).value ? scoredIdx + 4 : scoredIdx;
+		const size_t dropIdx = dropState.value ? scoredIdx + 4 : scoredIdx;
 		dropDelay.delay = delays[std::min(dropIdx, maxSpeedLevel)];
 		moveMino(delta);
 		rotateMino(delta);
@@ -300,10 +319,10 @@ void Game::UpdateDraw(App& app)
 	draw();
 }
 
-Game::Game(
-    Playfield playfield, State state, Timer dropDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score) :
+Game::Game(Playfield playfield, State state, Timer dropDelay, Timer lockDelay, KeyAction drop, KeyAction move,
+    KeyAction rotate, size_t score) :
     playfield{std::move(playfield)},
-    state{state}, dropDelay{dropDelay}, drop{drop}, move{move}, rotate{rotate}, score{score}
+    state{state}, dropDelay{dropDelay}, lockDelay{lockDelay}, drop{drop}, move{move}, rotate{rotate}, score{score}
 {
 }
 
@@ -313,7 +332,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Game>()
 	return std::make_unique<Game>(Playfield{Size{FIELD_WIDTH, FIELD_HEIGHT + HIDDEN_HEIGHT}, makeBaseMinos(),
 	                                  std::function<Playfield::ShuffleBaseMinosFunc>{shuffleBaseMinos},
 	                                  std::function<Playfield::StartingPositionFunc>{getStartPosition}},
-	    State::Drop, Timer{}, KeyAction{0, KEY_DOWN}, KeyAction{delays[BASE_DELAY_IDX], KEY_RIGHT, KEY_LEFT},
-	    KeyAction{delays[BASE_DELAY_IDX], KEY_D, KEY_A}, 0);
+	    Game::State::Drop, Timer{}, Timer{1}, KeyAction{0, KEY_DOWN},
+	    KeyAction{delays[BASE_DELAY_IDX], KEY_RIGHT, KEY_LEFT}, KeyAction{delays[BASE_DELAY_IDX], KEY_D, KEY_A}, 0);
 }
 } // namespace raymino

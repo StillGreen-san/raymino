@@ -10,16 +10,16 @@
 
 namespace raymino
 {
-enum class State
-{
-	Drop,
-	Set,
-	Over,
-};
-
 struct Game : IScene
 {
-	Game(Playfield playfield, State state, Timer dropDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score);
+	enum class State
+	{
+		Drop,
+		Lock,
+		Set,
+		Over,
+	};
+	Game(Playfield playfield, State state,Timer dropDelay, Timer lockDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score);
 	void dropMino();
 	void moveMino(float delta);
 	void rotateMino(float delta);
@@ -30,6 +30,7 @@ struct Game : IScene
 	Playfield playfield;
 	State state;
 	Timer dropDelay;
+	Timer lockDelay;
 	KeyAction drop;
 	KeyAction move;
 	KeyAction rotate;

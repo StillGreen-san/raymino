@@ -6,6 +6,9 @@ namespace raymino
 {
 struct Timer
 {
+	/**
+	 * @return true if elapsed >= delay
+	 */
 	bool tick(float delta)
 	{
 		elapsed += delta;
