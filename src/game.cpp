@@ -307,6 +307,7 @@ void Game::draw()
 
 	if(state == State::Over)
 	{
+		::DrawRectangle(145, 250, 280, 42, {77, 77, 77, 222});
 		::DrawText("GAME OVER", 150, 250, 45, RED);
 	}
 
