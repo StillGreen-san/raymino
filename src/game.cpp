@@ -334,6 +334,6 @@ std::unique_ptr<IScene> MakeScene<Scene::Game>()
 	                                  std::function<Playfield::ShuffleBaseMinosFunc>{shuffleBaseMinos},
 	                                  std::function<Playfield::StartingPositionFunc>{getStartPosition}},
 	    Game::State::Drop, Timer{}, Timer{1}, KeyAction{0, KEY_DOWN},
-	    KeyAction{delays[BASE_DELAY_IDX], KEY_RIGHT, KEY_LEFT}, KeyAction{delays[BASE_DELAY_IDX], KEY_D, KEY_A}, 0);
+	    KeyAction{delays[BASE_DELAY_IDX + 2], KEY_RIGHT, KEY_LEFT}, KeyAction{delays[BASE_DELAY_IDX], KEY_D, KEY_A}, 0);
 }
 } // namespace raymino
