@@ -19,7 +19,8 @@ struct Game : IScene
 		Set,
 		Over,
 	};
-	Game(Playfield playfield, State state,Timer dropDelay, Timer lockDelay, KeyAction drop, KeyAction move, KeyAction rotate, size_t score);
+	Game(Playfield playfield, State state, Timer dropDelay, Timer lockDelay, KeyAction drop, KeyAction move,
+	    KeyAction rotate, size_t score);
 	void dropMino();
 	void moveMino(float delta);
 	void rotateMino(float delta);

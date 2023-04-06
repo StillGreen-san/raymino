@@ -31,6 +31,7 @@ public:
 	void Run();
 
 	std::unique_ptr<IScene> currentScene;
+
 private:
 	App();
 };
