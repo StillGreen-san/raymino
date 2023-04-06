@@ -24,3 +24,10 @@ add_executable(${PROJECT_NAME} src/main.cpp src/cellular.cpp src/app.cpp
 target_include_directories(${PROJECT_NAME} PRIVATE inc)
 target_compile_features( ${PROJECT_NAME} PRIVATE cxx_std_17 )
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib::lib raylib::cpp raylib::gui raylib::res)
+
+enable_testing()
+include(Catch)
+
+add_executable(${PROJECT_NAME}-test test/grid.cpp)
+target_link_libraries(${PROJECT_NAME}-test PRIVATE Catch2::Catch2WithMain)
+catch_discover_tests(${PROJECT_NAME}-test)
