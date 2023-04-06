@@ -49,6 +49,11 @@ bool Grid::overlapAt(XY topLeft, const Grid& other) const
 	return false;
 }
 
+bool Grid::isSquare() const
+{
+	return size.width == size.height;
+}
+
 Size Grid::getSize() const
 {
 	return size;
@@ -84,7 +89,7 @@ void Grid::setAt(XY topLeft, const Grid& other)
 }
 
 void Grid::rotate(int steps)
-{// TODO NxM
+{
 	steps %= 4;
 	while(steps != 0)
 	{
@@ -105,12 +110,18 @@ void Grid::rotate(int steps)
 
 void Grid::transpose()
 {
-	for(int y = 0; y < size.height; ++y)
+	if(!isSquare())
 	{
-		for(int x = y; x < size.width; ++x)
+		std::swap(size.width, size.height);
+	}
+	for(unsigned i = 0; i < size.height * size.width; ++i)
+	{
+		auto dest = (size.height * (i % size.width)) + (i / size.width);
+		while(dest < i)
 		{
-			std::swap(cells[index1D(x, y, size.width)], cells[index1D(y, x, size.width)]);
+			dest = (size.height * (dest % size.width)) + (dest / size.width);
 		}
+		std::swap(cells[i], cells[dest]);
 	}
 }
 

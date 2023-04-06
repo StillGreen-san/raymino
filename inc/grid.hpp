@@ -10,7 +10,6 @@ namespace raymino
 class Grid
 {
 public:
-	using TOverlapFunc = bool(uint8_t lhs, uint8_t rhs);
 	using TTransformFunc = uint8_t(uint8_t);
 	Grid() = delete;
 	Grid(Size size, uint8_t fill);
@@ -19,9 +18,8 @@ public:
 	 */
 	Grid(Size size, const std::vector<uint8_t>& grid);
 	Grid(const Grid& other, std::function<TTransformFunc> func);
-	Grid subGrid(Rect rect) const;
 	bool overlapAt(XY topLeft, const Grid& other) const;
-	bool isSqaure() const;
+	bool isSquare() const;
 	Size getSize() const;
 	uint8_t getAt(XY topLeft) const;
 	void transformCells(std::function<TTransformFunc> func);
