@@ -11,6 +11,7 @@ class Grid
 {
 public:
 	using TTransformFunc = uint8_t(uint8_t);
+	static constexpr uint8_t oobVal = 0xFF;
 	Grid() = delete;
 	Grid(Size size, uint8_t fill);
 	/**

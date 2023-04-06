@@ -61,9 +61,9 @@ Size Grid::getSize() const
 
 uint8_t Grid::getAt(XY topLeft) const
 {
-	if(topLeft.x < 0 || topLeft.x >= size.width || topLeft.y >= size.height)
+	if(topLeft.x < 0 || topLeft.x >= size.width || topLeft.y >= size.height || topLeft.y < 0)
 	{
-		return 0xFF;
+		return oobVal;
 	}
 	return cells[index1D(topLeft.x, topLeft.y, size.width)];
 }

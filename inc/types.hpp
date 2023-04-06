@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <tuple>
 
 namespace raymino
 {
@@ -22,6 +23,10 @@ struct Size
 	[[nodiscard]] size_t area() const noexcept
 	{
 		return width * height;
+	}
+	constexpr bool operator==(Size other) const noexcept
+	{
+		return std::tie(width, height) == std::tie(other.width, other.height);
 	}
 };
 struct Rect : XY, Size
