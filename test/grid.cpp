@@ -69,20 +69,69 @@ TEST_CASE("Grid::setAt", "[Grid]")
 {
 	Grid grid({3, 3}, {0, 0, 0, 0, 0, 0, 1, 1, 1});
 	const Grid other({2, 2}, {2, 2, 0, 0});
-	const auto equal = [](const Grid& grid, const std::vector<uint8_t>& expected)
-	{
-		return std::equal(grid.begin(), grid.end(), expected.begin(), expected.end());
-	};
 
 	grid.setAt({0, -1}, other);
-	REQUIRE(equal(grid, {0, 0, 0, 0, 0, 0, 1, 1, 1}) == true);
+	REQUIRE(grid == Grid{{3, 3}, {0, 0, 0, 0, 0, 0, 1, 1, 1}});
 
 	grid.setAt({2, 0}, other);
-	REQUIRE(equal(grid, {0, 0, 2, 0, 0, 0, 1, 1, 1}) == true);
+	REQUIRE(grid == Grid{{3, 3}, {0, 0, 2, 0, 0, 0, 1, 1, 1}});
 
 	grid.setAt({1, 1}, other);
-	REQUIRE(equal(grid, {0, 0, 2, 0, 2, 2, 1, 1, 1}) == true);
+	REQUIRE(grid == Grid{{3, 3}, {0, 0, 2, 0, 2, 2, 1, 1, 1}});
 
 	grid.setAt({0, 2}, other);
-	REQUIRE(equal(grid, {0, 0, 2, 0, 2, 2, 3, 3, 1}) == true);
+	REQUIRE(grid == Grid{{3, 3}, {0, 0, 2, 0, 2, 2, 3, 3, 1}});
+}
+
+TEST_CASE("Grid::transpose", "[Grid]")
+{
+	Grid gridS({3, 3}, {1, 2, 3, 4, 5, 6, 7, 8, 9});
+	gridS.transpose();
+	REQUIRE(gridS == Grid{{3, 3}, {1, 4, 7, 2, 5, 8, 3, 6, 9}});
+
+	Grid gridR({2, 4}, {1, 2, 3, 4, 5, 6, 7, 8});
+	gridR.transpose();
+	REQUIRE(gridR == Grid{{4, 2}, {1, 3, 5, 7, 2, 4, 6, 8}});
+}
+
+TEST_CASE("Grid::reverseRows", "[Grid]")
+{
+	Grid gridS({3, 3}, {1, 2, 3, 4, 5, 6, 7, 8, 9});
+	gridS.reverseRows();
+	REQUIRE(gridS == Grid{{3, 3}, {3, 2, 1, 6, 5, 4, 9, 8, 7}});
+	gridS.reverseRows();
+	REQUIRE(gridS == Grid{{3, 3}, {1, 2, 3, 4, 5, 6, 7, 8, 9}});
+
+	Grid gridR({2, 4}, {1, 2, 3, 4, 5, 6, 7, 8});
+	gridR.reverseRows();
+	REQUIRE(gridR == Grid{{2, 4}, {2, 1, 4, 3, 6, 5, 8, 7}});
+}
+
+TEST_CASE("Grid::rotate", "[Grid]")
+{
+	Grid grid({2, 2}, {1, 2, 3, 4});
+
+	grid.rotate(1);
+	REQUIRE(grid == Grid{{2, 2}, {3, 1, 4, 2}});
+
+	grid.rotate(2);
+	REQUIRE(grid == Grid{{2, 2}, {2, 4, 1, 3}});
+
+	grid.rotate(-1);
+	REQUIRE(grid == Grid{{2, 2}, {4, 3, 2, 1}});
+
+	grid.rotate(-6);
+	REQUIRE(grid == Grid{{2, 2}, {1, 2, 3, 4}});
+}
+
+TEST_CASE("Grid::transformCells", "[Grid]")
+{
+	Grid grid({2, 2}, {1, 2, 3, 4});
+
+	grid.transformCells(
+	    [](uint8_t cell) -> uint8_t
+	    {
+		    return cell + 3;
+	    });
+	REQUIRE(grid == Grid{{2, 2}, {4, 5, 6, 7}});
 }

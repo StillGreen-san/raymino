@@ -60,6 +60,10 @@ public:
 	{
 		return cells.rend();
 	}
+	[[nodiscard]] bool operator==(const Grid& other)
+	{
+		return size == other.size && cells == other.cells;
+	}
 
 private:
 	std::vector<uint8_t> cells;
