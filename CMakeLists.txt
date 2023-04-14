@@ -19,7 +19,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CompilerWarnings.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ProjectSettings.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_library(${PROJECT_NAME}-lib src/cellular.cpp src/app.cpp src/game.cpp src/grid.cpp src/playfield.cpp src/input.cpp)
+add_library(${PROJECT_NAME}-lib src/app.cpp src/game.cpp src/grid.cpp src/playfield.cpp src/input.cpp)
 target_include_directories(${PROJECT_NAME}-lib PUBLIC inc)
 target_compile_features(${PROJECT_NAME}-lib PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res)
