@@ -54,4 +54,23 @@ struct Range
 		return last;
 	}
 };
+
+enum class TetrominoType
+{
+	I,
+	L,
+	J,
+	O,
+	Z,
+	T,
+	S,
+};
+enum class RotationSystem
+{
+	Original,
+	Super,
+	Arika,
+	Sega,
+	Nintendo,
+};
 } // namespace raymino
