@@ -7,11 +7,24 @@
 
 namespace raymino
 {
-struct Tetromino
+struct Offset
+{
+	XY position;
+	int rotation;
+	Offset operator+(Offset other) const noexcept
+	{
+		return {position + other.position, rotation + other.rotation};
+	}
+	Offset& operator+=(Offset other) noexcept
+	{
+		position += other.position;
+		rotation += other.rotation;
+		return *this;
+	}
+};
+struct Tetromino : public Offset
 {
 	TetrominoType type;
-	int rotation;
-	XY position;
 	Grid collision;
 };
 

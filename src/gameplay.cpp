@@ -5,13 +5,13 @@ namespace raymino
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Super>()
 {
-	return {{raymino::TetrominoType::I, 0, {0, 0}, {{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}},
-	    {raymino::TetrominoType::J, 0, {0, 0}, {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}},
-	    {raymino::TetrominoType::L, 0, {0, 0}, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}},
-	    {raymino::TetrominoType::O, 0, {0, 0}, {{2, 2}, {1, 1, 1, 1}}},
-	    {raymino::TetrominoType::S, 0, {0, 0}, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}},
-	    {raymino::TetrominoType::T, 0, {0, 0}, {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}},
-	    {raymino::TetrominoType::Z, 0, {0, 0}, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}}};
+	return {{{{0, 0}, 0}, raymino::TetrominoType::I, {{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}},
+	    {{{0, 0}, 0}, raymino::TetrominoType::J, {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}},
+	    {{{0, 0}, 0}, raymino::TetrominoType::L, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}},
+	    {{{0, 0}, 0}, raymino::TetrominoType::O, {{2, 2}, {1, 1, 1, 1}}},
+	    {{{0, 0}, 0}, raymino::TetrominoType::S, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}},
+	    {{{0, 0}, 0}, raymino::TetrominoType::T, {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}},
+	    {{{0, 0}, 0}, raymino::TetrominoType::Z, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}}};
 }
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Original>()
