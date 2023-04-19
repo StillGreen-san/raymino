@@ -19,7 +19,7 @@ Grid::Grid(Size size, uint8_t fill) : cells(size.area(), fill), size{size}
 
 Grid::Grid(Size size, const std::vector<uint8_t>& grid) : size{size}
 {
-	if(grid.size() != size.area())
+	if(grid.size() != static_cast<size_t>(size.area()))
 	{
 		throw std::logic_error("size mismatch");
 	}
@@ -72,6 +72,10 @@ void Grid::setAt(XY topLeft, const Grid& other)
 {
 	for(int y = 0; y < other.size.height; ++y)
 	{
+		if(topLeft.y + y < 0)
+		{
+			continue;
+		}
 		for(int x = 0; x < other.size.width; ++x)
 		{
 			if(topLeft.x + x >= size.width)
@@ -114,7 +118,7 @@ void Grid::transpose()
 	{
 		std::swap(size.width, size.height);
 	}
-	for(unsigned i = 0; i < size.height * size.width; ++i)
+	for(int i = 0; i < size.area(); ++i)
 	{
 		auto dest = (size.height * (i % size.width)) + (i / size.width);
 		while(dest < i)

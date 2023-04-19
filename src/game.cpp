@@ -42,7 +42,7 @@ struct Colors
 	uint8_t operator[](Color color)
 	{
 		const auto colorIt = std::lower_bound(colors.begin(), colors.end(), color);
-		return std::distance(begin(colors), colorIt);
+		return static_cast<uint8_t>(std::distance(begin(colors), colorIt));
 	}
 	Color& operator[](uint8_t idx)
 	{

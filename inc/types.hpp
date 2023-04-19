@@ -18,11 +18,11 @@ struct XY
 };
 struct Size
 {
-	unsigned width;
-	unsigned height;
-	[[nodiscard]] size_t area() const noexcept
+	int width;
+	int height;
+	[[nodiscard]] ptrdiff_t area() const noexcept
 	{
-		return width * height;
+		return static_cast<ptrdiff_t>(width) * height;
 	}
 	constexpr bool operator==(Size other) const noexcept
 	{
