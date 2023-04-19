@@ -41,4 +41,10 @@ std::vector<Tetromino> makeBaseMinos<RotationSystem::Sega>()
 {
 	return makeBaseMinos<RotationSystem::Original>();
 }
+
+template<>
+Offset basicRotation<RotationSystem::Super>([[maybe_unused]] const Tetromino& mino, int rotation)
+{
+	return {{0, 0}, rotation};
+}
 } // namespace raymino

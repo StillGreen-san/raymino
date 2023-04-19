@@ -9,11 +9,19 @@ struct XY
 {
 	int x;
 	int y;
+	XY operator+(XY other) const noexcept
+	{
+		return {x + other.x, y + other.y};
+	}
 	XY& operator+=(XY other) noexcept
 	{
 		x += other.x;
 		y += other.y;
 		return *this;
+	}
+	constexpr bool operator==(XY other) const noexcept
+	{
+		return std::tie(x, y) == std::tie(other.x, other.y);
 	}
 };
 struct Size
