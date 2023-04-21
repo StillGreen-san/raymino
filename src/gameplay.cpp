@@ -1,5 +1,7 @@
 #include "gameplay.hpp"
 
+#include <array>
+
 namespace raymino
 {
 template<>
@@ -43,8 +45,65 @@ std::vector<Tetromino> makeBaseMinos<RotationSystem::Sega>()
 }
 
 template<>
-Offset basicRotation<RotationSystem::Super>([[maybe_unused]] const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::Super>(const Tetromino& mino, int rotation)
 {
+	rotation = mino.type == TetrominoType::O ? 0 : rotation;
 	return {{0, 0}, rotation};
+}
+template<>
+Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
+{
+	rotation %= 4;
+	if(rotation == 0)
+	{
+		return {{0, 0}, 0};
+	}
+	switch(mino.type)
+	{
+	case TetrominoType::I:
+	case TetrominoType::Z:
+	{
+		rotation %= 2;
+		if(rotation < 0)
+		{
+			return {{0, 0}, 1};
+		}
+		if(rotation > 0)
+		{
+			return {{0, 0}, -1};
+		}
+		return {{0, 0}, 0};
+	}
+	case TetrominoType::S:
+	{
+		rotation %= 2;
+		if(rotation < 0)
+		{
+			return {{0, 0}, -1};
+		}
+		if(rotation > 0)
+		{
+			return {{0, 0}, 1};
+		}
+		return {{0, 0}, 0};
+	}
+	case TetrominoType::L:
+	case TetrominoType::J:
+	case TetrominoType::T:
+	{
+
+		if((mino.rotation + rotation) % 4 == 2)
+		{
+			return {{0, 1}, rotation};
+		}
+		if(mino.rotation % 4 == 2)
+		{
+			return {{0, -1}, rotation};
+		}
+		return {{0, 0}, rotation};
+	}
+	case TetrominoType::O:
+		return {{0, 0}, 0};
+	}
 }
 } // namespace raymino
