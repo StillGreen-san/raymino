@@ -18,7 +18,6 @@ bool constexpr operator<(Color lhs, Color rhs) noexcept
 
 #include <algorithm>
 #include <charconv>
-#include <numeric>
 #include <random>
 #include <vector>
 
@@ -96,7 +95,7 @@ unsigned unusedBottomRows(const Grid& mino)
 	unsigned unused = 0;
 	for(unsigned col = 0; rit != rend; ++rit)
 	{
-		if(*rit)
+		if(*rit != 0)
 		{
 			break;
 		}
@@ -139,7 +138,7 @@ Grid colorize(Grid grid, uint8_t color)
 	grid.transformCells(
 	    [color](uint8_t current)
 	    {
-		    return current ? color : current;
+		    return current != 0 ? color : current;
 	    });
 	return grid;
 }
@@ -248,7 +247,7 @@ void Game::update([[maybe_unused]] App& app)
 	{
 	case State::Lock:
 	{
-		if(dropState.value || lockDelay.tick(delta))
+		if(dropState.value != 0 || lockDelay.tick(delta))
 		{
 			state = State::Drop;
 			dropMino();
@@ -262,7 +261,7 @@ void Game::update([[maybe_unused]] App& app)
 	case State::Drop:
 	{
 		const size_t scoredIdx = (score / 8) + BASE_DELAY_IDX;
-		const size_t dropIdx = dropState.value ? scoredIdx + 4 : scoredIdx;
+		const size_t dropIdx = dropState.value != 0 ? scoredIdx + 4 : scoredIdx;
 		dropDelay.delay = delays[std::min(dropIdx, maxSpeedLevel)];
 		moveMino(delta);
 		rotateMino(delta);
@@ -290,7 +289,7 @@ void Game::draw()
 {
 	::BeginDrawing();
 
-	::ClearBackground(::RColor::LightGray());
+	::ClearBackground(LIGHTGRAY);
 
 	::draw(playfield.getField(), HIDDEN_HEIGHT, {0, 0}, 30, true);
 

@@ -18,7 +18,7 @@ std::vector<Grid>&& processBaseMinos(std::vector<Grid>& baseMinos)
 	return std::move(baseMinos);
 }
 std::vector<Grid> initNextMinos(
-    const std::vector<Grid>& baseMinos, std::function<Playfield::ShuffleBaseMinosFunc>& shuffleBaseMinos)
+    const std::vector<Grid>& baseMinos, const std::function<Playfield::ShuffleBaseMinosFunc>& shuffleBaseMinos)
 {
 	std::vector<Grid> nextMinos;
 	nextMinos.reserve(baseMinos.size());
@@ -26,7 +26,7 @@ std::vector<Grid> initNextMinos(
 	return nextMinos;
 }
 Playfield::ActiveMino takeNextMino(
-    Grid& field, std::vector<Grid>& nextMinos, std::function<Playfield::StartingPositionFunc>& getStartPosition)
+    Grid& field, std::vector<Grid>& nextMinos, const std::function<Playfield::StartingPositionFunc>& getStartPosition)
 {
 	Grid& next = nextMinos.front();
 	const XY startPos = getStartPosition(next, field.getSize().width);
@@ -51,7 +51,7 @@ Range<Playfield::MinoConstIterator> Playfield::getNextMinos(size_t count) const
 		nextMinos.reserve(count);
 		shuffleBaseMinos(baseMinos, std::back_inserter(nextMinos), count - nextMinos.size());
 	}
-	return {std::begin(nextMinos), std::next(std::begin(nextMinos), count)};
+	return {std::begin(nextMinos), std::next(std::begin(nextMinos), static_cast<ptrdiff_t>(count))};
 }
 
 const Grid& Playfield::getField() const

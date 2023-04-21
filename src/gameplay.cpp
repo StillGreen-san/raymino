@@ -1,7 +1,5 @@
 #include "gameplay.hpp"
 
-#include <array>
-
 namespace raymino
 {
 template<>
