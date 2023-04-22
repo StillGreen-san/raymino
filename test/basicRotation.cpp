@@ -103,3 +103,50 @@ TEST_CASE("basicRotation<Sega>", "[basicRotation]")
 		REQUIRE(negative.overlapAt(minoZ.position, minoZ.collision) == false);
 	}
 }
+
+TEST_CASE("basicRotation<Arika>", "[basicRotation]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Arika>();
+	Tetromino& minoO = tetrominos[3];
+	Tetromino& minoT = tetrominos[5];
+	Tetromino& minoS = tetrominos[4];
+
+	{
+		const Offset offset = basicRotation<RotationSystem::Arika>(minoO, 2);
+		minoO += offset;
+		const Grid negative({4, 4}, {0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+		REQUIRE(negative.overlapAt(minoO.position, minoO.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::Arika>(minoO, -1);
+		minoO += offset;
+		const Grid negative({4, 4}, {0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+		REQUIRE(negative.overlapAt(minoO.position, minoO.collision) == false);
+	}
+
+	{
+		const Offset offset = basicRotation<RotationSystem::Arika>(minoT, 2);
+		minoT += offset;
+		const Grid negative({3, 3}, {1, 1, 1, 1, 0, 1, 0, 0, 0});
+		REQUIRE(negative.overlapAt(minoT.position, minoT.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::Arika>(minoT, -2);
+		minoT += offset;
+		const Grid negative({3, 3}, {1, 1, 1, 0, 0, 0, 1, 0, 1});
+		REQUIRE(negative.overlapAt(minoT.position, minoT.collision) == false);
+	}
+
+	{
+		const Offset offset = basicRotation<RotationSystem::Arika>(minoS, -1);
+		minoS += offset;
+		const Grid negative({3, 3}, {0, 1, 1, 0, 0, 1, 1, 0, 1});
+		REQUIRE(negative.overlapAt(minoS.position, minoS.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::Arika>(minoS, 3);
+		minoS += offset;
+		const Grid negative({3, 3}, {1, 1, 1, 1, 0, 0, 0, 0, 1});
+		REQUIRE(negative.overlapAt(minoS.position, minoS.collision) == false);
+	}
+}

@@ -98,4 +98,9 @@ Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
 		return {{0, 0}, 0};
 	}
 }
+template<>
+Offset basicRotation<RotationSystem::Arika>(const Tetromino& mino, int rotation)
+{
+	return basicRotation<RotationSystem::Sega>(mino, rotation);
+}
 } // namespace raymino
