@@ -70,6 +70,12 @@ TEST_CASE("basicRotation<Sega>", "[basicRotation]")
 		const Grid negative({4, 4}, {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1});
 		REQUIRE(negative.overlapAt(minoI.position, minoI.collision) == false);
 	}
+	{
+		const Offset offset = basicRotation<RotationSystem::Sega>(minoI, -3);
+		minoI += offset;
+		const Grid negative({4, 4}, {1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1});
+		REQUIRE(negative.overlapAt(minoI.position, minoI.collision) == false);
+	}
 
 	{
 		const Offset offset = basicRotation<RotationSystem::Sega>(minoL, 3);

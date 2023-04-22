@@ -59,29 +59,23 @@ Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
 	switch(mino.type)
 	{
 	case TetrominoType::I:
-	case TetrominoType::Z:
-	{
-		rotation %= 2;
-		if(rotation < 0)
-		{
-			return {{0, 0}, 1};
-		}
-		if(rotation > 0)
-		{
-			return {{0, 0}, -1};
-		}
-		return {{0, 0}, 0};
-	}
 	case TetrominoType::S:
 	{
 		rotation %= 2;
-		if(rotation < 0)
+		if(rotation != 0)
 		{
-			return {{0, 0}, -1};
+			rotation = mino.rotation % 2 != 0 ? -1 : 1;
+			return {{0, 0}, rotation};
 		}
-		if(rotation > 0)
+		return {{0, 0}, 0};
+	}
+	case TetrominoType::Z:
+	{
+		rotation %= 2;
+		if(rotation != 0)
 		{
-			return {{0, 0}, 1};
+			rotation = mino.rotation % 2 != 0 ? 1 : -1;
+			return {{0, 0}, rotation};
 		}
 		return {{0, 0}, 0};
 	}
