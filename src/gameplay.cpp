@@ -35,11 +35,16 @@ std::vector<Tetromino> makeBaseMinos<RotationSystem::Original>()
 	return tetrominos;
 }
 template<>
-std::vector<Tetromino> makeBaseMinos<RotationSystem::Nintendo>()
+std::vector<Tetromino> makeBaseMinos<RotationSystem::NintendoLeft>()
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Original>();
 	tetrominos[0].collision.rotate(2);
 	return tetrominos;
+}
+template<>
+std::vector<Tetromino> makeBaseMinos<RotationSystem::NintendoRight>()
+{
+	return makeBaseMinos<RotationSystem::NintendoLeft>();
 }
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Arika>()

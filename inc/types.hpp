@@ -79,6 +79,7 @@ enum class RotationSystem
 	Super,
 	Arika,
 	Sega,
-	Nintendo,
+	NintendoLeft,
+	NintendoRight,
 };
 } // namespace raymino
