@@ -103,4 +103,39 @@ Offset basicRotation<RotationSystem::Arika>(const Tetromino& mino, int rotation)
 {
 	return basicRotation<RotationSystem::Sega>(mino, rotation);
 }
+template<>
+Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotation)
+{
+	rotation %= 4;
+	switch(mino.type)
+	{
+	case TetrominoType::I:
+	{
+		rotation %= 2;
+		if(rotation != 0)
+		{
+			rotation = mino.rotation % 2 != 0 ? -1 : 1;
+			return {{0, 0}, rotation};
+		}
+		return {{0, 0}, 0};
+	}
+	case TetrominoType::S:
+	case TetrominoType::Z:
+	{
+		rotation %= 2;
+		if(rotation != 0)
+		{
+			rotation = mino.rotation % 2 != 0 ? 1 : -1;
+			return {{0, 0}, rotation};
+		}
+		return {{0, 0}, 0};
+	}
+	case TetrominoType::L:
+	case TetrominoType::J:
+	case TetrominoType::T:
+		return {{0, 0}, rotation};
+	case TetrominoType::O:
+		return {{0, 0}, 0};
+	}
+}
 } // namespace raymino
