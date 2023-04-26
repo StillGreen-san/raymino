@@ -2,6 +2,16 @@
 
 namespace raymino
 {
+template<int TOddDir>
+inline Offset flip(const Tetromino& mino, int rotation)
+{
+	if(rotation % 2 != 0)
+	{
+		return {{0, 0}, mino.rotation % 2 != 0 ? TOddDir : -TOddDir};
+	}
+	return {{0, 0}, 0};
+}
+
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Super>()
 {
@@ -60,30 +70,13 @@ Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
 	{
 	case TetrominoType::I:
 	case TetrominoType::S:
-	{
-		rotation %= 2;
-		if(rotation != 0)
-		{
-			rotation = mino.rotation % 2 != 0 ? -1 : 1;
-			return {{0, 0}, rotation};
-		}
-		return {{0, 0}, 0};
-	}
+		return flip<-1>(mino, rotation);
 	case TetrominoType::Z:
-	{
-		rotation %= 2;
-		if(rotation != 0)
-		{
-			rotation = mino.rotation % 2 != 0 ? 1 : -1;
-			return {{0, 0}, rotation};
-		}
-		return {{0, 0}, 0};
-	}
+		return flip<1>(mino, rotation);
 	case TetrominoType::L:
 	case TetrominoType::J:
 	case TetrominoType::T:
 	{
-
 		if((mino.rotation + rotation) % 4 == 2)
 		{
 			return {{0, 1}, rotation};
@@ -110,26 +103,10 @@ Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotati
 	switch(mino.type)
 	{
 	case TetrominoType::I:
-	{
-		rotation %= 2;
-		if(rotation != 0)
-		{
-			rotation = mino.rotation % 2 != 0 ? -1 : 1;
-			return {{0, 0}, rotation};
-		}
-		return {{0, 0}, 0};
-	}
+		return flip<-1>(mino, rotation);
 	case TetrominoType::S:
 	case TetrominoType::Z:
-	{
-		rotation %= 2;
-		if(rotation != 0)
-		{
-			rotation = mino.rotation % 2 != 0 ? 1 : -1;
-			return {{0, 0}, rotation};
-		}
-		return {{0, 0}, 0};
-	}
+		return flip<1>(mino, rotation);
 	case TetrominoType::L:
 	case TetrominoType::J:
 	case TetrominoType::T:
