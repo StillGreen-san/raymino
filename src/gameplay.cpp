@@ -15,30 +15,30 @@ inline Offset flip(const Tetromino& mino, int rotation)
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Super>()
 {
-	return {{{{0, 0}, 0}, raymino::TetrominoType::I, {{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}},
-	    {{{0, 0}, 0}, raymino::TetrominoType::J, {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}},
-	    {{{0, 0}, 0}, raymino::TetrominoType::L, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}},
-	    {{{0, 0}, 0}, raymino::TetrominoType::O, {{2, 2}, {1, 1, 1, 1}}},
-	    {{{0, 0}, 0}, raymino::TetrominoType::S, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}},
-	    {{{0, 0}, 0}, raymino::TetrominoType::T, {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}},
-	    {{{0, 0}, 0}, raymino::TetrominoType::Z, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}}};
+	return {{{{0, 0}, 0}, TetrominoType::I, {{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}},
+	    {{{0, 0}, 0}, TetrominoType::J, {{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}},
+	    {{{0, 0}, 0}, TetrominoType::L, {{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}},
+	    {{{0, 0}, 0}, TetrominoType::O, {{2, 2}, {1, 1, 1, 1}}},
+	    {{{0, 0}, 0}, TetrominoType::S, {{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}},
+	    {{{0, 0}, 0}, TetrominoType::T, {{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}},
+	    {{{0, 0}, 0}, TetrominoType::Z, {{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}}};
 }
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Original>()
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
-	tetrominos[1].collision.rotate(2);
-	tetrominos[2].collision.rotate(2);
-	tetrominos[4].collision.rotate(2);
-	tetrominos[5].collision.rotate(2);
-	tetrominos[6].collision.rotate(2);
+	find(tetrominos, TetrominoType::J)->collision.rotate(2);
+	find(tetrominos, TetrominoType::L)->collision.rotate(2);
+	find(tetrominos, TetrominoType::S)->collision.rotate(2);
+	find(tetrominos, TetrominoType::T)->collision.rotate(2);
+	find(tetrominos, TetrominoType::Z)->collision.rotate(2);
 	return tetrominos;
 }
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::NintendoLeft>()
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Original>();
-	tetrominos[0].collision.rotate(2);
+	find(tetrominos, TetrominoType::I)->collision.rotate(2);
 	return tetrominos;
 }
 template<>

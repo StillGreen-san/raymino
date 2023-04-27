@@ -3,6 +3,7 @@
 #include "grid.hpp"
 #include "types.hpp"
 
+#include <algorithm>
 #include <vector>
 
 namespace raymino
@@ -44,6 +45,18 @@ struct Tetromino : public Offset
  */
 template<RotationSystem TSys>
 std::vector<Tetromino> makeBaseMinos();
+
+/**
+ * @return iterator to Tetromino of type or end
+ */
+inline auto find(std::vector<Tetromino>& minos, TetrominoType type)
+{
+	return std::find_if(minos.begin(), minos.end(),
+	    [=](const Tetromino& mino)
+	    {
+		    return mino.type == type;
+	    });
+}
 
 /**
  * @tparam TSys RotationSystem to use for rotation

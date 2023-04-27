@@ -7,9 +7,9 @@ using namespace raymino;
 TEST_CASE("basicRotation<Super>", "[basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
-	Tetromino& minoI = tetrominos[0];
-	Tetromino& minoJ = tetrominos[1];
-	Tetromino& minoS = tetrominos[4];
+	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
+	Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
+	Tetromino& minoS = *find(tetrominos, TetrominoType::S);
 
 	{
 		const Offset offset = basicRotation<RotationSystem::Super>(minoI, 2);
@@ -54,9 +54,9 @@ TEST_CASE("basicRotation<Super>", "[basicRotation]")
 TEST_CASE("basicRotation<Sega>", "[basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Sega>();
-	Tetromino& minoI = tetrominos[0];
-	Tetromino& minoL = tetrominos[2];
-	Tetromino& minoZ = tetrominos[6];
+	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
+	Tetromino& minoL = *find(tetrominos, TetrominoType::L);
+	Tetromino& minoZ = *find(tetrominos, TetrominoType::Z);
 
 	{
 		const Offset offset = basicRotation<RotationSystem::Sega>(minoI, 2);
@@ -107,9 +107,9 @@ TEST_CASE("basicRotation<Sega>", "[basicRotation]")
 TEST_CASE("basicRotation<Arika>", "[basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Arika>();
-	Tetromino& minoO = tetrominos[3];
-	Tetromino& minoT = tetrominos[5];
-	Tetromino& minoS = tetrominos[4];
+	Tetromino& minoO = *find(tetrominos, TetrominoType::O);
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+	Tetromino& minoS = *find(tetrominos, TetrominoType::S);
 
 	{
 		const Offset offset = basicRotation<RotationSystem::Arika>(minoO, 2);
@@ -154,9 +154,9 @@ TEST_CASE("basicRotation<Arika>", "[basicRotation]")
 TEST_CASE("basicRotation<Original>", "[basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Original>();
-	Tetromino& minoI = tetrominos[0];
-	Tetromino& minoJ = tetrominos[1];
-	Tetromino& minoS = tetrominos[4];
+	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
+	Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
+	Tetromino& minoS = *find(tetrominos, TetrominoType::S);
 
 	{
 		const Offset offset = basicRotation<RotationSystem::Original>(minoI, -4);
