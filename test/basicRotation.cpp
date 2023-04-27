@@ -197,3 +197,97 @@ TEST_CASE("basicRotation<Original>", "[basicRotation]")
 		REQUIRE(negative.overlapAt(minoS.position, minoS.collision) == false);
 	}
 }
+
+TEST_CASE("basicRotation<NintendoLeft>", "[basicRotation]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::NintendoLeft>();
+	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+	Tetromino& minoZ = *find(tetrominos, TetrominoType::Z);
+
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoI, 6);
+		minoI += offset;
+		const Grid negative({4, 4}, {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1});
+		REQUIRE(negative.overlapAt(minoI.position, minoI.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoI, 5);
+		minoI += offset;
+		const Grid negative({4, 4}, {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1});
+		REQUIRE(negative.overlapAt(minoI.position, minoI.collision) == false);
+	}
+
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoT, -1);
+		minoT += offset;
+		const Grid negative({3, 3}, {1, 0, 1, 1, 0, 0, 1, 0, 1});
+		REQUIRE(negative.overlapAt(minoT.position, minoT.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoT, 3);
+		minoT += offset;
+		const Grid negative({3, 3}, {1, 0, 1, 0, 0, 0, 1, 1, 1});
+		REQUIRE(negative.overlapAt(minoT.position, minoT.collision) == false);
+	}
+
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoZ, -2);
+		minoZ += offset;
+		const Grid negative({3, 3}, {1, 1, 1, 0, 0, 1, 1, 0, 0});
+		REQUIRE(negative.overlapAt(minoZ.position, minoZ.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoZ, -1);
+		minoZ += offset;
+		const Grid negative({3, 3}, {1, 0, 1, 0, 0, 1, 0, 1, 1});
+		REQUIRE(negative.overlapAt(minoZ.position, minoZ.collision) == false);
+	}
+}
+
+TEST_CASE("basicRotation<NintendoRight>", "[basicRotation]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::NintendoRight>();
+	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
+	Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
+	Tetromino& minoS = *find(tetrominos, TetrominoType::S);
+
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoI, 1);
+		minoI += offset;
+		const Grid negative({4, 4}, {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1});
+		REQUIRE(negative.overlapAt(minoI.position, minoI.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoI, -1);
+		minoI += offset;
+		const Grid negative({4, 4}, {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1});
+		REQUIRE(negative.overlapAt(minoI.position, minoI.collision) == false);
+	}
+
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoJ, 1);
+		minoJ += offset;
+		const Grid negative({3, 3}, {1, 0, 1, 1, 0, 1, 0, 0, 1});
+		REQUIRE(negative.overlapAt(minoJ.position, minoJ.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoJ, 2);
+		minoJ += offset;
+		const Grid negative({3, 3}, {1, 0, 0, 1, 0, 1, 1, 0, 1});
+		REQUIRE(negative.overlapAt(minoJ.position, minoJ.collision) == false);
+	}
+
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoS, 3);
+		minoS += offset;
+		const Grid negative({3, 3}, {1, 0, 1, 1, 0, 0, 1, 1, 0});
+		REQUIRE(negative.overlapAt(minoS.position, minoS.collision) == false);
+	}
+	{
+		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoS, 3);
+		minoS += offset;
+		const Grid negative({3, 3}, {1, 1, 1, 1, 0, 0, 0, 0, 1});
+		REQUIRE(negative.overlapAt(minoS.position, minoS.collision) == false);
+	}
+}

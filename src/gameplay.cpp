@@ -120,4 +120,41 @@ Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotati
 		return {{0, 0}, 0};
 	}
 }
+template<>
+Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int rotation)
+{
+	rotation %= 4;
+	switch(mino.type)
+	{
+	case TetrominoType::I:
+		return flip<1>(mino, rotation);
+	case TetrominoType::S:
+	case TetrominoType::Z:
+		return flip<-1>(mino, rotation);
+	case TetrominoType::L:
+	case TetrominoType::J:
+	case TetrominoType::T:
+		return {{0, 0}, rotation};
+	case TetrominoType::O:
+		return {{0, 0}, 0};
+	}
+}
+template<>
+Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int rotation)
+{
+	rotation %= 4;
+	switch(mino.type)
+	{
+	case TetrominoType::I:
+	case TetrominoType::S:
+	case TetrominoType::Z:
+		return flip<1>(mino, rotation);
+	case TetrominoType::L:
+	case TetrominoType::J:
+	case TetrominoType::T:
+		return {{0, 0}, rotation};
+	case TetrominoType::O:
+		return {{0, 0}, 0};
+	}
+}
 } // namespace raymino
