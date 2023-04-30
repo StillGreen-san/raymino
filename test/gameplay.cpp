@@ -29,3 +29,27 @@ TEST_CASE("findTrueSize", "[gameplay]")
 		REQUIRE(findTrueSize(grid) == expected);
 	}
 }
+
+TEST_CASE("spawnPosition", "[gameplay]")
+{
+	{
+		const Tetromino tetromino{{}, {}, {{2, 2}, {1, 1, 1, 1}}};
+		const XY expected{4, 4};
+		REQUIRE(spawnPosition(tetromino, 4, 10) == expected);
+	}
+	{
+		const Tetromino tetromino{{}, {}, {{3, 3}, {0, 0, 1, 0, 0, 1, 0, 1, 1}}};
+		const XY expected{3, 4};
+		REQUIRE(spawnPosition(tetromino, 4, 10) == expected);
+	}
+	{
+		const Tetromino tetromino{{}, {}, {{3, 3}, {0, 0, 0, 1, 1, 0, 0, 1, 1}}};
+		const XY expected{3, -1};
+		REQUIRE(spawnPosition(tetromino, 0, 10) == expected);
+	}
+	{
+		const Tetromino tetromino{{}, {}, {{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}};
+		const XY expected{3, 1};
+		REQUIRE(spawnPosition(tetromino, 2, 10) == expected);
+	}
+}

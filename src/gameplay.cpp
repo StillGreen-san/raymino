@@ -183,4 +183,12 @@ Rect findTrueSize(const Grid& grid)
 
 	return trueSize;
 }
+
+XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
+{
+	const Rect trueSize = findTrueSize(tetromino.collision);
+	const int leftOffset = ((totalWidth - trueSize.width) / 2) - trueSize.x;
+	const int topOffset = highestUsedRow - trueSize.y;
+	return {leftOffset, topOffset};
+}
 } // namespace raymino

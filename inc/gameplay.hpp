@@ -72,4 +72,13 @@ Offset basicRotation(const Tetromino& mino, int rotation);
  * @return Rect with offset inside grid & true size
  */
 Rect findTrueSize(const Grid& grid);
+
+/**
+ * @brief centered absolut position to place Tetromino (rounded left)
+ * @param tetromino to position
+ * @param highestUsedRow for any Mino in Tetromino
+ * @param totalWidth of playfield
+ * @return XY spawn position
+ */
+XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth);
 } // namespace raymino
