@@ -4,7 +4,7 @@
 
 using namespace raymino;
 
-TEST_CASE("basicRotation<Super>", "[basicRotation]")
+TEST_CASE("basicRotation<Super>", "[gameplay][basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
@@ -51,7 +51,7 @@ TEST_CASE("basicRotation<Super>", "[basicRotation]")
 	}
 }
 
-TEST_CASE("basicRotation<Sega>", "[basicRotation]")
+TEST_CASE("basicRotation<Sega>", "[gameplay][basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Sega>();
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
@@ -104,7 +104,7 @@ TEST_CASE("basicRotation<Sega>", "[basicRotation]")
 	}
 }
 
-TEST_CASE("basicRotation<Arika>", "[basicRotation]")
+TEST_CASE("basicRotation<Arika>", "[gameplay][basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Arika>();
 	Tetromino& minoO = *find(tetrominos, TetrominoType::O);
@@ -151,7 +151,7 @@ TEST_CASE("basicRotation<Arika>", "[basicRotation]")
 	}
 }
 
-TEST_CASE("basicRotation<Original>", "[basicRotation]")
+TEST_CASE("basicRotation<Original>", "[gameplay][basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Original>();
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
@@ -198,7 +198,7 @@ TEST_CASE("basicRotation<Original>", "[basicRotation]")
 	}
 }
 
-TEST_CASE("basicRotation<NintendoLeft>", "[basicRotation]")
+TEST_CASE("basicRotation<NintendoLeft>", "[gameplay][basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::NintendoLeft>();
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
@@ -245,7 +245,7 @@ TEST_CASE("basicRotation<NintendoLeft>", "[basicRotation]")
 	}
 }
 
-TEST_CASE("basicRotation<NintendoRight>", "[basicRotation]")
+TEST_CASE("basicRotation<NintendoRight>", "[gameplay][basicRotation]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::NintendoRight>();
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
