@@ -66,4 +66,10 @@ inline auto find(std::vector<Tetromino>& minos, TetrominoType type)
  */
 template<RotationSystem TSys>
 Offset basicRotation(const Tetromino& mino, int rotation);
+
+/**
+ * @param grid to query
+ * @return Rect with offset inside grid & true size
+ */
+Rect findTrueSize(const Grid& grid);
 } // namespace raymino

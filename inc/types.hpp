@@ -39,6 +39,11 @@ struct Size
 };
 struct Rect : XY, Size
 {
+	constexpr bool operator==(Rect other) const noexcept
+	{
+		return std::tie(static_cast<const XY&>(*this), static_cast<const Size&>(*this)) ==
+		       std::tie(static_cast<const XY&>(other), static_cast<const Size&>(other));
+	}
 };
 template<typename TIterator>
 struct Range

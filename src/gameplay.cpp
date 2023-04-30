@@ -2,16 +2,6 @@
 
 namespace raymino
 {
-template<int TOddDir>
-inline Offset flip(const Tetromino& mino, int rotation)
-{
-	if(rotation % 2 != 0)
-	{
-		return {{0, 0}, mino.rotation % 2 != 0 ? TOddDir : -TOddDir};
-	}
-	return {{0, 0}, 0};
-}
-
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Super>()
 {
@@ -55,6 +45,16 @@ template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Sega>()
 {
 	return makeBaseMinos<RotationSystem::Original>();
+}
+
+template<int TOddDir>
+inline Offset flip(const Tetromino& mino, int rotation)
+{
+	if(rotation % 2 != 0)
+	{
+		return {{0, 0}, mino.rotation % 2 != 0 ? TOddDir : -TOddDir};
+	}
+	return {{0, 0}, 0};
 }
 
 template<>
@@ -156,5 +156,31 @@ Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int r
 	case TetrominoType::O:
 		return {{0, 0}, 0};
 	}
+}
+
+Rect findTrueSize(const Grid& grid)
+{
+	Rect trueSize{{grid.getSize().width, grid.getSize().height}, {0, 0}};
+
+	for(int y = 0; y < grid.getSize().height; ++y)
+	{
+		for(int x = 0; x < grid.getSize().width; ++x)
+		{
+			if(grid.getAt({x, y}) != 0)
+			{
+				trueSize.x = std::min(trueSize.x, x);
+				trueSize.y = std::min(trueSize.y, y);
+				trueSize.width = std::max(trueSize.width, x);
+				trueSize.height = std::max(trueSize.height, y);
+			}
+		}
+	}
+
+	trueSize.width += 1;
+	trueSize.height += 1;
+	trueSize.width -= trueSize.x;
+	trueSize.height -= trueSize.y;
+
+	return trueSize;
 }
 } // namespace raymino

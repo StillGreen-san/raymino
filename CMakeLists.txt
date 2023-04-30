@@ -30,6 +30,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
 enable_testing()
 include(Catch)
 
-add_executable(${PROJECT_NAME}-test test/grid.cpp test/basicRotation.cpp)
+add_executable(${PROJECT_NAME}-test test/grid.cpp test/basicRotation.cpp test/gameplay.cpp)
 target_link_libraries(${PROJECT_NAME}-test PRIVATE Catch2::Catch2WithMain ${PROJECT_NAME}-lib)
 catch_discover_tests(${PROJECT_NAME}-test)
