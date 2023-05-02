@@ -49,7 +49,8 @@ std::vector<Tetromino> makeBaseMinos();
 /**
  * @return iterator to Tetromino of type or end
  */
-inline auto find(std::vector<Tetromino>& minos, TetrominoType type)
+template<typename TContainer>
+inline auto find(TContainer& minos, TetrominoType type)
 {
 	return std::find_if(minos.begin(), minos.end(),
 	    [=](const Tetromino& mino)
