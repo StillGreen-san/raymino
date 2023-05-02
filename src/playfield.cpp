@@ -74,7 +74,7 @@ bool Playfield::moveActiveMino(XY translation, int rotation)
 	ActiveMino next = activeMino;
 	next.collision.rotate(rotation);
 	next.position += translation;
-	if(field.overlapAt(next.position, next.collision))
+	if(field.overlapAt(next.position, next.collision) != 0)
 	{
 		return false;
 	}
@@ -90,7 +90,7 @@ bool Playfield::lockActiveMino()
 		shuffleBaseMinos(baseMinos, std::back_inserter(nextMinos), baseMinos.size());
 	}
 	activeMino = takeNextMino(field, nextMinos, getStartPosition);
-	return !field.overlapAt(activeMino.position, activeMino.collision);
+	return field.overlapAt(activeMino.position, activeMino.collision) == 0;
 }
 
 unsigned Playfield::clearFullLines()

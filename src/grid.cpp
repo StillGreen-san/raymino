@@ -32,7 +32,7 @@ Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.s
 	std::transform(other.cells.begin(), other.cells.end(), std::back_insert_iterator(cells), std::move(func));
 }
 
-bool Grid::overlapAt(XY topLeft, const Grid& other) const
+size_t Grid::overlapAt(XY topLeft, const Grid& other) const
 {
 	for(int y = 0; y < other.size.height; ++y)
 	{
@@ -42,11 +42,11 @@ bool Grid::overlapAt(XY topLeft, const Grid& other) const
 			const auto thisCell = getAt({x + topLeft.x, y + topLeft.y});
 			if(thisCell != 0 && otherCell != 0)
 			{
-				return true;
+				return index1D(x, y, other.size.width) + 1;
 			}
 		}
 	}
-	return false;
+	return 0;
 }
 
 bool Grid::isSquare() const

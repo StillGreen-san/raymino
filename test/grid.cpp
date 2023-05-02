@@ -58,11 +58,11 @@ TEST_CASE("Grid::overlapAt", "[Grid]")
 	const Grid grid({4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1});
 	const Grid other({2, 2}, {2, 2, 0, 0});
 
-	REQUIRE(grid.overlapAt({0, 0}, other) == false);
-	REQUIRE(grid.overlapAt({1, 1}, other) == false);
-	REQUIRE(grid.overlapAt({2, 2}, other) == true);
-	REQUIRE(grid.overlapAt({3, 3}, other) == true);
-	REQUIRE(grid.overlapAt({0, -1}, other) == true);
+	REQUIRE(grid.overlapAt({0, 0}, other) == 0);
+	REQUIRE(grid.overlapAt({1, 1}, other) == 0);
+	REQUIRE(grid.overlapAt({2, 2}, other) != 0);
+	REQUIRE(grid.overlapAt({3, 3}, other) != 0);
+	REQUIRE(grid.overlapAt({0, -1}, other) != 0);
 }
 
 TEST_CASE("Grid::setAt", "[Grid]")

@@ -19,7 +19,14 @@ public:
 	 */
 	Grid(Size size, const std::vector<uint8_t>& grid);
 	Grid(const Grid& other, std::function<TTransformFunc> func);
-	bool overlapAt(XY topLeft, const Grid& other) const;
+
+	/**
+	 * @param topLeft XY offset for other inside this
+	 * @param other Grid to test against
+	 * @return size_t 1 based index into other where overlap occurred
+	 */
+	[[nodiscard]] size_t overlapAt(XY topLeft, const Grid& other) const;
+
 	bool isSquare() const;
 	Size getSize() const;
 	uint8_t getAt(XY topLeft) const;
