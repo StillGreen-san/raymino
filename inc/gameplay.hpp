@@ -69,6 +69,17 @@ template<RotationSystem TSys>
 Offset basicRotation(const Tetromino& mino, int rotation);
 
 /**
+ * @tparam TSys RotationSystem to use for kicks
+ * @param field playfield to test against
+ * @param tetromino to kick
+ * @param offset basic rotation
+ * @return Offset that can be applied to Tetromino
+ * @warning assumes basic rotation failed
+ */
+template<RotationSystem TSys>
+Offset wallKick(const Grid& field, const Tetromino& tetromino, Offset offset);
+
+/**
  * @param grid to query
  * @return Rect with offset inside grid & true size
  */

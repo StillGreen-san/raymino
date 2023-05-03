@@ -191,4 +191,10 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
 	const int topOffset = highestUsedRow - trueSize.y;
 	return {leftOffset, topOffset};
 }
+
+template<>
+Offset wallKick<RotationSystem::Arika>(const Grid& field, const Tetromino& tetromino, Offset offset)
+{
+	return {};
+}
 } // namespace raymino
