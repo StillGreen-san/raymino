@@ -195,6 +195,79 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
 template<>
 Offset wallKick<RotationSystem::Arika>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
+	const Tetromino desiredPosition{Tetromino{tetromino} += offset};
+	const XY right{1, 0};
+	const XY left{-1, 0};
+	const XY up{0, -1};
+	const XY down{0, 1};
+
+	switch(tetromino.type)
+	{
+	case TetrominoType::T:
+		if(desiredPosition.rotation % 4 == 2 &&
+		    field.overlapAt(desiredPosition.position + up, desiredPosition.collision) == 0)
+		{
+			return {{offset.position + up}, offset.rotation};
+		}
+	case TetrominoType::L:
+	case TetrominoType::J:
+		if(desiredPosition.rotation % 2 == 0)
+		{
+			const size_t overlapIdx = field.overlapAt(desiredPosition.position, desiredPosition.collision);
+			if(overlapIdx == 2 || overlapIdx == 5 || overlapIdx == 8)
+			{
+				return {};
+			}
+		}
+	case TetrominoType::Z:
+	case TetrominoType::S:
+		if(field.overlapAt(desiredPosition.position + right, desiredPosition.collision) == 0)
+		{
+			return {{offset.position + right}, offset.rotation};
+		}
+		if(field.overlapAt(desiredPosition.position + left, desiredPosition.collision) == 0)
+		{
+			return {{offset.position + left}, offset.rotation};
+		}
+		break;
+	case TetrominoType::I:
+		if(field.overlapAt(tetromino.position + up, tetromino.collision) != 0 ||
+		    field.overlapAt(tetromino.position + down, tetromino.collision) != 0 ||
+		    field.overlapAt(tetromino.position + left, tetromino.collision) != 0 ||
+		    field.overlapAt(tetromino.position + right, tetromino.collision) != 0)
+		{
+			if(desiredPosition.rotation % 2 == 0)
+			{
+				if(field.overlapAt(desiredPosition.position + right, desiredPosition.collision) == 0)
+				{
+					return {{offset.position + right}, offset.rotation};
+				}
+				if(field.overlapAt(desiredPosition.position + right + right, desiredPosition.collision) == 0)
+				{
+					return {{offset.position + right + right}, offset.rotation};
+				}
+				if(field.overlapAt(desiredPosition.position + left, desiredPosition.collision) == 0)
+				{
+					return {{offset.position + left}, offset.rotation};
+				}
+			}
+			else
+			{
+				if(field.overlapAt(desiredPosition.position + up, desiredPosition.collision) == 0)
+				{
+					return {{offset.position + up}, offset.rotation};
+				}
+				if(field.overlapAt(desiredPosition.position + up + up, desiredPosition.collision) == 0)
+				{
+					return {{offset.position + up + up}, offset.rotation};
+				}
+			}
+		}
+		break;
+	case TetrominoType::O:
+		break;
+	}
+
 	return {};
 }
 } // namespace raymino
