@@ -17,4 +17,9 @@ std::ostream& operator<<(std::ostream& os, const Rect& value)
 	os << '{' << static_cast<const XY&>(value) << ", " << static_cast<const Size&>(value) << '}';
 	return os;
 }
+std::ostream& operator<<(std::ostream& os, const Offset& value)
+{
+	os << '{' << value.position << ", " << value.rotation << '}';
+	return os;
+}
 } // namespace raymino
