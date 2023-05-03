@@ -69,29 +69,30 @@ TEST_CASE("wallKick<Arika>", "[gameplay]")
 		REQUIRE(wallKick<RotationSystem::Arika>(field, minoL, offset) == expected);
 	}
 	{
-		const Grid field{{3, 3}, {0, 0, 1, 0, 0, 0, 0, 1, 0}};
+		const Grid field{{3, 4}, {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0}};
 		const Offset offset = basicRotation<RotationSystem::Arika>(minoJ, -1);
 		const Offset expected{{1, 0}, -1};
 		REQUIRE(wallKick<RotationSystem::Arika>(field, minoJ, offset) == expected);
 	}
 	{
-		const Grid field{{5, 7},
-		    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}};
+		const Grid field{{5, 8}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+		                             0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}};
 		Tetromino minoIr{minoI};
-		minoIr += Offset{{-2, 0}, 1};
+		minoIr += Offset{{-2, 1}, 1};
 		const Offset rotateRight{{0, 0}, 1};
-		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateRight) == Offset{{2, 0}, 1});
+		const Offset rotateLeft{{0, 0}, -1};
+		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateLeft) == Offset{{2, 0}, -1});
 
 		minoIr += Offset{{1, 0}, 0};
-		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateRight) == Offset{{0, 0}, 0});
+		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateLeft) == Offset{{0, 0}, 0});
 
 		minoIr += Offset{{0, 1}, 0};
-		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateRight) == Offset{{1, 0}, 1});
+		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateLeft) == Offset{{1, 0}, -1});
 
 		minoIr += Offset{{3, 0}, 0};
-		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateRight) == Offset{{-1, 0}, 1});
+		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateLeft) == Offset{{-1, 0}, -1});
 
-		minoIr += Offset{{-1, 3}, 1};
+		minoIr += Offset{{-1, 3}, -1};
 		REQUIRE(wallKick<RotationSystem::Arika>(field, minoIr, rotateRight) == Offset{{0, -1}, 1});
 	}
 	{
@@ -99,7 +100,7 @@ TEST_CASE("wallKick<Arika>", "[gameplay]")
 		Tetromino minoTr{minoT};
 		minoTr += basicRotation<RotationSystem::Arika>(minoTr, 1);
 		const Offset offset = basicRotation<RotationSystem::Arika>(minoTr, 1);
-		const Offset expected{{0, 1}, 1};
+		const Offset expected{{0, 0}, 1};
 		REQUIRE(wallKick<RotationSystem::Arika>(field, minoTr, offset) == expected);
 	}
 }
