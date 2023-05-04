@@ -1,5 +1,7 @@
 #include "gameplay.hpp"
 
+#include <array>
+
 namespace raymino
 {
 template<>
@@ -273,6 +275,47 @@ Offset wallKick<RotationSystem::Arika>(const Grid& field, const Tetromino& tetro
 template<>
 Offset wallKick<RotationSystem::Super>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
+	using KickRow = std::array<XY, 4>;
+	using KickTable = std::array<KickRow, 8>;
+	static constexpr KickTable kicksJLSTZ{{
+	    /*0->L*/ {{{+1, 0}, {+1, -1}, {0, +2}, {+1, +2}}},
+	    /*0->R*/ {{{-1, 0}, {-1, -1}, {0, +2}, {-1, +2}}},
+	    /*R->0*/ {{{+1, 0}, {+1, +1}, {0, -2}, {+1, -2}}},
+	    /*R->2*/ {{{+1, 0}, {+1, +1}, {0, -2}, {+1, -2}}},
+	    /*2->R*/ {{{-1, 0}, {-1, -1}, {0, +2}, {-1, +2}}},
+	    /*2->L*/ {{{+1, 0}, {+1, -1}, {0, +2}, {+1, +2}}},
+	    /*L->2*/ {{{-1, 0}, {-1, +1}, {0, -2}, {-1, -2}}},
+	    /*L->0*/ {{{-1, 0}, {-1, +1}, {0, -2}, {-1, -2}}},
+	}};
+	static constexpr KickTable kicksI{{
+	    /*0->L*/ {{{-1, 0}, {+2, 0}, {-1, -2}, {+2, -1}}},
+	    /*0->R*/ {{{-2, 0}, {+1, 0}, {-2, +1}, {+1, -2}}},
+	    /*R->0*/ {{{+2, 0}, {-1, 0}, {+2, -1}, {-1, +2}}},
+	    /*R->2*/ {{{-1, 0}, {+2, 0}, {-1, -2}, {+2, +1}}},
+	    /*2->R*/ {{{+1, 0}, {-2, 0}, {+1, +2}, {-2, -1}}},
+	    /*2->L*/ {{{+2, 0}, {-1, 0}, {+2, -1}, {-1, +2}}},
+	    /*L->2*/ {{{-2, 0}, {+1, 0}, {-2, +1}, {+1, -2}}},
+	    /*L->0*/ {{{+1, 0}, {-2, 0}, {+1, +2}, {-2, -1}}},
+	}};
+
+	if(tetromino.type == TetrominoType::O)
+	{
+		return {};
+	}
+
+	const Tetromino desiredPosition{Tetromino{tetromino} += offset};
+	const KickTable& kickTable = tetromino.type == TetrominoType::I ? kicksI : kicksJLSTZ;
+	const size_t kickIdx = (std::abs(tetromino.rotation % 4) * 2) + static_cast<int>(offset.rotation > 0);
+	const KickRow& kickRow = kickTable[kickIdx];
+
+	for(const XY kick : kickRow)
+	{
+		if(field.overlapAt(desiredPosition.position + kick, desiredPosition.collision) == 0)
+		{
+			return {kick, offset.rotation};
+		}
+	}
+
 	return {};
 }
 } // namespace raymino
