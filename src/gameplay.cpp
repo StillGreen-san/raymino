@@ -318,4 +318,28 @@ Offset wallKick<RotationSystem::Super>(const Grid& field, const Tetromino& tetro
 
 	return {};
 }
+template<>
+Offset wallKick<RotationSystem::Original>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return {};
+}
+template<>
+Offset wallKick<RotationSystem::NintendoLeft>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return {};
+}
+template<>
+Offset wallKick<RotationSystem::NintendoRight>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return {};
+}
+template<>
+Offset wallKick<RotationSystem::Sega>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return {};
+}
 } // namespace raymino

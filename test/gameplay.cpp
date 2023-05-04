@@ -145,3 +145,21 @@ TEST_CASE("wallKick<Super>", "[wallKick][gameplay]")
 		REQUIRE(wallKick<RotationSystem::Super>(field, minoZr, offset) == expected);
 	}
 }
+
+TEST_CASE("wallKick<>", "[wallKick][gameplay]")
+{
+	const std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Original>();
+	const Tetromino& minoO = *find(tetrominos, TetrominoType::O);
+	const Tetromino& minoL = *find(tetrominos, TetrominoType::L);
+	const Tetromino& minoS = *find(tetrominos, TetrominoType::S);
+	const Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+
+	const Grid field{{6, 6}, 0};
+	const Offset offset{{1, 1}, 1};
+	const Offset expected{{0, 0}, 0};
+
+	REQUIRE(wallKick<RotationSystem::Original>(field, minoO, offset) == expected);
+	REQUIRE(wallKick<RotationSystem::Sega>(field, minoL, offset) == expected);
+	REQUIRE(wallKick<RotationSystem::NintendoRight>(field, minoS, offset) == expected);
+	REQUIRE(wallKick<RotationSystem::NintendoLeft>(field, minoT, offset) == expected);
+}
