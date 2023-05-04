@@ -54,7 +54,7 @@ TEST_CASE("spawnPosition", "[gameplay]")
 	}
 }
 
-TEST_CASE("wallKick<Arika>", "[gameplay]")
+TEST_CASE("wallKick<Arika>", "[wallKick][gameplay]")
 {
 	const std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
 	const Tetromino& minoI = *find(tetrominos, TetrominoType::I);
@@ -102,5 +102,46 @@ TEST_CASE("wallKick<Arika>", "[gameplay]")
 		const Offset offset = basicRotation<RotationSystem::Arika>(minoTr, 1);
 		const Offset expected{{0, 0}, 1};
 		REQUIRE(wallKick<RotationSystem::Arika>(field, minoTr, offset) == expected);
+	}
+}
+
+TEST_CASE("wallKick<Super>", "[wallKick][gameplay]")
+{
+	const std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	const Tetromino& minoI = *find(tetrominos, TetrominoType::I);
+	const Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
+	const Tetromino& minoZ = *find(tetrominos, TetrominoType::Z);
+	const Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+
+	{
+		const Grid field{{3, 5}, {0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0}};
+		const Offset offset = basicRotation<RotationSystem::Super>(minoJ, -1);
+		const Offset expected{{1, 2}, -1};
+		REQUIRE(wallKick<RotationSystem::Super>(field, minoJ, offset) == expected);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0}};
+		const Offset offset = basicRotation<RotationSystem::Super>(minoI, 1);
+		const Offset expected{{-2, 0}, 1};
+		REQUIRE(wallKick<RotationSystem::Super>(field, minoI, offset) == expected);
+	}
+	{
+		const Grid field{{3, 5}, {0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1}};
+		const Offset offset = basicRotation<RotationSystem::Super>(minoZ, 1);
+		const Offset expected{{0, 2}, 1};
+		REQUIRE(wallKick<RotationSystem::Super>(field, minoZ, offset) == expected);
+	}
+	{
+		const Grid field{{3, 3}, {0, 0, 0, 0, 0, 0, 0, 1, 1}};
+		const Offset offset = basicRotation<RotationSystem::Super>(minoT, -1);
+		const Offset expected{{0, 0}, 0};
+		REQUIRE(wallKick<RotationSystem::Super>(field, minoT, offset) == expected);
+	}
+	{
+		const Grid field{{3, 5}, {0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1}};
+		const Tetromino minoZr{Tetromino{minoZ} += basicRotation<RotationSystem::Super>(minoZ, 2)};
+		const Offset offset = basicRotation<RotationSystem::Super>(minoZr, 1);
+		const Offset expected{{1, 2}, 1};
+		REQUIRE(wallKick<RotationSystem::Super>(field, minoZr, offset) == expected);
 	}
 }

@@ -270,4 +270,9 @@ Offset wallKick<RotationSystem::Arika>(const Grid& field, const Tetromino& tetro
 
 	return {};
 }
+template<>
+Offset wallKick<RotationSystem::Super>(const Grid& field, const Tetromino& tetromino, Offset offset)
+{
+	return {};
+}
 } // namespace raymino
