@@ -22,4 +22,24 @@ std::ostream& operator<<(std::ostream& os, const Offset& value)
 	os << '{' << value.position << ", " << value.rotation << '}';
 	return os;
 }
+std::ostream& operator<<(std::ostream& os, const Grid& value)
+{
+	os << '{';
+
+	auto cellIt = value.begin();
+	const auto cellEnd = value.end();
+
+	for(; cellIt != cellEnd;)
+	{
+		os << *cellIt;
+		++cellIt;
+		if(cellIt != cellEnd)
+		{
+			os << ", ";
+		}
+	}
+
+	os << '}';
+	return os;
+}
 } // namespace raymino
