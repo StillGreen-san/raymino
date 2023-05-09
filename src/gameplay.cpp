@@ -342,4 +342,9 @@ Offset wallKick<RotationSystem::Sega>(
 {
 	return {};
 }
+
+size_t eraseFullLines(Grid& grid)
+{
+	return 0;
+}
 } // namespace raymino

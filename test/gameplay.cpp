@@ -163,3 +163,23 @@ TEST_CASE("wallKick<>", "[wallKick][gameplay]")
 	REQUIRE(wallKick<RotationSystem::NintendoRight>(field, minoS, offset) == expected);
 	REQUIRE(wallKick<RotationSystem::NintendoLeft>(field, minoT, offset) == expected);
 }
+
+TEST_CASE("eraseFullLines", "[gameplay]")
+{
+	{
+		Grid emptyGrid{{3, 3}, 0};
+		Grid fullGrid{{3, 3}, 1};
+
+		REQUIRE(eraseFullLines(emptyGrid) == 0);
+
+		REQUIRE(eraseFullLines(fullGrid) == 3);
+		REQUIRE(emptyGrid == fullGrid);
+	}
+	{
+		Grid grid{{3, 4}, {0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1}};
+		const Grid expected{{3, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1}};
+
+		REQUIRE(eraseFullLines(grid) == 1);
+		REQUIRE(grid == expected);
+	}
+}

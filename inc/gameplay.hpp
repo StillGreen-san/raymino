@@ -94,4 +94,10 @@ Rect findTrueSize(const Grid& grid);
  * @return XY spawn position
  */
 XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth);
+
+/**
+ * @param grid to modify
+ * @return size_t number of lines erased
+ */
+size_t eraseFullLines(Grid& grid);
 } // namespace raymino
