@@ -345,6 +345,58 @@ Offset wallKick<RotationSystem::Sega>(
 
 size_t eraseFullLines(Grid& grid)
 {
-	return 0;
+	const auto gridWidth = grid.getSize().width;
+	const auto isFullLine = [](auto begin, auto end)
+	{
+		return std::all_of(begin, end,
+		    [](auto cell)
+		    {
+			    return cell != 0;
+		    });
+	};
+
+	size_t erasedLines = 0;
+
+	if(grid.getSize().area() == 0)
+	{
+		return erasedLines;
+	}
+
+	const auto linesEnd = grid.rend();
+	auto linesReadBegin = grid.rbegin();
+
+	while(linesReadBegin != linesEnd && !isFullLine(linesReadBegin, std::next(linesReadBegin, gridWidth)))
+	{
+		std::advance(linesReadBegin, gridWidth);
+	}
+
+	auto linesWriteBegin = linesReadBegin;
+	if(linesReadBegin != linesEnd)
+	{
+		std::advance(linesReadBegin, gridWidth);
+		++erasedLines;
+	}
+
+	while(linesReadBegin != linesEnd)
+	{
+		if(!isFullLine(linesReadBegin, std::next(linesReadBegin, gridWidth)))
+		{
+			std::copy(linesReadBegin, std::next(linesReadBegin, gridWidth), linesWriteBegin);
+			std::advance(linesWriteBegin, gridWidth);
+		}
+		else
+		{
+			++erasedLines;
+		}
+		std::advance(linesReadBegin, gridWidth);
+	}
+
+	while(linesWriteBegin != linesEnd)
+	{
+		std::fill(linesWriteBegin, std::next(linesWriteBegin, gridWidth), uint8_t(0));
+		std::advance(linesWriteBegin, gridWidth);
+	}
+
+	return erasedLines;
 }
 } // namespace raymino

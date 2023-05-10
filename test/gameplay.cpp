@@ -182,4 +182,18 @@ TEST_CASE("eraseFullLines", "[gameplay]")
 		REQUIRE(eraseFullLines(grid) == 1);
 		REQUIRE(grid == expected);
 	}
+	{
+		Grid grid{{3, 3}, {1, 0, 0, 1, 1, 0, 0, 1, 1}};
+		const Grid expected{{3, 3}, {1, 0, 0, 1, 1, 0, 0, 1, 1}};
+
+		REQUIRE(eraseFullLines(grid) == 0);
+		REQUIRE(grid == expected);
+	}
+	{
+		Grid grid{{3, 3}, {1, 1, 1, 0, 0, 0, 0, 0, 0}};
+		const Grid expected{{3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+		REQUIRE(eraseFullLines(grid) == 1);
+		REQUIRE(grid == expected);
+	}
 }
