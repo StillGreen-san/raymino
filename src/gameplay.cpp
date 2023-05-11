@@ -399,4 +399,9 @@ size_t eraseFullLines(Grid& grid)
 
 	return erasedLines;
 }
+
+TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino)
+{
+	return {};
+}
 } // namespace raymino

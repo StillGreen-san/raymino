@@ -100,4 +100,24 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
  * @return size_t number of lines erased
  */
 size_t eraseFullLines(Grid& grid);
+
+/**
+ * @brief amount of occupied front&back corners of a T in a playfield
+ */
+struct TSpinCornerCountResult
+{
+	int front;
+	int back;
+	constexpr bool operator==(TSpinCornerCountResult other) const noexcept
+	{
+		return std::tie(front, back) == std::tie(other.front, other.back);
+	}
+};
+
+/**
+ * @param field playfield to test against
+ * @param tetromino to test against
+ * @return TSpinCornerCountResult
+ */
+TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino);
 } // namespace raymino

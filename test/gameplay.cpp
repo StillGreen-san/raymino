@@ -197,3 +197,31 @@ TEST_CASE("eraseFullLines", "[gameplay]")
 		REQUIRE(grid == expected);
 	}
 }
+
+TEST_CASE("tSpinCornerCount", "[gameplay]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+
+	{
+		const Grid field{{3, 3}, {0, 0, 0, 0, 0, 0, 0, 1, 0}};
+		const TSpinCornerCountResult expected{0, 0};
+		REQUIRE(tSpinCornerCount(field, minoT) == expected);
+	}
+
+	minoT += Offset{{}, 1};
+
+	{
+		const Grid field{{3, 3}, {0, 0, 1, 0, 0, 0, 1, 0, 0}};
+		const TSpinCornerCountResult expected{1, 1};
+		REQUIRE(tSpinCornerCount(field, minoT) == expected);
+	}
+
+	minoT += Offset{{}, 1};
+
+	{
+		const Grid field{{3, 3}, {0, 1, 1, 0, 0, 0, 1, 0, 1}};
+		const TSpinCornerCountResult expected{2, 1};
+		REQUIRE(tSpinCornerCount(field, minoT) == expected);
+	}
+}
