@@ -42,4 +42,9 @@ std::ostream& operator<<(std::ostream& os, const Grid& value)
 	os << '}';
 	return os;
 }
+std::ostream& operator<<(std::ostream& os, const TSpinCornerCountResult& value)
+{
+	os << '{' << value.front << ", " << value.back << '}';
+	return os;
+}
 } // namespace raymino
