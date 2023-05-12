@@ -393,7 +393,7 @@ size_t eraseFullLines(Grid& grid)
 
 	while(linesWriteBegin != linesEnd)
 	{
-		std::fill(linesWriteBegin, std::next(linesWriteBegin, gridWidth), uint8_t(0));
+		std::fill(linesWriteBegin, std::next(linesWriteBegin, gridWidth), uint8_t{0});
 		std::advance(linesWriteBegin, gridWidth);
 	}
 
@@ -402,6 +402,30 @@ size_t eraseFullLines(Grid& grid)
 
 TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino)
 {
-	return {};
+	static constexpr std::array<XY, 4> checkOffsets{{{0, 0}, {2, 0}, {0, 2}, {2, 2}}};
+	const Rect trueSize = findTrueSize(tetromino.collision);
+	const bool horizontal = trueSize.width == 3;
+	const bool topLeft = tetromino.collision.getAt({trueSize.x, trueSize.y}) == 0;
+	XY trueOffset = tetromino.position + static_cast<const XY&>(trueSize);
+	const auto getAt = [&](XY checkOffset)
+	{
+		return static_cast<int>(field.getAt(trueOffset + checkOffset) != 0);
+	};
+
+	if(horizontal && topLeft)
+	{
+		return {getAt(checkOffsets[0]) + getAt(checkOffsets[1]), getAt(checkOffsets[2]) + getAt(checkOffsets[3])};
+	}
+	if(horizontal)
+	{
+		trueOffset.y -= 1;
+		return {getAt(checkOffsets[2]) + getAt(checkOffsets[3]), getAt(checkOffsets[0]) + getAt(checkOffsets[1])};
+	}
+	if(topLeft)
+	{
+		return {getAt(checkOffsets[1]) + getAt(checkOffsets[3]), getAt(checkOffsets[0]) + getAt(checkOffsets[2])};
+	}
+	trueOffset.x -= 1;
+	return {getAt(checkOffsets[0]) + getAt(checkOffsets[2]), getAt(checkOffsets[1]) + getAt(checkOffsets[3])};
 }
 } // namespace raymino
