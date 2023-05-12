@@ -93,4 +93,44 @@ enum class WallKicks
 	Arika,
 	Super,
 };
+enum class LockDown
+{
+	Infinit,
+	Extended,
+	Classic,
+	Entry,
+};
+enum class SoftDrop
+{
+	Locking,
+	NonLocking,
+};
+enum class InstantDrop
+{
+	Hard,
+	Sonic,
+};
+enum class ShuffleType
+{
+	Random,
+	SingleBag,
+	DoubleBag,
+	TripleBag,
+};
+enum class ScoringSystem
+{
+	Guideline,
+	BPS,
+	Sega,
+	Nintendo,
+};
+enum class ScoreEvent
+{
+	LineClear,
+	PerfectClear,
+	MiniTSpin,
+	TSpin,
+	SoftDrop,
+	HardDrop,
+};
 } // namespace raymino
