@@ -19,6 +19,7 @@ struct IScene
 enum class Scene
 {
 	Game,
+	Menu,
 };
 
 /**
