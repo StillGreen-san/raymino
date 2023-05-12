@@ -30,9 +30,14 @@ public:
 	 */
 	void Run();
 
-	std::unique_ptr<IScene> currentScene;
+	/**
+	 * @brief calls UpdateDraw on currentScene
+	 */
+	void UpdateDraw();
 
 private:
 	App();
+
+	std::unique_ptr<IScene> currentScene;
 };
 } // namespace raymino

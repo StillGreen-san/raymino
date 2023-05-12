@@ -15,17 +15,22 @@ raymino::App::App()
 void UpdateDraw(void* app)
 {
 	raymino::App& self = *static_cast<raymino::App*>(app);
-	self.currentScene->UpdateDraw(self);
+	self.UpdateDraw();
+}
+
+void raymino::App::UpdateDraw()
+{
+	currentScene->UpdateDraw(*this);
 }
 
 void raymino::App::Run()
 {
 #if defined(PLATFORM_WEB)
-	emscripten_set_main_loop_arg(UpdateDraw, this, 0, 1);
+	emscripten_set_main_loop_arg(::UpdateDraw, this, 0, 1);
 #else
 	while(!::WindowShouldClose())
 	{
-		UpdateDraw(this);
+		::UpdateDraw(this);
 	}
 #endif
 }
