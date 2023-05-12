@@ -35,6 +35,11 @@ public:
 	 */
 	void UpdateDraw();
 
+	/**
+	 * @param newScene to switch to
+	 */
+	void SwitchScene(std::unique_ptr<IScene> newScene);
+
 private:
 	App();
 

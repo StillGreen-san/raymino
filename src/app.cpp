@@ -34,3 +34,8 @@ void raymino::App::Run()
 	}
 #endif
 }
+
+void raymino::App::SwitchScene(std::unique_ptr<IScene> newScene)
+{
+	currentScene = std::move(newScene);
+}
