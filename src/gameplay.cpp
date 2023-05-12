@@ -195,7 +195,7 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
 }
 
 template<>
-Offset wallKick<RotationSystem::Arika>(const Grid& field, const Tetromino& tetromino, Offset offset)
+Offset wallKick<WallKicks::Arika>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
 	const Tetromino desiredPosition{Tetromino{tetromino} += offset};
 	const XY right{1, 0};
@@ -273,7 +273,7 @@ Offset wallKick<RotationSystem::Arika>(const Grid& field, const Tetromino& tetro
 	return {};
 }
 template<>
-Offset wallKick<RotationSystem::Super>(const Grid& field, const Tetromino& tetromino, Offset offset)
+Offset wallKick<WallKicks::Super>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
 	using KickRow = std::array<XY, 4>;
 	using KickTable = std::array<KickRow, 8>;
@@ -319,25 +319,7 @@ Offset wallKick<RotationSystem::Super>(const Grid& field, const Tetromino& tetro
 	return {};
 }
 template<>
-Offset wallKick<RotationSystem::Original>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
-{
-	return {};
-}
-template<>
-Offset wallKick<RotationSystem::NintendoLeft>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
-{
-	return {};
-}
-template<>
-Offset wallKick<RotationSystem::NintendoRight>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
-{
-	return {};
-}
-template<>
-Offset wallKick<RotationSystem::Sega>(
+Offset wallKick<WallKicks::None>(
     [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
 {
 	return {};

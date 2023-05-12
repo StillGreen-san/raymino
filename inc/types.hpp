@@ -87,4 +87,10 @@ enum class RotationSystem
 	NintendoLeft,
 	NintendoRight,
 };
+enum class WallKicks
+{
+	None,
+	Arika,
+	Super,
+};
 } // namespace raymino
