@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.25)
 
 project(raymino C CXX)
 
@@ -8,7 +8,7 @@ if (EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
 endif ()
 
-add_subdirectory(ext)
+add_subdirectory(ext SYSTEM)
 
 option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
