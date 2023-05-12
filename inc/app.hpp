@@ -21,7 +21,7 @@ public:
 	static App Make()
 	{
 		App app;
-		app.currentScene = MakeScene<TScene>();
+		app.currentScene = MakeScene<TScene>(app);
 		return app;
 	}
 

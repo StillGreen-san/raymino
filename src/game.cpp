@@ -327,7 +327,7 @@ Game::Game(Playfield playfield, State state, Timer dropDelay, Timer lockDelay, K
 }
 
 template<>
-std::unique_ptr<IScene> MakeScene<Scene::Game>()
+std::unique_ptr<IScene> MakeScene<Scene::Game>([[maybe_unused]] class App& app)
 {
 	return std::make_unique<Game>(Playfield{Size{FIELD_WIDTH, FIELD_HEIGHT + HIDDEN_HEIGHT}, makeBaseMinos(),
 	                                  std::function<Playfield::ShuffleBaseMinosFunc>{shuffleBaseMinos},

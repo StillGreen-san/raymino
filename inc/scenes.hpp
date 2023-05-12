@@ -27,5 +27,5 @@ enum class Scene
  * @return std::unique_ptr<IScene> of TScene type
  */
 template<Scene TScene>
-std::unique_ptr<IScene> MakeScene();
+std::unique_ptr<IScene> MakeScene(class App& app);
 } // namespace raymino
