@@ -4,6 +4,7 @@
 #include "types.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 namespace raymino
@@ -120,4 +121,13 @@ struct TSpinCornerCountResult
  * @return TSpinCornerCountResult
  */
 TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino);
+
+struct IScoringSystem
+{
+	virtual ~IScoringSystem() = default;
+	virtual ptrdiff_t process(ScoreEvent event, int lines, int level) = 0;
+};
+
+template<ScoringSystem TSys>
+std::unique_ptr<IScoringSystem> makeScoringSystem();
 } // namespace raymino
