@@ -410,4 +410,32 @@ TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetr
 	trueOffset.x -= 1;
 	return {getAt(checkOffsets[0]) + getAt(checkOffsets[2]), getAt(checkOffsets[1]) + getAt(checkOffsets[3])};
 }
+
+struct BPS : public IScoringSystem
+{
+	ptrdiff_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) override
+	{
+		switch(event)
+		{
+		case ScoreEvent::LineClear:
+		case ScoreEvent::PerfectClear:
+		case ScoreEvent::MiniTSpin:
+		case ScoreEvent::TSpin:
+		{
+			lines = std::clamp(lines, 0, 4);
+			static constexpr std::array<ptrdiff_t, 5> scores{0, 40, 100, 300, 1200};
+			return scores[lines];
+		}
+		case ScoreEvent::SoftDrop:
+		case ScoreEvent::HardDrop:
+		default:
+			return 0;
+		}
+	}
+};
+template<>
+std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::BPS>()
+{
+	return std::make_unique<BPS>();
+}
 } // namespace raymino
