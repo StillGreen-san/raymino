@@ -418,7 +418,6 @@ struct BPS : public IScoringSystem
 		switch(event)
 		{
 		case ScoreEvent::LineClear:
-		case ScoreEvent::PerfectClear:
 		case ScoreEvent::MiniTSpin:
 		case ScoreEvent::TSpin:
 		{
@@ -426,6 +425,7 @@ struct BPS : public IScoringSystem
 			static constexpr std::array<ptrdiff_t, 5> scores{0, 40, 100, 300, 1200};
 			return scores[lines];
 		}
+		case ScoreEvent::PerfectClear:
 		case ScoreEvent::SoftDrop:
 		case ScoreEvent::HardDrop:
 		default:
@@ -448,7 +448,6 @@ struct Sega : public IScoringSystem
 		switch(event)
 		{
 		case ScoreEvent::LineClear:
-		case ScoreEvent::PerfectClear:
 		case ScoreEvent::MiniTSpin:
 		case ScoreEvent::TSpin:
 		{
@@ -460,6 +459,7 @@ struct Sega : public IScoringSystem
 		{
 			return static_cast<ptrdiff_t>(lines) * level;
 		}
+		case ScoreEvent::PerfectClear:
 		case ScoreEvent::HardDrop:
 		default:
 			return 0;
@@ -479,7 +479,6 @@ struct Nintendo : public IScoringSystem
 		switch(event)
 		{
 		case ScoreEvent::LineClear:
-		case ScoreEvent::PerfectClear:
 		case ScoreEvent::MiniTSpin:
 		case ScoreEvent::TSpin:
 		{
@@ -487,6 +486,7 @@ struct Nintendo : public IScoringSystem
 			static constexpr std::array<ptrdiff_t, 5> scores{0, 40, 100, 300, 1200};
 			return scores[lines] * level;
 		}
+		case ScoreEvent::PerfectClear:
 		case ScoreEvent::SoftDrop:
 		case ScoreEvent::HardDrop:
 		default:

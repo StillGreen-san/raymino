@@ -127,7 +127,7 @@ enum class ScoringSystem
 enum class ScoreEvent
 {
 	LineClear,
-	PerfectClear,
+	PerfectClear, // separat from *Clear & *Spin events
 	MiniTSpin,
 	TSpin,
 	SoftDrop,
