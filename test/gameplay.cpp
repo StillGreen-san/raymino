@@ -225,3 +225,23 @@ TEST_CASE("tSpinCornerCount", "[gameplay]")
 		REQUIRE(tSpinCornerCount(field, minoT) == expected);
 	}
 }
+
+TEST_CASE("IScoringSystems", "[gameplay][IScoringSystem]")
+{
+	{
+		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::BPS>();
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 2, 4) == 100);
+		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 3, 1) == 300);
+	}
+	{
+		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::Sega>();
+		REQUIRE(scoreSys->process(ScoreEvent::PerfectClear, 3, 3) == 0);
+		REQUIRE(scoreSys->process(ScoreEvent::MiniTSpin, 2, 9) == 2000);
+		REQUIRE(scoreSys->process(ScoreEvent::SoftDrop, 7, 2) == 7);
+	}
+	{
+		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::Nintendo>();
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 1) == 1200);
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 2, 3) == 300);
+	}
+}
