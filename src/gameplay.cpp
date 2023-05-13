@@ -471,4 +471,32 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Sega>()
 {
 	return std::make_unique<Sega>();
 }
+
+struct Nintendo : public IScoringSystem
+{
+	ptrdiff_t process(ScoreEvent event, int lines, int level) override
+	{
+		switch(event)
+		{
+		case ScoreEvent::LineClear:
+		case ScoreEvent::PerfectClear:
+		case ScoreEvent::MiniTSpin:
+		case ScoreEvent::TSpin:
+		{
+			lines = std::clamp(lines, 0, 4);
+			static constexpr std::array<ptrdiff_t, 5> scores{0, 40, 100, 300, 1200};
+			return scores[lines] * level;
+		}
+		case ScoreEvent::SoftDrop:
+		case ScoreEvent::HardDrop:
+		default:
+			return 0;
+		}
+	}
+};
+template<>
+std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Nintendo>()
+{
+	return std::make_unique<Nintendo>();
+}
 } // namespace raymino
