@@ -122,12 +122,26 @@ struct TSpinCornerCountResult
  */
 TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino);
 
+/**
+ * @brief potentially stateful ScoringSystem
+ */
 struct IScoringSystem
 {
 	virtual ~IScoringSystem() = default;
+
+	/**
+	 * @param event ScoreEvent to process
+	 * @param lines cleared/dropped
+	 * @param level
+	 * @return ptrdiff_t score for event
+	 */
 	virtual ptrdiff_t process(ScoreEvent event, int lines, int level) = 0;
 };
 
+/**
+ * @tparam TSys ScoringSystem to use
+ * @return std::unique_ptr<IScoringSystem> of TSys ScoringSystem
+ */
 template<ScoringSystem TSys>
 std::unique_ptr<IScoringSystem> makeScoringSystem();
 } // namespace raymino
