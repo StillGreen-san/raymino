@@ -438,4 +438,37 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::BPS>()
 {
 	return std::make_unique<BPS>();
 }
+
+struct Sega : public IScoringSystem
+{
+	ptrdiff_t process(ScoreEvent event, int lines, int level) override
+	{
+		lines = std::clamp(lines, 0, std::numeric_limits<int>::max());
+		level = std::clamp((level + 1) / 2, 1, 5);
+		switch(event)
+		{
+		case ScoreEvent::LineClear:
+		case ScoreEvent::PerfectClear:
+		case ScoreEvent::MiniTSpin:
+		case ScoreEvent::TSpin:
+		{
+			lines = std::clamp(lines, 0, 4);
+			static constexpr std::array<ptrdiff_t, 5> scores{0, 100, 400, 900, 2000};
+			return scores[lines] * level;
+		}
+		case ScoreEvent::SoftDrop:
+		{
+			return static_cast<ptrdiff_t>(lines) * level;
+		}
+		case ScoreEvent::HardDrop:
+		default:
+			return 0;
+		}
+	}
+};
+template<>
+std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Sega>()
+{
+	return std::make_unique<Sega>();
+}
 } // namespace raymino
