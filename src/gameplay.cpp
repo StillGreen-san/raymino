@@ -499,4 +499,27 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Nintendo>()
 {
 	return std::make_unique<Nintendo>();
 }
+
+struct Guideline : public IScoringSystem
+{
+	ptrdiff_t process(ScoreEvent event, int lines, int level) override
+	{
+		switch(event)
+		{
+		case ScoreEvent::LineClear:
+		case ScoreEvent::MiniTSpin:
+		case ScoreEvent::TSpin:
+		case ScoreEvent::PerfectClear:
+		case ScoreEvent::SoftDrop:
+		case ScoreEvent::HardDrop:
+		default:
+			return 0;
+		}
+	}
+};
+template<>
+std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Guideline>()
+{
+	return std::make_unique<Guideline>();
+}
 } // namespace raymino

@@ -245,3 +245,23 @@ TEST_CASE("IScoringSystems", "[gameplay][IScoringSystem]")
 		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 2, 3) == 300);
 	}
 }
+
+TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
+{
+	{
+		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::Guideline>();
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 3, 1) == 500);
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 1, 2) == 200 + 100);
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 2, 3) == 900 + 300);
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 0, 4) == 0);
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 5) == 4000);
+	}
+	{
+		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::Guideline>();
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 1) == 800);
+		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 2, 2) == (2400 + 100) * 1.5);
+		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 0, 3) == 1200 * 1.5);
+		REQUIRE(scoreSys->process(ScoreEvent::MiniTSpin, 0, 4) == 400);
+		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 5) == 4000);
+	}
+}
