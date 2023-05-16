@@ -502,19 +502,126 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Nintendo>()
 
 struct Guideline : public IScoringSystem
 {
+	struct Action
+	{
+		enum
+		{
+			NoLines = 0,
+			Single,
+			Double,
+			Triple,
+			Tetris,
+			MiniNoLines,
+			MiniSingle,
+			MiniDouble,
+			SpinNoLines,
+			SpinSingle,
+			SpinDouble,
+			SpinTriple,
+			Combo,
+			Soft,
+			Hard,
+			PerfectNoLines,
+			PerfectSingle,
+			PerfectDouble,
+			PerfectTriple,
+			PerfectTetris,
+			PerfectTetrisChain,
+
+			COUNT
+		};
+		ptrdiff_t points;
+		bool isDifficult;
+	};
+	static constexpr std::array<Action, Action::COUNT> actions{{/*NoLines*/ {0, false},
+	    /*Single*/ {100, false},
+	    /*Double*/ {300, false},
+	    /*Triple*/ {500, false},
+	    /*Tetris*/ {800, true},
+	    /*MiniNoLines*/ {100, false},
+	    /*MiniSingle*/ {200, true},
+	    /*MiniDouble*/ {400, true},
+	    /*SpinNoLines*/ {400, false},
+	    /*SpinSingle*/ {800, true},
+	    /*SpinDouble*/ {1200, true},
+	    /*SpinTriple*/ {1600, true},
+	    /*Combo*/ {50, false},
+	    /*Soft*/ {1, false},
+	    /*Hard*/ {2, false},
+	    /*PerfectNoLines*/ {0, false},
+	    /*PerfectSingle*/ {800, false},
+	    /*PerfectDouble*/ {1200, false},
+	    /*PerfectTriple*/ {1800, false},
+	    /*PerfectTetris*/ {2000, false},
+	    /*PerfectTetrisChain*/ {3200, false}}};
+	bool wasLastEventDifficult = false;
+	int lastPerfectClearLines = 0;
+	int clearCounter = 0;
+	int combo = -1;
 	ptrdiff_t process(ScoreEvent event, int lines, int level) override
 	{
+		ptrdiff_t score = 0;
+		bool isThisEventDifficult = false;
 		switch(event)
 		{
 		case ScoreEvent::LineClear:
+		{
+			lines = std::clamp(lines, 0, 4);
+			score = actions[Action::NoLines + lines].points * level;
+			isThisEventDifficult = actions[Action::NoLines + lines].isDifficult;
+			break;
+		}
 		case ScoreEvent::MiniTSpin:
+		{
+			lines = std::clamp(lines, 0, 2);
+			score = actions[Action::MiniNoLines + lines].points * level;
+			isThisEventDifficult = actions[Action::MiniNoLines + lines].isDifficult;
+			break;
+		}
 		case ScoreEvent::TSpin:
+		{
+			lines = std::clamp(lines, 0, 3);
+			score = actions[Action::SpinNoLines + lines].points * level;
+			isThisEventDifficult = true;
+			break;
+		}
 		case ScoreEvent::PerfectClear:
+		{
+			lines = std::clamp(lines, 0, 4);
+			if(lines == 4 && lastPerfectClearLines == 4 && clearCounter < 2)
+			{
+				return actions[Action::PerfectTetrisChain].points * level;
+			}
+			clearCounter = 0;
+			lastPerfectClearLines = lines;
+			return actions[Action::PerfectNoLines + lines].points * level;
+		}
 		case ScoreEvent::SoftDrop:
+			return actions[Action::Soft].points * level;
 		case ScoreEvent::HardDrop:
+			return actions[Action::Hard].points * level;
 		default:
 			return 0;
 		}
+		if(lines > 0)
+		{
+			clearCounter += 1;
+			combo += 1;
+			score += actions[Action::Combo].points * combo * level;
+		}
+		else
+		{
+			combo = -1;
+		}
+		if(wasLastEventDifficult && isThisEventDifficult)
+		{
+			score += score / 2; // * 1.5
+		}
+		else
+		{
+			wasLastEventDifficult = isThisEventDifficult;
+		}
+		return score;
 	}
 };
 template<>
