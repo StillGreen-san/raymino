@@ -226,6 +226,38 @@ TEST_CASE("tSpinCornerCount", "[gameplay]")
 	}
 }
 
+TEST_CASE("isImmobile", "[gameplay]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+
+	{
+		minoT.position = {0, 1};
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0}};
+		REQUIRE(isImmobile(field, minoT) == true);
+	}
+	{
+		minoT.position = {0, 1};
+		const Grid field{{4, 4}, {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0}};
+		REQUIRE(isImmobile(field, minoT) == false);
+	}
+	{
+		minoT.position = {1, 1};
+		const Grid field{{4, 4}, {0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0}};
+		REQUIRE(isImmobile(field, minoT) == false);
+	}
+	{
+		minoT.position = {0, 0};
+		const Grid field{{4, 3}, {0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0}};
+		REQUIRE(isImmobile(field, minoT) == false);
+	}
+	{
+		minoT.position = {0, 0};
+		const Grid field{{4, 4}, {1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1}};
+		REQUIRE(isImmobile(field, minoT) == false);
+	}
+}
+
 TEST_CASE("IScoringSystems", "[gameplay][IScoringSystem]")
 {
 	{

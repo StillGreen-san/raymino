@@ -411,6 +411,16 @@ TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetr
 	return {getAt(checkOffsets[0]) + getAt(checkOffsets[2]), getAt(checkOffsets[1]) + getAt(checkOffsets[3])};
 }
 
+bool isImmobile(const Grid& field, const Tetromino& tetromino)
+{
+	static constexpr std::array<XY, 4> directions{{{0, 1}, {1, 0}, {-1, 0}, {0, -1}}};
+	return std::none_of(directions.begin(), directions.end(),
+	    [&](const XY dir)
+	    {
+		    return field.overlapAt(tetromino.position + dir, tetromino.collision) == 0;
+	    });
+}
+
 struct BPS : public IScoringSystem
 {
 	ptrdiff_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) override

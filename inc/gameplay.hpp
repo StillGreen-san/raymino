@@ -123,6 +123,14 @@ struct TSpinCornerCountResult
 TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino);
 
 /**
+ * @brief checks if tetromino cannot move in any direction
+ * @param field playfield to test against
+ * @param tetromino to test against
+ * @return bool is immobile
+ */
+bool isImmobile(const Grid& field, const Tetromino& tetromino);
+
+/**
  * @brief potentially stateful ScoringSystem
  */
 struct IScoringSystem
