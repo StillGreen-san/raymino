@@ -29,7 +29,14 @@ public:
 
 	bool isSquare() const;
 	Size getSize() const;
-	uint8_t getAt(XY topLeft) const;
+
+	/**
+	 * @param topLeft offset
+	 * @param oobVal = Grid::oobVal
+	 * @return uint8_t cell value
+	 */
+	uint8_t getAt(XY topLeft, uint8_t oobVal = Grid::oobVal) const;
+
 	void transformCells(std::function<TTransformFunc> func);
 	void rotate(int steps);
 	void transpose();

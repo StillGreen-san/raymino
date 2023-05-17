@@ -59,7 +59,7 @@ Size Grid::getSize() const
 	return size;
 }
 
-uint8_t Grid::getAt(XY topLeft) const
+uint8_t Grid::getAt(XY topLeft, uint8_t oobVal) const
 {
 	if(topLeft.x < 0 || topLeft.x >= size.width || topLeft.y >= size.height || topLeft.y < 0)
 	{
