@@ -382,6 +382,28 @@ size_t eraseFullLines(Grid& grid)
 	return erasedLines;
 }
 
+size_t countFullLines(const Grid& grid, const Tetromino& tetromino)
+{
+	size_t fullLines = 0;
+	const auto gridSize = grid.getSize();
+
+	for(int y = 0; y < gridSize.height; ++y)
+	{
+		bool isFullLine = true;
+		for(int x = 0; x < gridSize.width; ++x)
+		{
+			if(grid.getAt({x, y}) == 0 && tetromino.collision.getAt(XY{x, y} - tetromino.position, 0) == 0)
+			{
+				isFullLine = false;
+				break;
+			}
+		}
+		fullLines += static_cast<size_t>(isFullLine);
+	}
+
+	return fullLines;
+}
+
 TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino)
 {
 	static constexpr std::array<XY, 4> checkOffsets{{{0, 0}, {2, 0}, {0, 2}, {2, 2}}};

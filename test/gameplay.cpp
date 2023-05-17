@@ -198,6 +198,22 @@ TEST_CASE("eraseFullLines", "[gameplay]")
 	}
 }
 
+TEST_CASE("countFullLines", "[gameplay]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
+	Tetromino& minoZ = *find(tetrominos, TetrominoType::Z);
+
+	{
+		const Grid field{{3, 3}, {0, 1, 1, 0, 0, 0, 1, 0, 0}};
+		REQUIRE(countFullLines(field, minoJ) == 2);
+	}
+	{
+		const Grid field{{3, 3}, {0, 0, 0, 1, 0, 0, 1, 1, 1}};
+		REQUIRE(countFullLines(field, minoZ) == 2);
+	}
+}
+
 TEST_CASE("tSpinCornerCount", "[gameplay]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();

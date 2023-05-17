@@ -103,6 +103,13 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
 size_t eraseFullLines(Grid& grid);
 
 /**
+ * @param grid to check
+ * @param tetromino to include when counting
+ * @return size_t number of full lines
+ */
+size_t countFullLines(const Grid& grid, const Tetromino& tetromino);
+
+/**
  * @brief amount of occupied front&back corners of a T in a playfield
  */
 struct TSpinCornerCountResult
