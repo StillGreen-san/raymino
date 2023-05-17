@@ -13,6 +13,10 @@ struct XY
 	{
 		return {x + other.x, y + other.y};
 	}
+	XY operator-(XY other) const noexcept
+	{
+		return {x - other.x, y - other.y};
+	}
 	XY& operator+=(XY other) noexcept
 	{
 		x += other.x;
