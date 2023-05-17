@@ -258,6 +258,71 @@ TEST_CASE("isImmobile", "[gameplay]")
 	}
 }
 
+TEST_CASE("tSpinCheck<Immobile>", "[gameplay][tSpinCheck]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+	minoT.position = {0, 1};
+	const Offset offset{{0, 0}, 1};
+
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::Immobile>(field, minoT, offset) == ScoreEvent::TSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::Immobile>(field, minoT, offset) == ScoreEvent::MiniTSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1}};
+		REQUIRE(tSpinCheck<TSpin::Immobile>(field, minoT, offset) == ScoreEvent::LineClear);
+	}
+}
+TEST_CASE("tSpinCheck<ThreeCorner>", "[gameplay][tSpinCheck]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+	minoT.position = {0, 1};
+	const Offset offset{{0, 0}, 1};
+
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0}};
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, offset) == ScoreEvent::TSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, Offset{{2, 0}, 1}) == ScoreEvent::TSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, offset) == ScoreEvent::MiniTSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1}};
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, offset) == ScoreEvent::LineClear);
+	}
+}
+TEST_CASE("tSpinCheck<Lenient>", "[gameplay][tSpinCheck]")
+{
+	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
+	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
+	minoT.position = {0, 1};
+	const Offset offset{{0, 0}, 1};
+
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::Lenient>(field, minoT, offset) == ScoreEvent::TSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::Lenient>(field, minoT, offset) == ScoreEvent::MiniTSpin);
+	}
+	{
+		const Grid field{{4, 4}, {0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0}};
+		REQUIRE(tSpinCheck<TSpin::Lenient>(field, minoT, {{}, 0}) == ScoreEvent::LineClear);
+	}
+}
+
 TEST_CASE("IScoringSystems", "[gameplay][IScoringSystem]")
 {
 	{

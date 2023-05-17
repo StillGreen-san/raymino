@@ -421,6 +421,25 @@ bool isImmobile(const Grid& field, const Tetromino& tetromino)
 	    });
 }
 
+template<>
+ScoreEvent tSpinCheck<TSpin::Immobile>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return ScoreEvent::LineClear;
+}
+template<>
+ScoreEvent tSpinCheck<TSpin::ThreeCorner>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return ScoreEvent::LineClear;
+}
+template<>
+ScoreEvent tSpinCheck<TSpin::Lenient>(
+    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+{
+	return ScoreEvent::LineClear;
+}
+
 struct BPS : public IScoringSystem
 {
 	ptrdiff_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) override

@@ -110,6 +110,12 @@ enum class InstantDrop
 	Hard,
 	Sonic,
 };
+enum class TSpin
+{
+	Immobile,
+	ThreeCorner,
+	Lenient,
+};
 enum class ShuffleType
 {
 	Random,

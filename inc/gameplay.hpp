@@ -126,9 +126,19 @@ TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetr
  * @brief checks if tetromino cannot move in any direction
  * @param field playfield to test against
  * @param tetromino to test against
- * @return bool is immobile
+ * @return true if immobile
  */
 bool isImmobile(const Grid& field, const Tetromino& tetromino);
+
+/**
+ * @tparam TTSpin TSpin type
+ * @param field playfield to test against
+ * @param tetromino to test
+ * @param offset for tetromino
+ * @return ScoreEvent LineClear, TSpinMini or TSpin
+ */
+template<TSpin TTSpin>
+ScoreEvent tSpinCheck(const Grid& field, const Tetromino& tetromino, Offset offset);
 
 /**
  * @brief potentially stateful ScoringSystem
