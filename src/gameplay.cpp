@@ -456,10 +456,17 @@ ScoreEvent tSpinCheck<TSpin::ThreeCorner>(
 	return ScoreEvent::LineClear;
 }
 template<>
-ScoreEvent tSpinCheck<TSpin::Lenient>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
-	return ScoreEvent::LineClear;
+	if(offset.rotation == 0)
+	{
+		return ScoreEvent::LineClear;
+	}
+
+	const Tetromino desired{Tetromino{tetromino} += offset};
+	const size_t fullLines = countFullLines(field, tetromino);
+
+	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
 
 struct BPS : public IScoringSystem
