@@ -232,6 +232,11 @@ TEST_CASE("tSpinCornerCount", "[gameplay]")
 		const TSpinCornerCountResult expected{1, 1};
 		REQUIRE(tSpinCornerCount(field, minoT) == expected);
 	}
+	{
+		const Grid field{{3, 3}, {1, 0, 1, 0, 0, 0, 0, 0, 1}};
+		const TSpinCornerCountResult expected{2, 1};
+		REQUIRE(tSpinCornerCount(field, minoT) == expected);
+	}
 
 	minoT += Offset{{}, 1};
 

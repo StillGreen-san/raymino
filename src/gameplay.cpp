@@ -427,10 +427,10 @@ TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetr
 	}
 	if(topLeft)
 	{
-		return {getAt(checkOffsets[1]) + getAt(checkOffsets[3]), getAt(checkOffsets[0]) + getAt(checkOffsets[2])};
+		return {getAt(checkOffsets[0]) + getAt(checkOffsets[2]), getAt(checkOffsets[1]) + getAt(checkOffsets[3])};
 	}
 	trueOffset.x -= 1;
-	return {getAt(checkOffsets[0]) + getAt(checkOffsets[2]), getAt(checkOffsets[1]) + getAt(checkOffsets[3])};
+	return {getAt(checkOffsets[1]) + getAt(checkOffsets[3]), getAt(checkOffsets[0]) + getAt(checkOffsets[2])};
 }
 
 bool isImmobile(const Grid& field, const Tetromino& tetromino)
