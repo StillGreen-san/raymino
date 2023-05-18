@@ -444,10 +444,18 @@ bool isImmobile(const Grid& field, const Tetromino& tetromino)
 }
 
 template<>
-ScoreEvent tSpinCheck<TSpin::Immobile>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+ScoreEvent tSpinCheck<TSpin::Immobile>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
-	return ScoreEvent::LineClear;
+	const Tetromino desired{Tetromino{tetromino} += offset};
+
+	if(!isImmobile(field, desired))
+	{
+		return ScoreEvent::LineClear;
+	}
+
+	const size_t fullLines = countFullLines(field, tetromino);
+
+	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
 template<>
 ScoreEvent tSpinCheck<TSpin::ThreeCorner>(
