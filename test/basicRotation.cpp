@@ -58,6 +58,9 @@ TEST_CASE("basicRotation<Sega>", "[gameplay][basicRotation]")
 	Tetromino& minoL = *find(tetrominos, TetrominoType::L);
 	Tetromino& minoZ = *find(tetrominos, TetrominoType::Z);
 
+	REQUIRE(basicRotation<RotationSystem::Sega>(minoI, 0) == Offset{{0, 0}, 0});
+	REQUIRE(basicRotation<RotationSystem::Sega>(minoI, 4) == Offset{{0, 0}, 0});
+
 	{
 		const Offset offset = basicRotation<RotationSystem::Sega>(minoI, 2);
 		minoI += offset;
@@ -157,6 +160,9 @@ TEST_CASE("basicRotation<Original>", "[gameplay][basicRotation]")
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
 	Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
 	Tetromino& minoS = *find(tetrominos, TetrominoType::S);
+	const Tetromino& minoO = *find(tetrominos, TetrominoType::O);
+
+	REQUIRE(basicRotation<RotationSystem::Original>(minoO, 1) == Offset{{0, 0}, 0});
 
 	{
 		const Offset offset = basicRotation<RotationSystem::Original>(minoI, -4);
@@ -204,6 +210,9 @@ TEST_CASE("basicRotation<NintendoLeft>", "[gameplay][basicRotation]")
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
 	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
 	Tetromino& minoZ = *find(tetrominos, TetrominoType::Z);
+	const Tetromino& minoO = *find(tetrominos, TetrominoType::O);
+
+	REQUIRE(basicRotation<RotationSystem::NintendoLeft>(minoO, 1) == Offset{{0, 0}, 0});
 
 	{
 		const Offset offset = basicRotation<RotationSystem::NintendoLeft>(minoI, 6);
@@ -251,6 +260,9 @@ TEST_CASE("basicRotation<NintendoRight>", "[gameplay][basicRotation]")
 	Tetromino& minoI = *find(tetrominos, TetrominoType::I);
 	Tetromino& minoJ = *find(tetrominos, TetrominoType::J);
 	Tetromino& minoS = *find(tetrominos, TetrominoType::S);
+	const Tetromino& minoO = *find(tetrominos, TetrominoType::O);
+
+	REQUIRE(basicRotation<RotationSystem::NintendoRight>(minoO, 1) == Offset{{0, 0}, 0});
 
 	{
 		const Offset offset = basicRotation<RotationSystem::NintendoRight>(minoI, 1);
