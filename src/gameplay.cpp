@@ -458,9 +458,29 @@ ScoreEvent tSpinCheck<TSpin::Immobile>(const Grid& field, const Tetromino& tetro
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
 template<>
-ScoreEvent tSpinCheck<TSpin::ThreeCorner>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& tetromino, Offset offset)
 {
+	if(offset.rotation == 0)
+	{
+		return ScoreEvent::LineClear;
+	}
+
+	const Tetromino desired{Tetromino{tetromino} += offset};
+	const TSpinCornerCountResult corners = tSpinCornerCount(field, desired);
+
+	if(corners.front == 2 && corners.back >= 1)
+	{
+		return ScoreEvent::TSpin;
+	}
+	if(corners.front == 1 && corners.back == 2)
+	{
+		if(offset.position.x > 1 || offset.position.y > 1)
+		{
+			return ScoreEvent::TSpin;
+		}
+		return ScoreEvent::MiniTSpin;
+	}
+
 	return ScoreEvent::LineClear;
 }
 template<>
