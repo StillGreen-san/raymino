@@ -27,88 +27,91 @@ void Menu::UpdateDraw(App& app)
 		GuiLock();
 	}
 
-	GuiGroupBox(layoutRecs[0], GroupBoxGameText);
-	if(GuiButton(layoutRecs[2], ButtonStartGameText))
+	GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
+	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
-	if(GuiButton(layoutRecs[27], ButtonHighscoresText))
+	if(GuiButton(ButtonHighscoresRect, ButtonHighscoresText))
 	{
 		//! TODO		app.QueueSceneSwitch(MakeScene<Scene::Highscores>(app));
 	}
 
-	GuiGroupBox(layoutRecs[1], GroupBoxSettingsText);
-	GuiLabel(layoutRecs[3], LabelRotationSystemText);
-	GuiLabel(layoutRecs[4], LabelWallKicksText);
-	GuiLabel(layoutRecs[5], LabelLockDownText);
-	GuiLabel(layoutRecs[6], LabelSoftDropText);
-	GuiLabel(layoutRecs[7], LabelInstantDropText);
-	GuiLabel(layoutRecs[8], LabelTSpinText);
-	GuiLabel(layoutRecs[9], LabelShuffleTypeText);
-	GuiLabel(layoutRecs[10], LabelScoringSystemText);
-	GuiLabel(layoutRecs[19], LabelFieldWidthText);
-	GuiLabel(layoutRecs[20], LabelFieldHeightText);
-	GuiLabel(layoutRecs[21], LabelPreviewCountText);
-	GuiLabel(layoutRecs[22], LabelHoldPieceText);
-	GuiLabel(layoutRecs[29], LabelPresetsText);
-	if(GuiSpinner(layoutRecs[24], "", &SpinnerPreviewCountValue, SpinnerPreviewCountMin, SpinnerPreviewCountMax,
-	       SpinnerPreviewCountEditMode))
+	GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
+	GuiLabel(LabelRotationSystemRect, LabelRotationSystemText);
+	GuiLabel(LabelWallKicksRect, LabelWallKicksText);
+	GuiLabel(LabelLockDownRect, LabelLockDownText);
+	GuiLabel(LabelSoftDropRect, LabelSoftDropText);
+	GuiLabel(LabelInstantDropRect, LabelInstantDropText);
+	GuiLabel(LabelTSpinRect, LabelTSpinText);
+	GuiLabel(LabelShuffleTypeRect, LabelShuffleTypeText);
+	GuiLabel(LabelScoringSystemRect, LabelScoringSystemText);
+	GuiLabel(LabelFieldWidthRect, LabelFieldWidthText);
+	GuiLabel(LabelFieldHeightRect, LabelFieldHeightText);
+	GuiLabel(LabelPreviewCountRect, LabelPreviewCountText);
+	GuiLabel(LabelHoldPieceRect, LabelHoldPieceText);
+	GuiLabel(LabelPresetsRect, LabelPresetsText);
+	if(GuiSpinner(SpinnerPreviewCountRect, "", &SpinnerPreviewCountValue, SpinnerPreviewCountMin,
+	       SpinnerPreviewCountMax, SpinnerPreviewCountEditMode))
 	{
 		SpinnerPreviewCountEditMode = !SpinnerPreviewCountEditMode;
 	}
-	if(GuiSpinner(layoutRecs[25], "", &SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax,
+	if(GuiSpinner(SpinnerFieldWidthRect, "", &SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax,
 	       SpinnerFieldWidthEditMode))
 	{
 		SpinnerFieldWidthEditMode = !SpinnerFieldWidthEditMode;
 	}
-	if(GuiSpinner(layoutRecs[26], "", &SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
+	if(GuiSpinner(SpinnerFieldHeightRect, "", &SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
 	       SpinnerFieldHeightEditMode))
 	{
 		SpinnerFieldHeightEditMode = !SpinnerFieldHeightEditMode;
 	}
-	if(GuiDropdownBox(
-	       layoutRecs[23], DropdownBoxHoldPieceText, &DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode))
+	if(GuiDropdownBox(DropdownBoxHoldPieceRect, DropdownBoxHoldPieceText, &DropdownBoxHoldPieceActive,
+	       DropdownBoxHoldPieceEditMode))
 	{
 		DropdownBoxHoldPieceEditMode = !DropdownBoxHoldPieceEditMode;
 	}
-	if(GuiDropdownBox(layoutRecs[18], DropdownBoxScoringSystemText, &DropdownBoxScoringSystemActive,
+	if(GuiDropdownBox(DropdownBoxScoringSystemRect, DropdownBoxScoringSystemText, &DropdownBoxScoringSystemActive,
 	       DropdownBoxScoringSystemEditMode))
 	{
 		DropdownBoxScoringSystemEditMode = !DropdownBoxScoringSystemEditMode;
 	}
-	if(GuiDropdownBox(
-	       layoutRecs[17], DropdownBoxShuffleTypeText, &DropdownBoxShuffleTypeActive, DropdownBoxShuffleTypeEditMode))
+	if(GuiDropdownBox(DropdownBoxShuffleTypeRect, DropdownBoxShuffleTypeText, &DropdownBoxShuffleTypeActive,
+	       DropdownBoxShuffleTypeEditMode))
 	{
 		DropdownBoxShuffleTypeEditMode = !DropdownBoxShuffleTypeEditMode;
 	}
-	if(GuiDropdownBox(layoutRecs[16], DropdownBoxTSpinText, &DropdownBoxTSpinActive, DropdownBoxTSpinEditMode))
+	if(GuiDropdownBox(DropdownBoxTSpinRect, DropdownBoxTSpinText, &DropdownBoxTSpinActive, DropdownBoxTSpinEditMode))
 	{
 		DropdownBoxTSpinEditMode = !DropdownBoxTSpinEditMode;
 	}
-	if(GuiDropdownBox(
-	       layoutRecs[15], DropdownBoxInstantDropText, &DropdownBoxInstantDropActive, DropdownBoxInstantDropEditMode))
+	if(GuiDropdownBox(DropdownBoxInstantDropRect, DropdownBoxInstantDropText, &DropdownBoxInstantDropActive,
+	       DropdownBoxInstantDropEditMode))
 	{
 		DropdownBoxInstantDropEditMode = !DropdownBoxInstantDropEditMode;
 	}
-	if(GuiDropdownBox(layoutRecs[14], DropdownBoxSoftDropText, &DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode))
+	if(GuiDropdownBox(
+	       DropdownBoxSoftDropRect, DropdownBoxSoftDropText, &DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode))
 	{
 		DropdownBoxSoftDropEditMode = !DropdownBoxSoftDropEditMode;
 	}
-	if(GuiDropdownBox(layoutRecs[13], DropdownBoxLockDownText, &DropdownBoxLockDownActive, DropdownBoxLockDownEditMode))
+	if(GuiDropdownBox(
+	       DropdownBoxLockDownRect, DropdownBoxLockDownText, &DropdownBoxLockDownActive, DropdownBoxLockDownEditMode))
 	{
 		DropdownBoxLockDownEditMode = !DropdownBoxLockDownEditMode;
 	}
-	if(GuiDropdownBox(
-	       layoutRecs[12], DropdownBoxWallKicksText, &DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode))
+	if(GuiDropdownBox(DropdownBoxWallKicksRect, DropdownBoxWallKicksText, &DropdownBoxWallKicksActive,
+	       DropdownBoxWallKicksEditMode))
 	{
 		DropdownBoxWallKicksEditMode = !DropdownBoxWallKicksEditMode;
 	}
-	if(GuiDropdownBox(layoutRecs[11], DropdownBoxRotationSystemText, &DropdownBoxRotationSystemActive,
+	if(GuiDropdownBox(DropdownBoxRotationSystemRect, DropdownBoxRotationSystemText, &DropdownBoxRotationSystemActive,
 	       DropdownBoxRotationSystemEditMode))
 	{
 		DropdownBoxRotationSystemEditMode = !DropdownBoxRotationSystemEditMode;
 	}
-	if(GuiDropdownBox(layoutRecs[28], DropdownBoxPresetsText, &DropdownBoxPresetsActive, DropdownBoxPresetsEditMode))
+	if(GuiDropdownBox(
+	       DropdownBoxPresetsRect, DropdownBoxPresetsText, &DropdownBoxPresetsActive, DropdownBoxPresetsEditMode))
 	{
 		DropdownBoxPresetsEditMode = !DropdownBoxPresetsEditMode;
 	}

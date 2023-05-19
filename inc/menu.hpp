@@ -77,37 +77,35 @@ struct Menu : public IScene
 	static constexpr int SpinnerFieldHeightMax = 50;
 	int DropdownBoxPresetsActive = 0;
 
-	static constexpr std::array<Rectangle, 30> layoutRecs{{
-	    {AnchorGame.x + 0, AnchorGame.y + 0, 552, 72},
-	    {AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456},
-	    {AnchorGame.x + 88, AnchorGame.y + 16, 152, 40},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 72, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 120, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 168, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 216, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 264, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 312, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 360, 96, 24},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 408, 96, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 72, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 120, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 168, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 216, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 264, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 312, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 408, 136, 24},
-	    {AnchorSettings.x + 296, AnchorSettings.y + 72, 96, 24},
-	    {AnchorSettings.x + 296, AnchorSettings.y + 120, 96, 24},
-	    {AnchorSettings.x + 296, AnchorSettings.y + 168, 96, 24},
-	    {AnchorSettings.x + 296, AnchorSettings.y + 216, 96, 24},
-	    {AnchorSettings.x + 392, AnchorSettings.y + 216, 136, 24},
-	    {AnchorSettings.x + 392, AnchorSettings.y + 168, 136, 24},
-	    {AnchorSettings.x + 392, AnchorSettings.y + 72, 136, 24},
-	    {AnchorSettings.x + 392, AnchorSettings.y + 120, 136, 24},
-	    {AnchorGame.x + 312, AnchorGame.y + 16, 152, 40},
-	    {AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32},
-	    {AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24},
-	}};
+	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
+	static constexpr Rectangle GroupBoxSettingsRect{AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456};
+	static constexpr Rectangle ButtonStartGameRect{AnchorGame.x + 88, AnchorGame.y + 16, 152, 40};
+	static constexpr Rectangle LabelRotationSystemRect{AnchorSettings.x + 24, AnchorSettings.y + 72, 96, 24};
+	static constexpr Rectangle LabelWallKicksRect{AnchorSettings.x + 24, AnchorSettings.y + 120, 96, 24};
+	static constexpr Rectangle LabelLockDownRect{AnchorSettings.x + 24, AnchorSettings.y + 168, 96, 24};
+	static constexpr Rectangle LabelSoftDropRect{AnchorSettings.x + 24, AnchorSettings.y + 216, 96, 24};
+	static constexpr Rectangle LabelInstantDropRect{AnchorSettings.x + 24, AnchorSettings.y + 264, 96, 24};
+	static constexpr Rectangle LabelTSpinRect{AnchorSettings.x + 296, AnchorSettings.y + 72, 96, 24};
+	static constexpr Rectangle LabelShuffleTypeRect{AnchorSettings.x + 296, AnchorSettings.y + 120, 96, 24};
+	static constexpr Rectangle LabelScoringSystemRect{AnchorSettings.x + 296, AnchorSettings.y + 168, 96, 24};
+	static constexpr Rectangle DropdownBoxRotationSystemRect{AnchorSettings.x + 120, AnchorSettings.y + 72, 136, 24};
+	static constexpr Rectangle DropdownBoxWallKicksRect{AnchorSettings.x + 120, AnchorSettings.y + 120, 136, 24};
+	static constexpr Rectangle DropdownBoxLockDownRect{AnchorSettings.x + 120, AnchorSettings.y + 168, 136, 24};
+	static constexpr Rectangle DropdownBoxSoftDropRect{AnchorSettings.x + 120, AnchorSettings.y + 216, 136, 24};
+	static constexpr Rectangle DropdownBoxInstantDropRect{AnchorSettings.x + 120, AnchorSettings.y + 264, 136, 24};
+	static constexpr Rectangle DropdownBoxTSpinRect{AnchorSettings.x + 392, AnchorSettings.y + 72, 136, 24};
+	static constexpr Rectangle DropdownBoxShuffleTypeRect{AnchorSettings.x + 392, AnchorSettings.y + 120, 136, 24};
+	static constexpr Rectangle DropdownBoxScoringSystemRect{AnchorSettings.x + 392, AnchorSettings.y + 168, 136, 24};
+	static constexpr Rectangle LabelFieldWidthRect{AnchorSettings.x + 24, AnchorSettings.y + 312, 96, 24};
+	static constexpr Rectangle LabelFieldHeightRect{AnchorSettings.x + 24, AnchorSettings.y + 360, 96, 24};
+	static constexpr Rectangle LabelPreviewCountRect{AnchorSettings.x + 24, AnchorSettings.y + 408, 96, 24};
+	static constexpr Rectangle LabelHoldPieceRect{AnchorSettings.x + 296, AnchorSettings.y + 216, 96, 24};
+	static constexpr Rectangle DropdownBoxHoldPieceRect{AnchorSettings.x + 392, AnchorSettings.y + 216, 136, 24};
+	static constexpr Rectangle SpinnerPreviewCountRect{AnchorSettings.x + 120, AnchorSettings.y + 408, 136, 24};
+	static constexpr Rectangle SpinnerFieldWidthRect{AnchorSettings.x + 120, AnchorSettings.y + 312, 136, 24};
+	static constexpr Rectangle SpinnerFieldHeightRect{AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24};
+	static constexpr Rectangle ButtonHighscoresRect{AnchorGame.x + 312, AnchorGame.y + 16, 152, 40};
+	static constexpr Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32};
+	static constexpr Rectangle LabelPresetsRect{AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24};
 };
 } // namespace raymino
