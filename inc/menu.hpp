@@ -2,45 +2,45 @@
 
 #include "scenes.hpp"
 
+#include <array>
 #include <raylib.h>
 
 namespace raymino
 {
 struct Menu : public IScene
 {
-	Menu();
 	void UpdateDraw(class App& app) override;
 
-	const char* GroupBoxGameText = "Game";
-	const char* ButtonStartGameText = "Start Game";
-	const char* ButtonHighscoresText = "Highscores";
-	const char* GroupBoxSettingsText = "Settings";
-	const char* LabelRotationSystemText = "Rotation System";
-	const char* LabelWallKicksText = "Wall Kicks";
-	const char* LabelLockDownText = "Lock Down";
-	const char* LabelSoftDropText = "Soft Drop";
-	const char* LabelInstantDropText = "Instant Drop";
-	const char* LabelTSpinText = "TSpin";
-	const char* LabelShuffleTypeText = "Shuffle Type";
-	const char* LabelScoringSystemText = "Scoring System";
-	const char* LabelFieldWidthText = "Field Width";
-	const char* LabelFieldHeightText = "Field Height";
-	const char* LabelPreviewCountText = "Preview Count";
-	const char* LabelHoldPieceText = "Hold Piece";
-	const char* LabelPresetsText = "Presets";
-	const char* DropdownBoxRotationSystemText = "Nintendo Right;PlaceHolder";
-	const char* DropdownBoxWallKicksText = "Arika;PlaceHolder";
-	const char* DropdownBoxLockDownText = "Extended;PlaceHolder";
-	const char* DropdownBoxSoftDropText = "None Locking;PlaceHolder";
-	const char* DropdownBoxInstantDropText = "Sonic;PlaceHolder";
-	const char* DropdownBoxTSpinText = "Three Corner;PlaceHolder";
-	const char* DropdownBoxShuffleTypeText = "Single Bag;PlaceHolder";
-	const char* DropdownBoxScoringSystemText = "Guideline;PlaceHolder";
-	const char* DropdownBoxHoldPieceText = "Yes;PlaceHolder";
-	const char* DropdownBoxPresetsText = "Guideline;PlaceHolder";
+	static constexpr const char* GroupBoxGameText = "Game";
+	static constexpr const char* ButtonStartGameText = "Start Game";
+	static constexpr const char* ButtonHighscoresText = "Highscores";
+	static constexpr const char* GroupBoxSettingsText = "Settings";
+	static constexpr const char* LabelRotationSystemText = "Rotation System";
+	static constexpr const char* LabelWallKicksText = "Wall Kicks";
+	static constexpr const char* LabelLockDownText = "Lock Down";
+	static constexpr const char* LabelSoftDropText = "Soft Drop";
+	static constexpr const char* LabelInstantDropText = "Instant Drop";
+	static constexpr const char* LabelTSpinText = "TSpin";
+	static constexpr const char* LabelShuffleTypeText = "Shuffle Type";
+	static constexpr const char* LabelScoringSystemText = "Scoring System";
+	static constexpr const char* LabelFieldWidthText = "Field Width";
+	static constexpr const char* LabelFieldHeightText = "Field Height";
+	static constexpr const char* LabelPreviewCountText = "Preview Count";
+	static constexpr const char* LabelHoldPieceText = "Hold Piece";
+	static constexpr const char* LabelPresetsText = "Presets";
+	static constexpr const char* DropdownBoxRotationSystemText = "Nintendo Right;PlaceHolder";
+	static constexpr const char* DropdownBoxWallKicksText = "Arika;PlaceHolder";
+	static constexpr const char* DropdownBoxLockDownText = "Extended;PlaceHolder";
+	static constexpr const char* DropdownBoxSoftDropText = "None Locking;PlaceHolder";
+	static constexpr const char* DropdownBoxInstantDropText = "Sonic;PlaceHolder";
+	static constexpr const char* DropdownBoxTSpinText = "Three Corner;PlaceHolder";
+	static constexpr const char* DropdownBoxShuffleTypeText = "Single Bag;PlaceHolder";
+	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;PlaceHolder";
+	static constexpr const char* DropdownBoxHoldPieceText = "Yes;PlaceHolder";
+	static constexpr const char* DropdownBoxPresetsText = "Guideline;PlaceHolder";
 
-	const Vector2 AnchorGame = {24, 24};
-	const Vector2 AnchorSettings = {24, 120};
+	static constexpr Vector2 AnchorGame = {24, 24};
+	static constexpr Vector2 AnchorSettings = {24, 120};
 
 	bool DropdownBoxRotationSystemEditMode = false;
 	bool DropdownBoxWallKicksEditMode = false;
@@ -55,8 +55,6 @@ struct Menu : public IScene
 	bool SpinnerFieldWidthEditMode = false;
 	bool SpinnerFieldHeightEditMode = false;
 	bool DropdownBoxPresetsEditMode = false;
-	bool ButtonGameStartClicked = false;
-	bool ButtonHighscoresClicked = false;
 
 	int DropdownBoxRotationSystemActive = 0;
 	int DropdownBoxWallKicksActive = 0;
@@ -72,7 +70,7 @@ struct Menu : public IScene
 	int SpinnerFieldHeightValue = 0;
 	int DropdownBoxPresetsActive = 0;
 
-	const Rectangle layoutRecs[30] = {
+	static constexpr std::array<Rectangle, 30> layoutRecs{{
 	    {AnchorGame.x + 0, AnchorGame.y + 0, 552, 72},
 	    {AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456},
 	    {AnchorGame.x + 88, AnchorGame.y + 16, 152, 40},
@@ -103,6 +101,6 @@ struct Menu : public IScene
 	    {AnchorGame.x + 312, AnchorGame.y + 16, 152, 40},
 	    {AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32},
 	    {AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24},
-	};
+	}};
 };
 } // namespace raymino

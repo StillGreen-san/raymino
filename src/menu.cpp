@@ -13,10 +13,6 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>([[maybe_unused]] App& app)
 	return std::make_unique<Menu>();
 }
 
-Menu::Menu()
-{
-}
-
 void Menu::UpdateDraw(App& app)
 {
 	BeginDrawing();
@@ -32,8 +28,14 @@ void Menu::UpdateDraw(App& app)
 	}
 
 	GuiGroupBox(layoutRecs[0], GroupBoxGameText);
-	ButtonGameStartClicked = GuiButton(layoutRecs[2], ButtonStartGameText);
-	ButtonHighscoresClicked = GuiButton(layoutRecs[27], ButtonHighscoresText);
+	if(GuiButton(layoutRecs[2], ButtonStartGameText))
+	{
+		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
+	}
+	if(GuiButton(layoutRecs[27], ButtonHighscoresText))
+	{
+		//! TODO		app.QueueSceneSwitch(MakeScene<Scene::Highscores>(app));
+	}
 
 	GuiGroupBox(layoutRecs[1], GroupBoxSettingsText);
 	GuiLabel(layoutRecs[3], LabelRotationSystemText);
@@ -111,16 +113,5 @@ void Menu::UpdateDraw(App& app)
 	GuiUnlock();
 
 	EndDrawing();
-
-	if(ButtonGameStartClicked)
-	{
-		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
-		return;
-	}
-	if(ButtonHighscoresClicked)
-	{
-		//! TODO		app.QueueSceneSwitch(MakeScene<Scene::Highscores>(app));
-		return;
-	}
 }
 } // namespace raymino
