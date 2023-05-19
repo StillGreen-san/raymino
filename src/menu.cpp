@@ -28,6 +28,22 @@ Menu::Menu(App& app) :
 {
 }
 
+void Menu::updateSettings(App& app) const
+{
+	app.settings.rotationSystem = static_cast<RotationSystem>(DropdownBoxRotationSystemActive);
+	app.settings.wallKicks = static_cast<WallKicks>(DropdownBoxWallKicksActive);
+	app.settings.lockDown = static_cast<LockDown>(DropdownBoxLockDownActive);
+	app.settings.softDrop = static_cast<SoftDrop>(DropdownBoxSoftDropActive);
+	app.settings.instantDrop = static_cast<InstantDrop>(DropdownBoxInstantDropActive);
+	app.settings.tSpin = static_cast<TSpin>(DropdownBoxTSpinActive);
+	app.settings.shuffleType = static_cast<ShuffleType>(DropdownBoxShuffleTypeActive);
+	app.settings.scoringSystem = static_cast<ScoringSystem>(DropdownBoxScoringSystemActive);
+	app.settings.holdPiece = static_cast<bool>(DropdownBoxHoldPieceActive);
+	app.settings.previewCount = SpinnerPreviewCountValue;
+	app.settings.fieldWidth = SpinnerFieldWidthValue;
+	app.settings.fieldHeight = SpinnerFieldHeightValue;
+}
+
 void Menu::UpdateDraw(App& app)
 {
 	BeginDrawing();
@@ -45,6 +61,7 @@ void Menu::UpdateDraw(App& app)
 	GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
+		updateSettings(app);
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
 	if(GuiButton(ButtonHighscoresRect, ButtonHighscoresText))

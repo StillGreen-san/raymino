@@ -12,6 +12,7 @@ struct Menu : public IScene
 	Menu(class App& app);
 
 	void UpdateDraw(class App& app) override;
+	void updateSettings(class App& app) const;
 
 	static constexpr const char* GroupBoxGameText = "Game";
 	static constexpr const char* ButtonStartGameText = "Start Game";
