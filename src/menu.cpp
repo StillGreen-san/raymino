@@ -114,12 +114,12 @@ void Menu::UpdateDraw(App& app)
 
 	if(ButtonGameStartClicked)
 	{
-		app.SwitchScene(MakeScene<Scene::Game>(app));
+		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 		return;
 	}
 	if(ButtonHighscoresClicked)
 	{
-		//!		app.SwitchScene(MakeScene<Scene::Highscores>(app));
+		//! TODO		app.QueueSceneSwitch(MakeScene<Scene::Highscores>(app));
 		return;
 	}
 }

@@ -38,11 +38,12 @@ public:
 	/**
 	 * @param newScene to switch to
 	 */
-	void SwitchScene(std::unique_ptr<IScene> newScene);
+	void QueueSceneSwitch(std::unique_ptr<IScene> newScene);
 
 private:
 	App();
 
 	std::unique_ptr<IScene> currentScene;
+	std::unique_ptr<IScene> nextScene = nullptr;
 };
 } // namespace raymino

@@ -20,6 +20,10 @@ void UpdateDraw(void* app)
 
 void raymino::App::UpdateDraw()
 {
+	if(nextScene)
+	{
+		currentScene = std::move(nextScene);
+	}
 	currentScene->UpdateDraw(*this);
 }
 
@@ -35,7 +39,7 @@ void raymino::App::Run()
 #endif
 }
 
-void raymino::App::SwitchScene(std::unique_ptr<IScene> newScene)
+void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 {
-	currentScene = std::move(newScene);
+	nextScene = std::move(newScene);
 }
