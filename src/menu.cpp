@@ -8,9 +8,24 @@
 namespace raymino
 {
 template<>
-std::unique_ptr<IScene> MakeScene<Scene::Menu>([[maybe_unused]] App& app)
+std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 {
-	return std::make_unique<Menu>();
+	return std::make_unique<Menu>(app);
+}
+
+Menu::Menu(App& app) :
+    DropdownBoxRotationSystemActive{static_cast<int>(app.settings.rotationSystem)},
+    DropdownBoxWallKicksActive{static_cast<int>(app.settings.wallKicks)},
+    DropdownBoxLockDownActive{static_cast<int>(app.settings.lockDown)},
+    DropdownBoxSoftDropActive{static_cast<int>(app.settings.softDrop)},
+    DropdownBoxInstantDropActive{static_cast<int>(app.settings.instantDrop)},
+    DropdownBoxTSpinActive{static_cast<int>(app.settings.tSpin)},
+    DropdownBoxShuffleTypeActive{static_cast<int>(app.settings.shuffleType)},
+    DropdownBoxScoringSystemActive{static_cast<int>(app.settings.scoringSystem)},
+    DropdownBoxHoldPieceActive{static_cast<int>(app.settings.holdPiece)},
+    SpinnerPreviewCountValue{app.settings.previewCount}, SpinnerFieldWidthValue{app.settings.fieldWidth},
+    SpinnerFieldHeightValue{app.settings.fieldHeight}
+{
 }
 
 void Menu::UpdateDraw(App& app)

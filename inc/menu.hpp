@@ -9,6 +9,8 @@ namespace raymino
 {
 struct Menu : public IScene
 {
+	Menu(class App& app);
+
 	void UpdateDraw(class App& app) override;
 
 	static constexpr const char* GroupBoxGameText = "Game";
@@ -37,7 +39,7 @@ struct Menu : public IScene
 	static constexpr const char* DropdownBoxTSpinText = "Immobile;Three Corner;Lenient";
 	static constexpr const char* DropdownBoxShuffleTypeText = "Random;Single Bag;Double Bag;Triple Bag";
 	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;BPS;Sega;Nintendo";
-	static constexpr const char* DropdownBoxHoldPieceText = "Yes;No";
+	static constexpr const char* DropdownBoxHoldPieceText = "No;Yes";
 	static constexpr const char* DropdownBoxPresetsText = "Guideline";
 
 	static constexpr Vector2 AnchorGame = {24, 24};
@@ -57,23 +59,23 @@ struct Menu : public IScene
 	bool SpinnerFieldHeightEditMode = false;
 	bool DropdownBoxPresetsEditMode = false;
 
-	int DropdownBoxRotationSystemActive = 1;
-	int DropdownBoxWallKicksActive = 2;
-	int DropdownBoxLockDownActive = 2;
-	int DropdownBoxSoftDropActive = 1;
-	int DropdownBoxInstantDropActive = 0;
-	int DropdownBoxTSpinActive = 1;
-	int DropdownBoxShuffleTypeActive = 1;
-	int DropdownBoxScoringSystemActive = 0;
-	int DropdownBoxHoldPieceActive = 0;
+	int DropdownBoxRotationSystemActive;
+	int DropdownBoxWallKicksActive;
+	int DropdownBoxLockDownActive;
+	int DropdownBoxSoftDropActive;
+	int DropdownBoxInstantDropActive;
+	int DropdownBoxTSpinActive;
+	int DropdownBoxShuffleTypeActive;
+	int DropdownBoxScoringSystemActive;
+	int DropdownBoxHoldPieceActive;
 	static constexpr int SpinnerPreviewCountMin = 0;
-	int SpinnerPreviewCountValue = 6;
+	int SpinnerPreviewCountValue;
 	static constexpr int SpinnerPreviewCountMax = 10;
 	static constexpr int SpinnerFieldWidthMin = 5;
-	int SpinnerFieldWidthValue = 10;
+	int SpinnerFieldWidthValue;
 	static constexpr int SpinnerFieldWidthMax = 50;
 	static constexpr int SpinnerFieldHeightMin = 10;
-	int SpinnerFieldHeightValue = 20;
+	int SpinnerFieldHeightValue;
 	static constexpr int SpinnerFieldHeightMax = 50;
 	int DropdownBoxPresetsActive = 0;
 
