@@ -51,15 +51,18 @@ void Menu::UpdateDraw(App& app)
 	GuiLabel(layoutRecs[21], LabelPreviewCountText);
 	GuiLabel(layoutRecs[22], LabelHoldPieceText);
 	GuiLabel(layoutRecs[29], LabelPresetsText);
-	if(GuiSpinner(layoutRecs[24], "", &SpinnerPreviewCountValue, 0, 10, SpinnerPreviewCountEditMode))
+	if(GuiSpinner(layoutRecs[24], "", &SpinnerPreviewCountValue, SpinnerPreviewCountMin, SpinnerPreviewCountMax,
+	       SpinnerPreviewCountEditMode))
 	{
 		SpinnerPreviewCountEditMode = !SpinnerPreviewCountEditMode;
 	}
-	if(GuiSpinner(layoutRecs[25], "", &SpinnerFieldWidthValue, 5, 100, SpinnerFieldWidthEditMode))
+	if(GuiSpinner(layoutRecs[25], "", &SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax,
+	       SpinnerFieldWidthEditMode))
 	{
 		SpinnerFieldWidthEditMode = !SpinnerFieldWidthEditMode;
 	}
-	if(GuiSpinner(layoutRecs[26], "", &SpinnerFieldHeightValue, 10, 100, SpinnerFieldHeightEditMode))
+	if(GuiSpinner(layoutRecs[26], "", &SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
+	       SpinnerFieldHeightEditMode))
 	{
 		SpinnerFieldHeightEditMode = !SpinnerFieldHeightEditMode;
 	}

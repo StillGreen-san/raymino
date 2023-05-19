@@ -28,16 +28,17 @@ struct Menu : public IScene
 	static constexpr const char* LabelPreviewCountText = "Preview Count";
 	static constexpr const char* LabelHoldPieceText = "Hold Piece";
 	static constexpr const char* LabelPresetsText = "Presets";
-	static constexpr const char* DropdownBoxRotationSystemText = "Nintendo Right;PlaceHolder";
-	static constexpr const char* DropdownBoxWallKicksText = "Arika;PlaceHolder";
-	static constexpr const char* DropdownBoxLockDownText = "Extended;PlaceHolder";
-	static constexpr const char* DropdownBoxSoftDropText = "None Locking;PlaceHolder";
-	static constexpr const char* DropdownBoxInstantDropText = "Sonic;PlaceHolder";
-	static constexpr const char* DropdownBoxTSpinText = "Three Corner;PlaceHolder";
-	static constexpr const char* DropdownBoxShuffleTypeText = "Single Bag;PlaceHolder";
-	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;PlaceHolder";
-	static constexpr const char* DropdownBoxHoldPieceText = "Yes;PlaceHolder";
-	static constexpr const char* DropdownBoxPresetsText = "Guideline;PlaceHolder";
+	static constexpr const char* DropdownBoxRotationSystemText =
+	    "Original;Super;Arika;Sega;Nintendo Left;Nintendo Right";
+	static constexpr const char* DropdownBoxWallKicksText = "None;Arika;Super";
+	static constexpr const char* DropdownBoxLockDownText = "Infinit;Extended;Classic;Entry";
+	static constexpr const char* DropdownBoxSoftDropText = "Locking;None Locking";
+	static constexpr const char* DropdownBoxInstantDropText = "Hard;Sonic";
+	static constexpr const char* DropdownBoxTSpinText = "Immobile;Three Corner;Lenient";
+	static constexpr const char* DropdownBoxShuffleTypeText = "Random;Single Bag;Double Bag;Triple Bag";
+	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;BPS;Sega;Nintendo";
+	static constexpr const char* DropdownBoxHoldPieceText = "Yes;No";
+	static constexpr const char* DropdownBoxPresetsText = "Guideline";
 
 	static constexpr Vector2 AnchorGame = {24, 24};
 	static constexpr Vector2 AnchorSettings = {24, 120};
@@ -56,18 +57,24 @@ struct Menu : public IScene
 	bool SpinnerFieldHeightEditMode = false;
 	bool DropdownBoxPresetsEditMode = false;
 
-	int DropdownBoxRotationSystemActive = 0;
-	int DropdownBoxWallKicksActive = 0;
-	int DropdownBoxLockDownActive = 0;
-	int DropdownBoxSoftDropActive = 0;
+	int DropdownBoxRotationSystemActive = 1;
+	int DropdownBoxWallKicksActive = 2;
+	int DropdownBoxLockDownActive = 2;
+	int DropdownBoxSoftDropActive = 1;
 	int DropdownBoxInstantDropActive = 0;
-	int DropdownBoxTSpinActive = 0;
-	int DropdownBoxShuffleTypeActive = 0;
+	int DropdownBoxTSpinActive = 1;
+	int DropdownBoxShuffleTypeActive = 1;
 	int DropdownBoxScoringSystemActive = 0;
 	int DropdownBoxHoldPieceActive = 0;
-	int SpinnerPreviewCountValue = 0;
-	int SpinnerFieldWidthValue = 0;
-	int SpinnerFieldHeightValue = 0;
+	static constexpr int SpinnerPreviewCountMin = 0;
+	int SpinnerPreviewCountValue = 6;
+	static constexpr int SpinnerPreviewCountMax = 10;
+	static constexpr int SpinnerFieldWidthMin = 5;
+	int SpinnerFieldWidthValue = 10;
+	static constexpr int SpinnerFieldWidthMax = 50;
+	static constexpr int SpinnerFieldHeightMin = 10;
+	int SpinnerFieldHeightValue = 20;
+	static constexpr int SpinnerFieldHeightMax = 50;
 	int DropdownBoxPresetsActive = 0;
 
 	static constexpr std::array<Rectangle, 30> layoutRecs{{
