@@ -720,24 +720,45 @@ template<>
 std::vector<size_t> shuffledIndices<ShuffleType::Random>(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
 {
-	return {};
+	std::vector<size_t> indices(baseMinos.size(), 0);
+	std::uniform_int_distribution<size_t> dist(0, indices.size() - 1);
+	std::generate(indices.begin(), indices.end(),
+	    [&]()
+	    {
+		    return dist(rng);
+	    });
+	return indices;
 }
 template<>
 std::vector<size_t> shuffledIndices<ShuffleType::SingleBag>(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
 {
-	return {};
+	std::vector<size_t> indices(baseMinos.size(), 0);
+	std::iota(indices.begin(), indices.end(), 0);
+	std::shuffle(indices.begin(), indices.end(), rng);
+	return indices;
 }
 template<>
 std::vector<size_t> shuffledIndices<ShuffleType::DoubleBag>(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
 {
-	return {};
+	const size_t baseSize = baseMinos.size();
+	std::vector<size_t> indices(baseSize * 2, 0);
+	std::iota(indices.begin(), std::next(indices.begin(), baseSize), 0);
+	std::iota(std::next(indices.begin(), baseSize), indices.end(), 0);
+	std::shuffle(indices.begin(), indices.end(), rng);
+	return indices;
 }
 template<>
 std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
 {
-	return {};
+	const size_t baseSize = baseMinos.size();
+	std::vector<size_t> indices(baseSize * 3, 0);
+	std::iota(indices.begin(), std::next(indices.begin(), baseSize), 0);
+	std::iota(std::next(indices.begin(), baseSize), std::next(indices.begin(), baseSize * 2), 0);
+	std::iota(std::next(indices.begin(), baseSize * 2), indices.end(), 0);
+	std::shuffle(indices.begin(), indices.end(), rng);
+	return indices;
 }
 } // namespace raymino
