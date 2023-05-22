@@ -715,4 +715,29 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Guideline>()
 {
 	return std::make_unique<Guideline>();
 }
+
+template<>
+std::vector<size_t> shuffledIndices<ShuffleType::Random>(
+    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+{
+	return {};
+}
+template<>
+std::vector<size_t> shuffledIndices<ShuffleType::SingleBag>(
+    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+{
+	return {};
+}
+template<>
+std::vector<size_t> shuffledIndices<ShuffleType::DoubleBag>(
+    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+{
+	return {};
+}
+template<>
+std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
+    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+{
+	return {};
+}
 } // namespace raymino

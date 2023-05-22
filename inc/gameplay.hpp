@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <random>
 #include <vector>
 
 namespace raymino
@@ -169,4 +170,13 @@ struct IScoringSystem
  */
 template<ScoringSystem TSys>
 std::unique_ptr<IScoringSystem> makeScoringSystem();
+
+/**
+ * @tparam TType ShuffleType
+ * @param baseMinos to shuffle indices from
+ * @param rng random_engine
+ * @return std::vector<size_t> of indices into baseMinos
+ */
+template<ShuffleType TType>
+std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng);
 } // namespace raymino

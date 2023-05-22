@@ -399,3 +399,40 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 		REQUIRE(scoreSys->process(ScoreEvent::PerfectClear, 4, 1) == 3200);
 	}
 }
+
+TEST_CASE("shuffledIndices", "[gameplay]")
+{
+	const std::vector<Tetromino> baseMinos = makeBaseMinos<RotationSystem::Super>();
+	std::default_random_engine rng(std::random_device{}());
+	auto allIndicesValid = [size = baseMinos.size()](const std::vector<size_t>& indices)
+	{
+		return std::all_of(indices.begin(), indices.end(),
+		    [size](size_t idx)
+		    {
+			    return idx < size;
+		    });
+	};
+	{
+		const std::vector<size_t> indices = shuffledIndices<ShuffleType::Random>(baseMinos, rng);
+		REQUIRE(indices.size() == baseMinos.size());
+		REQUIRE(allIndicesValid(indices));
+	}
+	{
+		const std::vector<size_t> indices = shuffledIndices<ShuffleType::SingleBag>(baseMinos, rng);
+		REQUIRE(indices.size() == baseMinos.size());
+		REQUIRE(allIndicesValid(indices));
+		REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 1);
+	}
+	{
+		const std::vector<size_t> indices = shuffledIndices<ShuffleType::DoubleBag>(baseMinos, rng);
+		REQUIRE(indices.size() == baseMinos.size() * 2);
+		REQUIRE(allIndicesValid(indices));
+		REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 2);
+	}
+	{
+		const std::vector<size_t> indices = shuffledIndices<ShuffleType::TripleBag>(baseMinos, rng);
+		REQUIRE(indices.size() == baseMinos.size() * 3);
+		REQUIRE(allIndicesValid(indices));
+		REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 3);
+	}
+}
