@@ -742,7 +742,7 @@ template<>
 std::vector<size_t> shuffledIndices<ShuffleType::DoubleBag>(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
 {
-	const size_t baseSize = baseMinos.size();
+	const auto baseSize = static_cast<ptrdiff_t>(baseMinos.size());
 	std::vector<size_t> indices(baseSize * 2, 0);
 	std::iota(indices.begin(), std::next(indices.begin(), baseSize), 0);
 	std::iota(std::next(indices.begin(), baseSize), indices.end(), 0);
@@ -753,7 +753,7 @@ template<>
 std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
 {
-	const size_t baseSize = baseMinos.size();
+	const auto baseSize = static_cast<ptrdiff_t>(baseMinos.size());
 	std::vector<size_t> indices(baseSize * 3, 0);
 	std::iota(indices.begin(), std::next(indices.begin(), baseSize), 0);
 	std::iota(std::next(indices.begin(), baseSize), std::next(indices.begin(), baseSize * 2), 0);
