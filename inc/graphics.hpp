@@ -29,10 +29,10 @@ private:
  * @param at position
  * @param cellSize
  * @param borderSize
- * @param minoColor
+ * @param minoColors
  * @remarks total size = (grid.size * cellSize) + ((grid.size - 1) * borderSize)
  */
-void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, Color minoColor);
+void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors);
 
 /**
  * @param grid to draw background of
