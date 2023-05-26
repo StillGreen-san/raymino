@@ -16,7 +16,7 @@ void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, Color mino
 	const int totalCellSize = cellSize + borderSize;
 	const int totalGridWidth = totalCellSize * gridSize.width;
 	const int maxGridOffset = at.x + totalGridWidth;
-	for(const uint8_t cell : grid)
+	for(const Grid::Cell cell : grid)
 	{
 		if(cell != 0)
 		{

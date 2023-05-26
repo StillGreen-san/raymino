@@ -19,9 +19,9 @@ public:
 		XY position;
 	};
 
-	static constexpr uint8_t emptyCell = 0;
+	static constexpr Grid::Cell emptyCell = 0;
 
-	using FieldConstIterator = std::vector<uint8_t>::const_iterator;
+	using FieldConstIterator = std::vector<Grid::Cell>::const_iterator;
 	using MinoConstIterator = std::vector<Grid>::const_iterator;
 	using ShuffleBaseMinosFunc = void(const std::vector<Grid>& baseMinos,
 	    std::back_insert_iterator<std::vector<Grid>> nextMinosInserter, size_t minCount);

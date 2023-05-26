@@ -6,10 +6,10 @@
 
 using namespace raymino;
 
-TEST_CASE("Grid(Size,uint8_t)", "[Grid]")
+TEST_CASE("Grid(Size,Grid::Cell)", "[Grid]")
 {
 	const Size size{2, 2};
-	const uint8_t fill = 7;
+	const Grid::Cell fill = 7;
 
 	const Grid grid(size, fill);
 
@@ -18,10 +18,10 @@ TEST_CASE("Grid(Size,uint8_t)", "[Grid]")
 	REQUIRE(std::count(grid.begin(), grid.end(), fill) == size.area());
 }
 
-TEST_CASE("Grid(Size,vector<uint8_t>)", "[Grid]")
+TEST_CASE("Grid(Size,vector<Grid::Cell>)", "[Grid]")
 {
 	const Size size{3, 2};
-	const std::vector<uint8_t> fill{1, 2, 3, 4, 5, 6};
+	const std::vector<Grid::Cell> fill{1, 2, 3, 4, 5, 6};
 
 	const Grid grid(size, fill);
 
@@ -37,8 +37,8 @@ TEST_CASE("Grid(Size,vector<uint8_t>)", "[Grid]")
 TEST_CASE("Grid(Grid,function)", "[Grid]")
 {
 	const Size size{2, 2};
-	const uint8_t fill = 7;
-	auto func = [](uint8_t cell) -> uint8_t
+	const Grid::Cell fill = 7;
+	auto func = [](Grid::Cell cell) -> Grid::Cell
 	{
 		return cell * 2;
 	};
@@ -129,7 +129,7 @@ TEST_CASE("Grid::transformCells", "[Grid]")
 	Grid grid({2, 2}, {1, 2, 3, 4});
 
 	grid.transformCells(
-	    [](uint8_t cell) -> uint8_t
+	    [](Grid::Cell cell) -> Grid::Cell
 	    {
 		    return cell + 3;
 	    });

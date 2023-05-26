@@ -376,7 +376,7 @@ size_t eraseFullLines(Grid& grid)
 
 	while(linesWriteBegin != linesEnd)
 	{
-		std::fill(linesWriteBegin, std::next(linesWriteBegin, gridWidth), uint8_t{0});
+		std::fill(linesWriteBegin, std::next(linesWriteBegin, gridWidth), Grid::Cell{0});
 		std::advance(linesWriteBegin, gridWidth);
 	}
 

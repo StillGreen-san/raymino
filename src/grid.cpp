@@ -13,11 +13,11 @@ size_t index1D(unsigned x, unsigned y, unsigned width)
 	return (y * width) + x;
 }
 
-Grid::Grid(Size size, uint8_t fill) : cells(size.area(), fill), size{size}
+Grid::Grid(Size size, Grid::Cell fill) : cells(size.area(), fill), size{size}
 {
 }
 
-Grid::Grid(Size size, const std::vector<uint8_t>& grid) : size{size}
+Grid::Grid(Size size, const std::vector<Grid::Cell>& grid) : size{size}
 {
 	if(grid.size() != static_cast<size_t>(size.area()))
 	{
@@ -59,7 +59,7 @@ Size Grid::getSize() const
 	return size;
 }
 
-uint8_t Grid::getAt(XY topLeft, uint8_t oobValue) const
+Grid::Cell Grid::getAt(XY topLeft, Grid::Cell oobValue) const
 {
 	if(topLeft.x < 0 || topLeft.x >= size.width || topLeft.y >= size.height || topLeft.y < 0)
 	{

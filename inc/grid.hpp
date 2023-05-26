@@ -10,14 +10,15 @@ namespace raymino
 class Grid
 {
 public:
-	using TTransformFunc = uint8_t(uint8_t);
-	static constexpr uint8_t oobVal = 0xFF;
+	using Cell = uint8_t;
+	using TTransformFunc = Cell(Cell);
+	static constexpr Cell oobVal = 0xFF;
 	Grid() = delete;
-	Grid(Size size, uint8_t fill);
+	Grid(Size size, Cell fill);
 	/**
 	 * @throws std::logic_error on size mismatch
 	 */
-	Grid(Size size, const std::vector<uint8_t>& grid);
+	Grid(Size size, const std::vector<Cell>& grid);
 	Grid(const Grid& other, std::function<TTransformFunc> func);
 
 	/**
@@ -33,9 +34,9 @@ public:
 	/**
 	 * @param topLeft offset
 	 * @param oobVal = Grid::oobVal
-	 * @return uint8_t cell value
+	 * @return Grid::Cell cell value
 	 */
-	uint8_t getAt(XY topLeft, uint8_t oobVal = Grid::oobVal) const;
+	Cell getAt(XY topLeft, Cell oobVal = Grid::oobVal) const;
 
 	void transformCells(std::function<TTransformFunc> func);
 	void rotate(int steps);
@@ -80,7 +81,7 @@ public:
 	}
 
 private:
-	std::vector<uint8_t> cells;
+	std::vector<Cell> cells;
 	Size size;
 };
 } // namespace raymino

@@ -38,12 +38,12 @@ struct Colors
 	{
 		std::sort(this->colors.begin(), this->colors.end());
 	}
-	uint8_t operator[](Color color)
+	Grid::Cell operator[](Color color)
 	{
 		const auto colorIt = std::lower_bound(colors.begin(), colors.end(), color);
-		return static_cast<uint8_t>(std::distance(begin(colors), colorIt));
+		return static_cast<Grid::Cell>(std::distance(begin(colors), colorIt));
 	}
-	Color& operator[](uint8_t idx)
+	Color& operator[](Grid::Cell idx)
 	{
 		return colors[idx];
 	}
@@ -69,7 +69,7 @@ void draw(const Grid& grid, int yOffset, XY at, int cellSize, bool background)
 	{
 		for(int x = 0; x < gridSize.width; ++x)
 		{
-			const uint8_t colorId = grid.getAt({x, y + yOffset});
+			const Grid::Cell colorId = grid.getAt({x, y + yOffset});
 			::DrawRectangle((x * cellSize) + at.x, (y * cellSize) + at.y, cellSize - 1, cellSize - 1, colors[colorId]);
 		}
 	}
@@ -133,10 +133,10 @@ XY getStartPosition(const Grid& mino, unsigned fieldWidth)
 	    HIDDEN_HEIGHT - (static_cast<int>(mino.getSize().height) - static_cast<int>(unusedBottomRows(mino)))};
 }
 
-Grid colorize(Grid grid, uint8_t color)
+Grid colorize(Grid grid, Grid::Cell color)
 {
 	grid.transformCells(
-	    [color](uint8_t current)
+	    [color](Grid::Cell current)
 	    {
 		    return current != 0 ? color : current;
 	    });
