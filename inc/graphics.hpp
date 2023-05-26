@@ -3,7 +3,7 @@
 #include "grid.hpp"
 #include "types.hpp"
 
-#include <raylib-cpp.hpp>
+#include <raylib.h>
 
 #include <vector>
 
