@@ -2,8 +2,29 @@
 
 #include <raylib.h>
 
+bool constexpr operator<(Color lhs, Color rhs) noexcept
+{
+	return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
+}
+
+#include <algorithm>
+
 namespace raymino
 {
+ColorMap::ColorMap(std::vector<Color> colors) : colors{std::move(colors)}
+{
+	std::sort(this->colors.begin(), this->colors.end());
+}
+Color ColorMap::operator[](Grid::Cell idx) const
+{
+	return colors[idx];
+}
+Grid::Cell ColorMap::operator[](Color color) const
+{
+	auto idxIt = std::lower_bound(colors.begin(), colors.end(), color);
+	return static_cast<Grid::Cell>(std::distance(begin(colors), idxIt));
+}
+
 void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, Color minoColor)
 {
 	const Size gridSize = grid.getSize();

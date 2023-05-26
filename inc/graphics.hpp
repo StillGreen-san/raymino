@@ -10,6 +10,21 @@
 namespace raymino
 {
 /**
+ * @brief a fixed mapping between Color<->Grid::Cell
+ */
+class ColorMap
+{
+public:
+	ColorMap() = delete;
+	ColorMap(std::vector<Color> colors);
+	Color operator[](Grid::Cell idx) const;
+	Grid::Cell operator[](Color color) const;
+
+private:
+	std::vector<Color> colors;
+};
+
+/**
  * @param grid to draw (non empty cells of)
  * @param at position
  * @param cellSize
