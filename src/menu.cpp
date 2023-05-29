@@ -52,6 +52,9 @@ void Menu::writeSettings(App::Settings& settings) const
 
 void Menu::UpdateDraw(App& app)
 {
+	App::Settings previous;
+	writeSettings(previous);
+
 	BeginDrawing();
 
 	ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
@@ -148,10 +151,26 @@ void Menu::UpdateDraw(App& app)
 	{
 		DropdownBoxRotationSystemEditMode = !DropdownBoxRotationSystemEditMode;
 	}
+
+	App::Settings current;
+	writeSettings(current);
+	if(current != previous)
+	{
+		DropdownBoxPresetsActive = 0;
+	}
+
 	if(GuiDropdownBox(
 	       DropdownBoxPresetsRect, DropdownBoxPresetsText, &DropdownBoxPresetsActive, DropdownBoxPresetsEditMode))
 	{
 		DropdownBoxPresetsEditMode = !DropdownBoxPresetsEditMode;
+		if(!DropdownBoxPresetsEditMode)
+		{
+			switch(DropdownBoxPresetsActive)
+			{
+			case 1:
+				readSettings(App::Settings{});
+			}
+		}
 	}
 
 	GuiUnlock();

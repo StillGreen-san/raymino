@@ -43,7 +43,7 @@ struct Menu : public IScene
 	static constexpr const char* DropdownBoxShuffleTypeText = "Random;Single Bag;Double Bag;Triple Bag";
 	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;BPS;Sega;Nintendo";
 	static constexpr const char* DropdownBoxHoldPieceText = "No;Yes";
-	static constexpr const char* DropdownBoxPresetsText = "Guideline";
+	static constexpr const char* DropdownBoxPresetsText = "Custom;Guideline";
 
 	static constexpr Vector2 AnchorGame = {24, 24};
 	static constexpr Vector2 AnchorSettings = {24, 120};
@@ -80,7 +80,7 @@ struct Menu : public IScene
 	static constexpr int SpinnerFieldHeightMin = 10;
 	int SpinnerFieldHeightValue;
 	static constexpr int SpinnerFieldHeightMax = 50;
-	int DropdownBoxPresetsActive = 0;
+	int DropdownBoxPresetsActive = 1;
 
 	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
 	static constexpr Rectangle GroupBoxSettingsRect{AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456};
