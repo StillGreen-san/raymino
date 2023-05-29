@@ -241,6 +241,10 @@ void Game::update([[maybe_unused]] App& app)
 			playfield.resetField();
 			score = 0;
 		}
+		if(::IsKeyReleased(KEY_END))
+		{
+			app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+		}
 		break;
 	}
 }
