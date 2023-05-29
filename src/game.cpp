@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include "app.hpp"
+#include "graphics.hpp"
 #include "grid.hpp"
 #include "playfield.hpp"
 #include "scenes.hpp"
@@ -30,59 +31,18 @@ constexpr int FIELD_WIDTH = 10;
 constexpr int FIELD_HEIGHT = 20;
 constexpr size_t BASE_DELAY_IDX = 2;
 
-template<size_t TColorNum>
-struct Colors
+ColorMap minoColors{
+    {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
+        DARKBLUE, PURPLE, VIOLET, DARKPURPLE, BEIGE, BROWN, DARKBROWN, WHITE, BLACK, BLANK, MAGENTA, RAYWHITE}};
+
+void drawPreview(Range<Playfield::MinoConstIterator> range, XY at, int firstCellSize, int restCellSize)
 {
-	Colors() = delete;
-	explicit Colors(std::array<Color, TColorNum> colors) : colors{colors}
-	{
-		std::sort(this->colors.begin(), this->colors.end());
-	}
-	Grid::Cell operator[](Color color)
-	{
-		const auto colorIt = std::lower_bound(colors.begin(), colors.end(), color);
-		return static_cast<Grid::Cell>(std::distance(begin(colors), colorIt));
-	}
-	Color& operator[](Grid::Cell idx)
-	{
-		return colors[idx];
-	}
-	std::array<Color, TColorNum> colors;
-};
-Colors colors{
-    std::array{LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE,
-        BLUE, DARKBLUE, PURPLE, VIOLET, DARKPURPLE, BEIGE, BROWN, DARKBROWN, WHITE, BLACK, BLANK, MAGENTA, RAYWHITE}};
-
-void draw(const Grid& grid, int yOffset, XY at, int cellSize, bool background)
-{
-	const Size gridSize = grid.getSize();
-	const int width = gridSize.width * cellSize;
-	const int height = (gridSize.height - yOffset) * cellSize;
-	colors[0] = background ? LIGHTGRAY : BLANK;
-
-	if(background)
-	{
-		::DrawRectangle(at.x, at.y, width, height, colors[colors[GRAY]]);
-	}
-
-	for(int y = 0; y < gridSize.height - yOffset; ++y)
-	{
-		for(int x = 0; x < gridSize.width; ++x)
-		{
-			const Grid::Cell colorId = grid.getAt({x, y + yOffset});
-			::DrawRectangle((x * cellSize) + at.x, (y * cellSize) + at.y, cellSize - 1, cellSize - 1, colors[colorId]);
-		}
-	}
-}
-
-void draw(Range<Playfield::MinoConstIterator> range, XY at, int firstCellSize, int restCellSize)
-{
-	draw(*range.first, 0, at, firstCellSize, false);
+	drawCells(*range.first, at, firstCellSize, 1, minoColors);
 	at.y += (range.first->getSize().height * firstCellSize) + restCellSize;
 	++range.first;
 	for(const Grid& mino : range)
 	{
-		draw(mino, 0, at, restCellSize, false);
+		drawCells(mino, at, restCellSize, 1, minoColors);
 		at.y += (mino.getSize().height * restCellSize) + restCellSize;
 	}
 }
@@ -146,13 +106,13 @@ Grid colorize(Grid grid, Grid::Cell color)
 std::vector<Grid> makeBaseMinos()
 {
 	return {
-	    colorize({{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}, colors[SKYBLUE]),
-	    colorize({{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}, colors[BLUE]),
-	    colorize({{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}, colors[ORANGE]),
-	    colorize({{2, 2}, {1, 1, 1, 1}}, colors[YELLOW]),
-	    colorize({{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}, colors[GREEN]),
-	    colorize({{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, colors[PINK]),
-	    colorize({{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}, colors[RED]),
+	    colorize({{4, 4}, {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}}, minoColors[SKYBLUE]),
+	    colorize({{3, 3}, {1, 0, 0, 1, 1, 1, 0, 0, 0}}, minoColors[BLUE]),
+	    colorize({{3, 3}, {0, 0, 1, 1, 1, 1, 0, 0, 0}}, minoColors[ORANGE]),
+	    colorize({{2, 2}, {1, 1, 1, 1}}, minoColors[YELLOW]),
+	    colorize({{3, 3}, {0, 1, 1, 1, 1, 0, 0, 0, 0}}, minoColors[GREEN]),
+	    colorize({{3, 3}, {0, 1, 0, 1, 1, 1, 0, 0, 0}}, minoColors[PINK]),
+	    colorize({{3, 3}, {1, 1, 0, 0, 1, 1, 0, 0, 0}}, minoColors[RED]),
 	};
 }
 
@@ -291,13 +251,14 @@ void Game::draw()
 
 	::ClearBackground(LIGHTGRAY);
 
-	::draw(playfield.getField(), HIDDEN_HEIGHT, {0, 0}, 30, true);
+	drawBackground(playfield.getField(), {0, 0 - (HIDDEN_HEIGHT * 30)}, 29, 1, LIGHTGRAY, GRAY);
+	drawCells(playfield.getField(), {0, 0 - (HIDDEN_HEIGHT * 30)}, 29, 1, minoColors);
 
 	const Playfield::ActiveMino& activeMino = playfield.getActiveMino();
-	::draw(
-	    activeMino.collision, 0, {activeMino.position.x * 30, (activeMino.position.y - HIDDEN_HEIGHT) * 30}, 30, false);
+	drawCells(activeMino.collision, {activeMino.position.x * 30, ((activeMino.position.y - HIDDEN_HEIGHT) * 30)}, 29, 1,
+	    minoColors);
 
-	::draw(playfield.getNextMinos(8), {330, 25}, 26, 16);
+	::drawPreview(playfield.getNextMinos(8), {330, 25}, 26, 16);
 
 	::DrawText("SCORE:", 450, 30, 30, DARKGRAY);
 	std::array<char, 16> buffer{};
