@@ -27,6 +27,8 @@ public:
 		int fieldWidth = 10;
 		int fieldHeight = 20;
 		int previewCount = 6;
+		bool operator==(const Settings& rhs) const;
+		bool operator!=(const Settings& rhs) const;
 	};
 
 	/**

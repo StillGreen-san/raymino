@@ -43,3 +43,18 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 {
 	nextScene = std::move(newScene);
 }
+
+bool raymino::App::Settings::operator==(const raymino::App::Settings& rhs) const
+{
+	return rotationSystem == rhs.rotationSystem && wallKicks == rhs.wallKicks && lockDown == rhs.lockDown &&
+	       softDrop == rhs.softDrop && instantDrop == rhs.instantDrop && tSpin == rhs.tSpin &&
+	       shuffleType == rhs.shuffleType && scoringSystem == rhs.scoringSystem && holdPiece == rhs.holdPiece &&
+	       fieldWidth == rhs.fieldWidth && fieldHeight == rhs.fieldHeight && previewCount == rhs.previewCount;
+}
+bool raymino::App::Settings::operator!=(const raymino::App::Settings& rhs) const
+{
+	return rotationSystem != rhs.rotationSystem || wallKicks != rhs.wallKicks || lockDown != rhs.lockDown ||
+	       softDrop != rhs.softDrop || instantDrop != rhs.instantDrop || tSpin != rhs.tSpin ||
+	       shuffleType != rhs.shuffleType || scoringSystem != rhs.scoringSystem || holdPiece != rhs.holdPiece ||
+	       fieldWidth != rhs.fieldWidth || fieldHeight != rhs.fieldHeight || previewCount != rhs.previewCount;
+}
