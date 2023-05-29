@@ -1,5 +1,6 @@
 #pragma once
 
+#include "app.hpp"
 #include "scenes.hpp"
 
 #include <array>
@@ -9,10 +10,11 @@ namespace raymino
 {
 struct Menu : public IScene
 {
-	Menu(class App& app);
+	Menu(App& app);
 
-	void UpdateDraw(class App& app) override;
-	void updateSettings(class App& app) const;
+	void UpdateDraw(App& app) override;
+	void readSettings(const App::Settings& settings);
+	void writeSettings(App::Settings& settings) const;
 
 	static constexpr const char* GroupBoxGameText = "Game";
 	static constexpr const char* ButtonStartGameText = "Start Game";

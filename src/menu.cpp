@@ -13,35 +13,41 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 	return std::make_unique<Menu>(app);
 }
 
-Menu::Menu(App& app) :
-    DropdownBoxRotationSystemActive{static_cast<int>(app.settings.rotationSystem)},
-    DropdownBoxWallKicksActive{static_cast<int>(app.settings.wallKicks)},
-    DropdownBoxLockDownActive{static_cast<int>(app.settings.lockDown)},
-    DropdownBoxSoftDropActive{static_cast<int>(app.settings.softDrop)},
-    DropdownBoxInstantDropActive{static_cast<int>(app.settings.instantDrop)},
-    DropdownBoxTSpinActive{static_cast<int>(app.settings.tSpin)},
-    DropdownBoxShuffleTypeActive{static_cast<int>(app.settings.shuffleType)},
-    DropdownBoxScoringSystemActive{static_cast<int>(app.settings.scoringSystem)},
-    DropdownBoxHoldPieceActive{static_cast<int>(app.settings.holdPiece)},
-    SpinnerPreviewCountValue{app.settings.previewCount}, SpinnerFieldWidthValue{app.settings.fieldWidth},
-    SpinnerFieldHeightValue{app.settings.fieldHeight}
+Menu::Menu(App& app) // NOLINT(*-member-init) handled by readSettings
 {
+	readSettings(app.settings);
 }
 
-void Menu::updateSettings(App& app) const
+void Menu::readSettings(const App::Settings& settings)
 {
-	app.settings.rotationSystem = static_cast<RotationSystem>(DropdownBoxRotationSystemActive);
-	app.settings.wallKicks = static_cast<WallKicks>(DropdownBoxWallKicksActive);
-	app.settings.lockDown = static_cast<LockDown>(DropdownBoxLockDownActive);
-	app.settings.softDrop = static_cast<SoftDrop>(DropdownBoxSoftDropActive);
-	app.settings.instantDrop = static_cast<InstantDrop>(DropdownBoxInstantDropActive);
-	app.settings.tSpin = static_cast<TSpin>(DropdownBoxTSpinActive);
-	app.settings.shuffleType = static_cast<ShuffleType>(DropdownBoxShuffleTypeActive);
-	app.settings.scoringSystem = static_cast<ScoringSystem>(DropdownBoxScoringSystemActive);
-	app.settings.holdPiece = static_cast<bool>(DropdownBoxHoldPieceActive);
-	app.settings.previewCount = SpinnerPreviewCountValue;
-	app.settings.fieldWidth = SpinnerFieldWidthValue;
-	app.settings.fieldHeight = SpinnerFieldHeightValue;
+	DropdownBoxRotationSystemActive = static_cast<int>(settings.rotationSystem);
+	DropdownBoxWallKicksActive = static_cast<int>(settings.wallKicks);
+	DropdownBoxLockDownActive = static_cast<int>(settings.lockDown);
+	DropdownBoxSoftDropActive = static_cast<int>(settings.softDrop);
+	DropdownBoxInstantDropActive = static_cast<int>(settings.instantDrop);
+	DropdownBoxTSpinActive = static_cast<int>(settings.tSpin);
+	DropdownBoxShuffleTypeActive = static_cast<int>(settings.shuffleType);
+	DropdownBoxScoringSystemActive = static_cast<int>(settings.scoringSystem);
+	DropdownBoxHoldPieceActive = static_cast<int>(settings.holdPiece);
+	SpinnerPreviewCountValue = settings.previewCount;
+	SpinnerFieldWidthValue = settings.fieldWidth;
+	SpinnerFieldHeightValue = settings.fieldHeight;
+}
+
+void Menu::writeSettings(App::Settings& settings) const
+{
+	settings.rotationSystem = static_cast<RotationSystem>(DropdownBoxRotationSystemActive);
+	settings.wallKicks = static_cast<WallKicks>(DropdownBoxWallKicksActive);
+	settings.lockDown = static_cast<LockDown>(DropdownBoxLockDownActive);
+	settings.softDrop = static_cast<SoftDrop>(DropdownBoxSoftDropActive);
+	settings.instantDrop = static_cast<InstantDrop>(DropdownBoxInstantDropActive);
+	settings.tSpin = static_cast<TSpin>(DropdownBoxTSpinActive);
+	settings.shuffleType = static_cast<ShuffleType>(DropdownBoxShuffleTypeActive);
+	settings.scoringSystem = static_cast<ScoringSystem>(DropdownBoxScoringSystemActive);
+	settings.holdPiece = static_cast<bool>(DropdownBoxHoldPieceActive);
+	settings.previewCount = SpinnerPreviewCountValue;
+	settings.fieldWidth = SpinnerFieldWidthValue;
+	settings.fieldHeight = SpinnerFieldHeightValue;
 }
 
 void Menu::UpdateDraw(App& app)
@@ -61,7 +67,7 @@ void Menu::UpdateDraw(App& app)
 	GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
-		updateSettings(app);
+		writeSettings(app.settings);
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
 	if(GuiButton(ButtonHighscoresRect, ButtonHighscoresText))
