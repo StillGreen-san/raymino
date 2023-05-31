@@ -76,10 +76,10 @@ struct Menu : public IScene
 	static constexpr int SpinnerPreviewCountMax = 10;
 	static constexpr int SpinnerFieldWidthMin = 5;
 	int SpinnerFieldWidthValue;
-	static constexpr int SpinnerFieldWidthMax = 50;
+	static constexpr int SpinnerFieldWidthMax = 22;
 	static constexpr int SpinnerFieldHeightMin = 10;
 	int SpinnerFieldHeightValue;
-	static constexpr int SpinnerFieldHeightMax = 50;
+	static constexpr int SpinnerFieldHeightMax = 45;
 	int DropdownBoxPresetsActive = 1;
 
 	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
