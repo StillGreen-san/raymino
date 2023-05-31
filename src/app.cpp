@@ -8,7 +8,7 @@
 
 raymino::App::App()
 {
-	::InitWindow(600, 600, "raymino");
+	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
 }
 

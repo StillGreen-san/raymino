@@ -29,6 +29,9 @@ public:
 		int previewCount = 6;
 		bool operator==(const Settings& rhs) const;
 		bool operator!=(const Settings& rhs) const;
+
+		static constexpr int SCREEN_WIDTH = 600;
+		static constexpr int SCREEN_HEIGHT = 600;
 	};
 
 	/**
