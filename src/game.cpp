@@ -42,7 +42,7 @@ void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth)
 	tetromino.position = spawnPosition(tetromino, HIDDEN_HEIGHT, fieldWidth);
 }
 
-std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino>& tetrominos, int fieldWidth)
+std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino> tetrominos, int fieldWidth)
 {
 	prepareTetromino(*find(tetrominos, TetrominoType::I), minoColors[SKYBLUE], fieldWidth);
 	prepareTetromino(*find(tetrominos, TetrominoType::J), minoColors[BLUE], fieldWidth);
@@ -68,9 +68,10 @@ void Game::draw()
 
 	::ClearBackground(LIGHTGRAY);
 
-	const raylib::Rectangle playfieldBorderBounds(playfieldBounds.x - FIELD_BORDER_WIDTH,
-	    playfieldBounds.y - FIELD_BORDER_WIDTH, playfieldBounds.width + (FIELD_BORDER_WIDTH * 2) - 1,
-	    playfieldBounds.height + (FIELD_BORDER_WIDTH * 2) - 1);
+	const raylib::Rectangle playfieldBorderBounds(static_cast<float>(playfieldBounds.x - FIELD_BORDER_WIDTH),
+	    static_cast<float>(playfieldBounds.y - FIELD_BORDER_WIDTH),
+	    static_cast<float>(playfieldBounds.width + (FIELD_BORDER_WIDTH * 2) - 1),
+	    static_cast<float>(playfieldBounds.height + (FIELD_BORDER_WIDTH * 2) - 1));
 	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 	const int cellSize = (playfieldBounds.width / playfield.getSize().width) - 1;
 	drawBackground(playfield, playfieldBounds, cellSize, 1, LIGHTGRAY, DARKGRAY);
@@ -102,7 +103,8 @@ Rect calculatePlayfieldBounds(Size fieldSize)
 
 Game::Game(App& app) :
     playfield{{app.settings.fieldWidth, app.settings.fieldHeight}, 0},
-    playfieldBounds{calculatePlayfieldBounds(playfield.getSize())}
+    playfieldBounds{calculatePlayfieldBounds(playfield.getSize())},
+    baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)}
 {
 }
 

@@ -19,5 +19,6 @@ struct Game : IScene
 
 	Grid playfield;
 	Rect playfieldBounds;
+	std::vector<Tetromino> baseTetrominos;
 };
 } // namespace raymino
