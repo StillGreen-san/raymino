@@ -49,6 +49,12 @@ template<RotationSystem TSys>
 std::vector<Tetromino> makeBaseMinos();
 
 /**
+ * @param tsys RotationSystem
+ * @return makeBaseMinos function pointer
+ */
+std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys))();
+
+/**
  * @return iterator to Tetromino of type or end
  */
 template<typename TContainer>
@@ -71,6 +77,12 @@ template<RotationSystem TSys>
 Offset basicRotation(const Tetromino& mino, int rotation);
 
 /**
+ * @param tsys RotationSystem
+ * @return basicRotation function pointer
+ */
+Offset (*basicRotation(RotationSystem tsys))(const Tetromino& mino, int rotation);
+
+/**
  * @tparam TSys WallKicks to use for kicks
  * @param field playfield to test against
  * @param tetromino to kick
@@ -81,6 +93,12 @@ Offset basicRotation(const Tetromino& mino, int rotation);
  */
 template<WallKicks TSys>
 Offset wallKick(const Grid& field, const Tetromino& tetromino, Offset offset);
+
+/**
+ * @param tsys WallKicks
+ * @return wallKick function pointer
+ */
+Offset (*wallKick(WallKicks tsys))(const Grid& field, const Tetromino& tetromino, Offset offset);
 
 /**
  * @param grid to query
@@ -149,6 +167,12 @@ template<TSpin TTSpin>
 ScoreEvent tSpinCheck(const Grid& field, const Tetromino& tetromino, Offset offset);
 
 /**
+ * @param tspin TSpin
+ * @return tSpinCheck function pointer
+ */
+ScoreEvent (*tSpinCheck(TSpin tspin))(const Grid& field, const Tetromino& tetromino, Offset offset);
+
+/**
  * @brief potentially stateful ScoringSystem
  */
 struct IScoringSystem
@@ -172,6 +196,12 @@ template<ScoringSystem TSys>
 std::unique_ptr<IScoringSystem> makeScoringSystem();
 
 /**
+ * @param tsys ScoringSystem
+ * @return makeScoringSystem function pointer
+ */
+std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))();
+
+/**
  * @tparam TType ShuffleType
  * @param baseMinos to shuffle indices from
  * @param rng random_engine
@@ -179,4 +209,11 @@ std::unique_ptr<IScoringSystem> makeScoringSystem();
  */
 template<ShuffleType TType>
 std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng);
+
+/**
+ * @param ttype ShuffleType
+ * @return shuffledIndices function pointer
+ */
+std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
+    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng);
 } // namespace raymino

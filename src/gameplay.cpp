@@ -49,6 +49,25 @@ std::vector<Tetromino> makeBaseMinos<RotationSystem::Sega>()
 {
 	return makeBaseMinos<RotationSystem::Original>();
 }
+std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys))()
+{
+	switch(tsys)
+	{
+	case RotationSystem::Original:
+		return makeBaseMinos<RotationSystem::Original>;
+	default:
+	case RotationSystem::Super:
+		return makeBaseMinos<RotationSystem::Super>;
+	case RotationSystem::Arika:
+		return makeBaseMinos<RotationSystem::Arika>;
+	case RotationSystem::Sega:
+		return makeBaseMinos<RotationSystem::Sega>;
+	case RotationSystem::NintendoLeft:
+		return makeBaseMinos<RotationSystem::NintendoLeft>;
+	case RotationSystem::NintendoRight:
+		return makeBaseMinos<RotationSystem::NintendoRight>;
+	}
+}
 
 template<int TOddDir>
 inline Offset flip(const Tetromino& mino, int rotation)
@@ -158,6 +177,25 @@ Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int r
 		return {{0, 0}, rotation};
 	case TetrominoType::O:
 		return {{0, 0}, 0};
+	}
+}
+Offset (*basicRotation(RotationSystem tsys))(const Tetromino&, int)
+{
+	switch(tsys)
+	{
+	case RotationSystem::Original:
+		return basicRotation<RotationSystem::Original>;
+	default:
+	case RotationSystem::Super:
+		return basicRotation<RotationSystem::Super>;
+	case RotationSystem::Arika:
+		return basicRotation<RotationSystem::Arika>;
+	case RotationSystem::Sega:
+		return basicRotation<RotationSystem::Sega>;
+	case RotationSystem::NintendoLeft:
+		return basicRotation<RotationSystem::NintendoLeft>;
+	case RotationSystem::NintendoRight:
+		return basicRotation<RotationSystem::NintendoRight>;
 	}
 }
 
@@ -324,6 +362,19 @@ Offset wallKick<WallKicks::None>(
     [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
 {
 	return {};
+}
+Offset (*wallKick(WallKicks tsys))(const Grid& field, const Tetromino& tetromino, Offset offset)
+{
+	switch(tsys)
+	{
+	case WallKicks::None:
+		return wallKick<WallKicks::None>;
+	case WallKicks::Arika:
+		return wallKick<WallKicks::Arika>;
+	default:
+	case WallKicks::Super:
+		return wallKick<WallKicks::Super>;
+	}
 }
 
 size_t eraseFullLines(Grid& grid)
@@ -496,6 +547,19 @@ ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetrom
 	const size_t fullLines = countFullLines(field, tetromino);
 
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
+}
+ScoreEvent (*tSpinCheck(TSpin tspin))(const Grid& field, const Tetromino& tetromino, Offset offset)
+{
+	switch(tspin)
+	{
+	case TSpin::Immobile:
+		return tSpinCheck<TSpin::Immobile>;
+	default:
+	case TSpin::ThreeCorner:
+		return tSpinCheck<TSpin::ThreeCorner>;
+	case TSpin::Lenient:
+		return tSpinCheck<TSpin::Lenient>;
+	}
 }
 
 struct BPS : public IScoringSystem
@@ -715,6 +779,21 @@ template<>
 std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Guideline>()
 {
 	return std::make_unique<Guideline>();
+}
+std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))()
+{
+	switch(tsys)
+	{
+	default:
+	case ScoringSystem::Guideline:
+		return makeScoringSystem<ScoringSystem::Guideline>;
+	case ScoringSystem::BPS:
+		return makeScoringSystem<ScoringSystem::BPS>;
+	case ScoringSystem::Sega:
+		return makeScoringSystem<ScoringSystem::Sega>;
+	case ScoringSystem::Nintendo:
+		return makeScoringSystem<ScoringSystem::Nintendo>;
+	}
 }
 
 template<>
