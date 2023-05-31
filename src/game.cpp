@@ -25,29 +25,19 @@ bool constexpr operator<(Color lhs, Color rhs) noexcept
 namespace raymino
 {
 constexpr int HIDDEN_HEIGHT = 4;
+constexpr int SIDEBAR_WIDTH = 150;
+constexpr int FIELD_BORDER_WIDTH = 2;
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
         DARKBLUE, PURPLE, VIOLET, DARKPURPLE, BEIGE, BROWN, DARKBROWN, WHITE, BLACK, BLANK, MAGENTA, RAYWHITE}};
-
-void drawPreview(Range<Playfield::MinoConstIterator> range, XY at, int firstCellSize, int restCellSize)
-{
-	drawCells(*range.first, at, firstCellSize, 1, minoColors);
-	at.y += (range.first->getSize().height * firstCellSize) + restCellSize;
-	++range.first;
-	for(const Grid& mino : range)
-	{
-		drawCells(mino, at, restCellSize, 1, minoColors);
-		at.y += (mino.getSize().height * restCellSize) + restCellSize;
-	}
-}
 
 void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth)
 {
 	tetromino.collision.transformCells(
 	    [color](Grid::Cell current)
 	    {
-		    return current * color;
+		    return static_cast<Grid::Cell>(current * color);
 	    });
 	tetromino.position = spawnPosition(tetromino, HIDDEN_HEIGHT, fieldWidth);
 }
@@ -64,12 +54,29 @@ std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino>& tetrominos, int
 	return tetrominos;
 }
 
-void Game::update([[maybe_unused]] App& app)
+void Game::update(App& app)
 {
+	if(IsKeyPressed(KEY_END))
+	{
+		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+	}
 }
 
 void Game::draw()
 {
+	::BeginDrawing();
+
+	::ClearBackground(LIGHTGRAY);
+
+	const raylib::Rectangle playfieldBorderBounds(playfieldBounds.x - FIELD_BORDER_WIDTH,
+	    playfieldBounds.y - FIELD_BORDER_WIDTH, playfieldBounds.width + (FIELD_BORDER_WIDTH * 2) - 1,
+	    playfieldBounds.height + (FIELD_BORDER_WIDTH * 2) - 1);
+	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
+	const int cellSize = (playfieldBounds.width / playfield.getSize().width) - 1;
+	drawBackground(playfield, playfieldBounds, cellSize, 1, LIGHTGRAY, DARKGRAY);
+	drawCells(playfield, playfieldBounds, cellSize, 1, minoColors);
+
+	::EndDrawing();
 }
 
 void Game::UpdateDraw(App& app)
@@ -78,9 +85,30 @@ void Game::UpdateDraw(App& app)
 	draw();
 }
 
+Rect calculatePlayfieldBounds(Size fieldSize)
+{
+	const int availableWidth = ((App::Settings::SCREEN_WIDTH - (SIDEBAR_WIDTH * 2)) - (FIELD_BORDER_WIDTH * 2));
+	const int availableHeight = (App::Settings::SCREEN_HEIGHT - (FIELD_BORDER_WIDTH * 2));
+	const int preferredFromWidth = availableWidth / fieldSize.width;
+	const int preferredFromHeight = availableHeight / fieldSize.height;
+	const int cellSize = std::min(preferredFromWidth, preferredFromHeight);
+	const int actualWidth = cellSize * fieldSize.width;
+	const int actualHeight = cellSize * fieldSize.height;
+	const int xOffset = (SIDEBAR_WIDTH + FIELD_BORDER_WIDTH) + ((availableWidth - actualWidth) / 2);
+	const int yOffset = FIELD_BORDER_WIDTH + ((availableHeight - actualHeight) / 2);
+
+	return {xOffset, yOffset, actualWidth, actualHeight};
+}
+
+Game::Game(App& app) :
+    playfield{{app.settings.fieldWidth, app.settings.fieldHeight}, 0},
+    playfieldBounds{calculatePlayfieldBounds(playfield.getSize())}
+{
+}
+
 template<>
 std::unique_ptr<IScene> MakeScene<Scene::Game>([[maybe_unused]] App& app)
 {
-	return std::make_unique<Game>();
+	return std::make_unique<Game>(app);
 }
 } // namespace raymino
