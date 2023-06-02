@@ -841,4 +841,20 @@ std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
 	std::shuffle(indices.begin(), indices.end(), rng);
 	return indices;
 }
+std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
+    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+{
+	switch(ttype)
+	{
+	case ShuffleType::Random:
+		return shuffledIndices<ShuffleType::Random>;
+	default:
+	case ShuffleType::SingleBag:
+		return shuffledIndices<ShuffleType::SingleBag>;
+	case ShuffleType::DoubleBag:
+		return shuffledIndices<ShuffleType::DoubleBag>;
+	case ShuffleType::TripleBag:
+		return shuffledIndices<ShuffleType::TripleBag>;
+	}
+}
 } // namespace raymino
