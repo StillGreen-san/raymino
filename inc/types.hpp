@@ -48,6 +48,10 @@ struct Rect : XY, Size
 		return std::tie(static_cast<const XY&>(*this), static_cast<const Size&>(*this)) ==
 		       std::tie(static_cast<const XY&>(other), static_cast<const Size&>(other));
 	}
+	Rect operator*(int val) const noexcept
+	{
+		return {x * val, y * val, width * val, height * val};
+	}
 };
 template<typename TIterator>
 struct Range

@@ -26,7 +26,10 @@ namespace raymino
 {
 constexpr int HIDDEN_HEIGHT = 4;
 constexpr int SIDEBAR_WIDTH = 150;
+constexpr int PREVIEW_ELEMENT_HEIGHT = 100;
+constexpr int PREVIEW_CELL_SIZE = 30;
 constexpr int FIELD_BORDER_WIDTH = 2;
+constexpr XY OFFSCREEN_POSITION{-666, -666};
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
@@ -44,14 +47,42 @@ void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth)
 
 std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino> tetrominos, int fieldWidth)
 {
-	prepareTetromino(*find(tetrominos, TetrominoType::I), minoColors[SKYBLUE], fieldWidth);
-	prepareTetromino(*find(tetrominos, TetrominoType::J), minoColors[BLUE], fieldWidth);
-	prepareTetromino(*find(tetrominos, TetrominoType::L), minoColors[ORANGE], fieldWidth);
-	prepareTetromino(*find(tetrominos, TetrominoType::O), minoColors[YELLOW], fieldWidth);
-	prepareTetromino(*find(tetrominos, TetrominoType::S), minoColors[GREEN], fieldWidth);
-	prepareTetromino(*find(tetrominos, TetrominoType::T), minoColors[PINK], fieldWidth);
-	prepareTetromino(*find(tetrominos, TetrominoType::Z), minoColors[RED], fieldWidth);
+	std::sort(tetrominos.begin(), tetrominos.end(),
+	    [](const Tetromino& lhs, const Tetromino& rhs)
+	    {
+		    return lhs.type < rhs.type;
+	    });
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::I)], minoColors[SKYBLUE], fieldWidth);
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::L)], minoColors[ORANGE], fieldWidth);
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::J)], minoColors[BLUE], fieldWidth);
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::O)], minoColors[YELLOW], fieldWidth);
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::Z)], minoColors[RED], fieldWidth);
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::T)], minoColors[PINK], fieldWidth);
+	prepareTetromino(tetrominos[static_cast<size_t>(TetrominoType::S)], minoColors[GREEN], fieldWidth);
 	return tetrominos;
+}
+
+Rect calculatePlayfieldBounds(Size fieldSize)
+{
+	const int availableWidth = ((App::Settings::SCREEN_WIDTH - (SIDEBAR_WIDTH * 2)) - (FIELD_BORDER_WIDTH * 2));
+	const int availableHeight = (App::Settings::SCREEN_HEIGHT - (FIELD_BORDER_WIDTH * 2));
+	const int preferredFromWidth = availableWidth / fieldSize.width;
+	const int preferredFromHeight = availableHeight / fieldSize.height;
+	const int cellSize = std::min(preferredFromWidth, preferredFromHeight);
+	const int actualWidth = cellSize * fieldSize.width;
+	const int actualHeight = cellSize * fieldSize.height;
+	const int xOffset = (SIDEBAR_WIDTH + FIELD_BORDER_WIDTH) + ((availableWidth - actualWidth) / 2);
+	const int yOffset = FIELD_BORDER_WIDTH + ((availableHeight - actualHeight) / 2);
+
+	return {xOffset, yOffset, actualWidth, actualHeight};
+}
+
+XY calcCenterOffset(const Grid& grid, Size available, int cellSize)
+{
+	const Rect actual = findTrueSize(grid) * cellSize;
+	const int xOffset = ((available.width - actual.width) / 2) - actual.x;
+	const int yOffset = ((available.height - actual.height) / 2) - actual.y;
+	return {xOffset, yOffset};
 }
 
 void Game::update(App& app)
@@ -59,6 +90,12 @@ void Game::update(App& app)
 	if(IsKeyPressed(KEY_END))
 	{
 		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+	}
+	if(app.settings.holdPiece && IsKeyPressed(KEY_H))
+	{
+		holdPieceIdx = (holdPieceIdx + 1) % baseTetrominos.size();
+		holdPiecePosition = calcCenterOffset(
+		    baseTetrominos[holdPieceIdx].collision, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE);
 	}
 }
 
@@ -77,6 +114,8 @@ void Game::draw()
 	drawBackground(playfield, playfieldBounds, cellSize, 1, LIGHTGRAY, DARKGRAY);
 	drawCells(playfield, playfieldBounds, cellSize, 1, minoColors);
 
+	drawCells(baseTetrominos[holdPieceIdx].collision, holdPiecePosition, PREVIEW_CELL_SIZE, 1, minoColors);
+
 	::EndDrawing();
 }
 
@@ -86,25 +125,11 @@ void Game::UpdateDraw(App& app)
 	draw();
 }
 
-Rect calculatePlayfieldBounds(Size fieldSize)
-{
-	const int availableWidth = ((App::Settings::SCREEN_WIDTH - (SIDEBAR_WIDTH * 2)) - (FIELD_BORDER_WIDTH * 2));
-	const int availableHeight = (App::Settings::SCREEN_HEIGHT - (FIELD_BORDER_WIDTH * 2));
-	const int preferredFromWidth = availableWidth / fieldSize.width;
-	const int preferredFromHeight = availableHeight / fieldSize.height;
-	const int cellSize = std::min(preferredFromWidth, preferredFromHeight);
-	const int actualWidth = cellSize * fieldSize.width;
-	const int actualHeight = cellSize * fieldSize.height;
-	const int xOffset = (SIDEBAR_WIDTH + FIELD_BORDER_WIDTH) + ((availableWidth - actualWidth) / 2);
-	const int yOffset = FIELD_BORDER_WIDTH + ((availableHeight - actualHeight) / 2);
-
-	return {xOffset, yOffset, actualWidth, actualHeight};
-}
-
 Game::Game(App& app) :
     playfield{{app.settings.fieldWidth, app.settings.fieldHeight}, 0},
     playfieldBounds{calculatePlayfieldBounds(playfield.getSize())},
-    baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)}
+    baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)},
+    holdPieceIdx{0}, holdPiecePosition{OFFSCREEN_POSITION}
 {
 }
 

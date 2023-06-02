@@ -20,5 +20,7 @@ struct Game : IScene
 	Grid playfield;
 	Rect playfieldBounds;
 	std::vector<Tetromino> baseTetrominos;
+	size_t holdPieceIdx;
+	XY holdPiecePosition;
 };
 } // namespace raymino
