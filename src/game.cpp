@@ -29,7 +29,7 @@ constexpr int SIDEBAR_WIDTH = 150;
 constexpr int PREVIEW_ELEMENT_HEIGHT = 100;
 constexpr int PREVIEW_CELL_SIZE = 30;
 constexpr int FIELD_BORDER_WIDTH = 2;
-constexpr XY OFFSCREEN_POSITION{-666, -666};
+constexpr XY OFFSCREEN_POSITION{-1337, -1337};
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
@@ -85,6 +85,18 @@ XY calcCenterOffset(const Grid& grid, Size available, int cellSize)
 	return {xOffset, yOffset};
 }
 
+std::vector<XY> calcCenterOffsets(const std::vector<Tetromino>& tetrominos, Size available, int cellSize)
+{
+	std::vector<XY> offsets;
+	offsets.reserve(tetrominos.size() + 1);
+	for(const Tetromino& tetromino : tetrominos)
+	{
+		offsets.push_back(calcCenterOffset(tetromino.collision, available, cellSize));
+	}
+	offsets.push_back(OFFSCREEN_POSITION);
+	return offsets;
+}
+
 void Game::update(App& app)
 {
 	if(IsKeyPressed(KEY_END))
@@ -94,8 +106,10 @@ void Game::update(App& app)
 	if(app.settings.holdPiece && IsKeyPressed(KEY_H))
 	{
 		holdPieceIdx = (holdPieceIdx + 1) % baseTetrominos.size();
-		holdPiecePosition = calcCenterOffset(
-		    baseTetrominos[holdPieceIdx].collision, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE);
+	}
+	if(app.settings.previewCount > 0 && IsKeyPressed(KEY_P))
+	{
+		std::shuffle(previewTetrominoIndices.begin(), previewTetrominoIndices.end(), rng);
 	}
 }
 
@@ -114,7 +128,18 @@ void Game::draw()
 	drawBackground(playfield, playfieldBounds, cellSize, 1, LIGHTGRAY, DARKGRAY);
 	drawCells(playfield, playfieldBounds, cellSize, 1, minoColors);
 
-	drawCells(baseTetrominos[holdPieceIdx].collision, holdPiecePosition, PREVIEW_CELL_SIZE, 1, minoColors);
+	if(holdPieceIdx != -1)
+	{
+		drawCells(
+		    baseTetrominos[holdPieceIdx].collision, previewOffsetsMain[holdPieceIdx], PREVIEW_CELL_SIZE, 1, minoColors);
+	}
+
+	if(!previewTetrominoIndices.empty())
+	{
+		drawCells(baseTetrominos[previewTetrominoIndices[0]].collision,
+		    previewOffsetsMain[previewTetrominoIndices[0]] + XY{App::Settings::SCREEN_WIDTH - SIDEBAR_WIDTH, 0},
+		    PREVIEW_CELL_SIZE, 1, minoColors);
+	}
 
 	::EndDrawing();
 }
@@ -129,8 +154,20 @@ Game::Game(App& app) :
     playfield{{app.settings.fieldWidth, app.settings.fieldHeight}, 0},
     playfieldBounds{calculatePlayfieldBounds(playfield.getSize())},
     baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)},
-    holdPieceIdx{0}, holdPiecePosition{OFFSCREEN_POSITION}
+    previewOffsetsMain{calcCenterOffsets(baseTetrominos, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE)},
+    holdPieceIdx{static_cast<size_t>(-1)}, rng{std::random_device{}()},
+    shuffledIndicesFunc{shuffledIndices(app.settings.shuffleType)}
 {
+	fillIndices(app.settings.previewCount);
+}
+
+void Game::fillIndices(size_t minIndices)
+{
+	while(previewTetrominoIndices.size() < minIndices)
+	{
+		std::vector<size_t> newIndices = shuffledIndicesFunc(baseTetrominos, rng);
+		previewTetrominoIndices.insert(previewTetrominoIndices.end(), newIndices.begin(), newIndices.end());
+	}
 }
 
 template<>
