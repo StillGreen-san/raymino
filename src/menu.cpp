@@ -16,6 +16,11 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 Menu::Menu(App& app) // NOLINT(*-member-init) handled by readSettings
 {
 	readSettings(app.settings);
+	App::Settings defaultSettings;
+	if(defaultSettings != app.settings)
+	{
+		DropdownBoxPresetsActive = 0;
+	}
 }
 
 void Menu::readSettings(const App::Settings& settings)
