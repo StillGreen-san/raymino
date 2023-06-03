@@ -17,9 +17,10 @@ struct Game : IScene
 	Game(App& app);
 	void UpdateDraw(App& app) override;
 	void update(App& app);
-	void draw();
+	void draw(App& app);
 
 	void fillIndices(size_t minIndices);
+	int cellSizeExtended() const;
 
 	Grid playfield;
 	Rect playfieldBounds;
@@ -28,6 +29,8 @@ struct Game : IScene
 	size_t holdPieceIdx;
 	std::default_random_engine rng;
 	std::vector<size_t> (*shuffledIndicesFunc)(const std::vector<Tetromino>&, std::default_random_engine&);
-	std::deque<size_t> previewTetrominoIndices;
+	std::deque<size_t> nextTetrominoIndices;
+	int previewElementHeightExtended;
+	std::vector<XY> previewOffsetsExtended;
 };
 } // namespace raymino
