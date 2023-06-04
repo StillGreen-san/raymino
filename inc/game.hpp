@@ -19,8 +19,9 @@ struct Game : IScene
 	void update(App& app);
 	void draw(App& app);
 
-	void fillIndices(size_t minIndices);
+	std::deque<size_t> fillIndices(std::deque<size_t> indices, size_t minIndices);
 	int cellSizeExtended() const;
+	Tetromino getNextTetromino(size_t minIndices);
 
 	Grid playfield;
 	Rect playfieldBounds;
@@ -32,5 +33,6 @@ struct Game : IScene
 	std::deque<size_t> nextTetrominoIndices;
 	int previewElementHeightExtended;
 	std::vector<XY> previewOffsetsExtended;
+	Tetromino currentTetromino;
 };
 } // namespace raymino

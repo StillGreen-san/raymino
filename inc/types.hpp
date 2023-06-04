@@ -27,6 +27,10 @@ struct XY
 	{
 		return std::tie(x, y) == std::tie(other.x, other.y);
 	}
+	XY operator*(int val) const noexcept
+	{
+		return {x * val, y * val};
+	}
 };
 struct Size
 {
