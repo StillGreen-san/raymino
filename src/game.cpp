@@ -30,6 +30,7 @@ constexpr int PREVIEW_ELEMENT_HEIGHT = 100;
 constexpr int PREVIEW_CELL_SIZE = 30;
 constexpr int FIELD_BORDER_WIDTH = 2;
 constexpr XY OFFSCREEN_POSITION{-1337, -1337};
+constexpr int FONT_SIZE = 30;
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
@@ -131,6 +132,10 @@ void Game::update(App& app)
 	{
 		currentTetromino = getNextTetromino(app.settings.previewCount);
 	}
+	if(IsKeyPressed(KEY_S))
+	{
+		score += scoringSystem->process(static_cast<ScoreEvent>(rng() % 6), rng() % 5, rng() % 12);
+	}
 }
 
 void Game::draw(App& app)
@@ -175,6 +180,33 @@ void Game::draw(App& app)
 		}
 	}
 
+	{
+		std::array<char, 32> scoreBuffer{};
+		char* scoreBufferBegin = scoreBuffer.data();
+		char* scoreBufferEnd = scoreBuffer.data() + scoreBuffer.size();
+		char* scoreBufferParsedEnd = std::to_chars(scoreBufferBegin, scoreBufferEnd, score).ptr;
+		const ptrdiff_t length = std::distance(scoreBufferBegin, scoreBufferParsedEnd);
+		const ptrdiff_t separators = (length - 1) / 3;
+		char* scoreBufferWrite = scoreBufferParsedEnd + (separators - 1);
+		char* scoreBufferRead = scoreBufferParsedEnd - 1;
+		ptrdiff_t separatorsWritten = 0;
+		while(separatorsWritten < separators)
+		{
+			for(int digitsRead = 0; digitsRead < 3; ++digitsRead)
+			{
+				*scoreBufferWrite = *scoreBufferRead;
+				--scoreBufferWrite;
+				--scoreBufferRead;
+			}
+			*scoreBufferWrite = '.';
+			++separatorsWritten;
+			--scoreBufferWrite;
+		}
+		const int scoreTextWidth = ::MeasureText(scoreBufferBegin, FONT_SIZE);
+		const int scoreTextXOffset = (SIDEBAR_WIDTH - scoreTextWidth) / 2;
+		::DrawText(scoreBufferBegin, scoreTextXOffset, PREVIEW_ELEMENT_HEIGHT + FONT_SIZE, FONT_SIZE, DARKGRAY);
+	}
+
 	::EndDrawing();
 }
 
@@ -198,7 +230,8 @@ Game::Game(App& app) :
             : (App::Settings::SCREEN_HEIGHT - PREVIEW_ELEMENT_HEIGHT) / (app.settings.previewCount - 1)},
     previewOffsetsExtended{
         calcCenterOffsetsExtended(baseTetrominos, {SIDEBAR_WIDTH, previewElementHeightExtended}, cellSizeExtended())},
-    currentTetromino{getNextTetromino(app.settings.previewCount)}
+    currentTetromino{getNextTetromino(app.settings.previewCount)},
+    scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}
 {
 }
 

@@ -34,5 +34,7 @@ struct Game : IScene
 	int previewElementHeightExtended;
 	std::vector<XY> previewOffsetsExtended;
 	Tetromino currentTetromino;
+	std::unique_ptr<IScoringSystem> scoringSystem;
+	ptrdiff_t score;
 };
 } // namespace raymino
