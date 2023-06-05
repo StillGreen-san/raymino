@@ -143,10 +143,12 @@ void Game::draw(App& app)
 	    static_cast<float>(playfieldBounds.y - FIELD_BORDER_WIDTH),
 	    static_cast<float>(playfieldBounds.width + (FIELD_BORDER_WIDTH * 2) - 1),
 	    static_cast<float>(playfieldBounds.height + (FIELD_BORDER_WIDTH * 2) - 1));
-	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 	const int cellSize = (playfieldBounds.width / playfield.getSize().width) - 1;
-	drawBackground(playfield, playfieldBounds, cellSize, 1, LIGHTGRAY, DARKGRAY);
-	drawCells(playfield, playfieldBounds, cellSize, 1, minoColors);
+	const XY hiddenOffset{0, (cellSize + 1) * HIDDEN_HEIGHT};
+	drawBackground(playfield, playfieldBounds - hiddenOffset, cellSize, 1, LIGHTGRAY, DARKGRAY);
+	drawCells(playfield, playfieldBounds - hiddenOffset, cellSize, 1, minoColors);
+	::DrawRectangle(playfieldBounds.x, 0, playfieldBounds.width, static_cast<int>(playfieldBorderBounds.y), LIGHTGRAY);
+	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 
 	drawCells(currentTetromino.collision,
 	    ((currentTetromino.position - XY{0, HIDDEN_HEIGHT}) * (cellSize + 1)) + playfieldBounds, cellSize, 1,
@@ -183,8 +185,8 @@ void Game::UpdateDraw(App& app)
 }
 
 Game::Game(App& app) :
-    playfield{{app.settings.fieldWidth, app.settings.fieldHeight}, 0},
-    playfieldBounds{calculatePlayfieldBounds(playfield.getSize())},
+    playfield{{app.settings.fieldWidth, app.settings.fieldHeight + HIDDEN_HEIGHT}, 0},
+    playfieldBounds{calculatePlayfieldBounds({app.settings.fieldWidth, app.settings.fieldHeight})},
     baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)},
     previewOffsetsMain{calcCenterOffsets(baseTetrominos, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE)},
     holdPieceIdx{static_cast<size_t>(-1)}, rng{std::random_device{}()},
