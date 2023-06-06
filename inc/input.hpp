@@ -21,12 +21,13 @@ struct KeyAction
 		int8_t value;
 	};
 	KeyAction() = delete;
-	KeyAction(float holdDelay, KeyboardKey rkey, KeyboardKey lkey = KEY_NULL) :
-	    holdDelay{holdDelay}, rkey{rkey}, lkey{lkey}
+	KeyAction(float repeatDelay, float repeatRate, ::KeyboardKey rkey, ::KeyboardKey lkey = KEY_NULL) :
+	    repeatDelay{repeatDelay}, delayTimer{repeatRate}, rkey{rkey}, lkey{lkey}
 	{
 	}
 	Return tick(float delta);
-	Timer holdDelay;
+	float repeatDelay;
+	Timer delayTimer;
 	::KeyboardKey rkey;
 	::KeyboardKey lkey;
 };
