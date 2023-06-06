@@ -16,12 +16,20 @@ struct Game : IScene
 {
 	Game(App& app);
 	void UpdateDraw(App& app) override;
+
 	void update(App& app);
 	void draw(App& app);
 
 	std::deque<size_t> fillIndices(std::deque<size_t> indices, size_t minIndices);
 	int cellSizeExtended() const;
 	Tetromino getNextTetromino(size_t minIndices);
+
+	enum class State
+	{
+		Running,
+		Paused,
+		GameOver,
+	};
 
 	Grid playfield;
 	Rect playfieldBounds;
@@ -36,5 +44,6 @@ struct Game : IScene
 	Tetromino currentTetromino;
 	std::unique_ptr<IScoringSystem> scoringSystem;
 	ptrdiff_t score;
+	State state;
 };
 } // namespace raymino

@@ -10,6 +10,7 @@ raymino::App::App()
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
+	::SetExitKey(KEY_NULL);
 }
 
 void UpdateDraw(void* app)

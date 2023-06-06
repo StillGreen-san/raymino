@@ -20,6 +20,7 @@ bool constexpr operator<(Color lhs, Color rhs) noexcept
 #include <algorithm>
 #include <charconv>
 #include <random>
+#include <string_view>
 #include <vector>
 
 namespace raymino
@@ -30,7 +31,9 @@ constexpr int PREVIEW_ELEMENT_HEIGHT = 100;
 constexpr int PREVIEW_CELL_SIZE = 30;
 constexpr int FIELD_BORDER_WIDTH = 2;
 constexpr XY OFFSCREEN_POSITION{-1337, -1337};
-constexpr int FONT_SIZE = 30;
+constexpr int SCORE_FONT_SIZE = 30;
+constexpr int STATUS_FONT_SIZE = 50;
+constexpr ::Color STATUS_BACKGROUND{77, 77, 77, 222};
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
@@ -113,7 +116,18 @@ void Game::update(App& app)
 	if(IsKeyPressed(KEY_END))
 	{
 		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+		state = State::GameOver;
 	}
+	if(::IsKeyPressed(KEY_ESCAPE))
+	{
+		state = state == State::Paused ? State::Running : State::Paused;
+	}
+
+	if(state != State::Running)
+	{
+		return;
+	}
+
 	if(app.settings.holdPiece && IsKeyPressed(KEY_C))
 	{
 		if(holdPieceIdx == -1)
@@ -202,9 +216,30 @@ void Game::draw(App& app)
 			++separatorsWritten;
 			--scoreBufferWrite;
 		}
-		const int scoreTextWidth = ::MeasureText(scoreBufferBegin, FONT_SIZE);
+		const int scoreTextWidth = ::MeasureText(scoreBufferBegin, SCORE_FONT_SIZE);
 		const int scoreTextXOffset = (SIDEBAR_WIDTH - scoreTextWidth) / 2;
-		::DrawText(scoreBufferBegin, scoreTextXOffset, PREVIEW_ELEMENT_HEIGHT + FONT_SIZE, FONT_SIZE, DARKGRAY);
+		::DrawText(
+		    scoreBufferBegin, scoreTextXOffset, PREVIEW_ELEMENT_HEIGHT + SCORE_FONT_SIZE, SCORE_FONT_SIZE, DARKGRAY);
+	}
+
+	if(state != State::Running)
+	{
+		const std::string_view statusText = state == State::Paused ? "Paused" : "Game Over";
+		const float statusTextSpacing = STATUS_FONT_SIZE / 10.0f;
+		const raylib::Vector2 statusTextSize =
+		    ::MeasureTextEx(::GetFontDefault(), statusText.data(), STATUS_FONT_SIZE, statusTextSpacing);
+		const raylib::Vector2 statusTextBackgroundSize =
+		    statusTextSize + raylib::Vector2{statusTextSpacing * 2, statusTextSpacing * 2};
+		const raylib::Vector2 centerPosition{App::Settings::SCREEN_WIDTH / 2.0f, App::Settings::SCREEN_HEIGHT / 2.0f};
+		const raylib::Vector2 statusTextBackgroundPosition{centerPosition.x - (statusTextBackgroundSize.x / 2.0f),
+		    centerPosition.y - (statusTextBackgroundSize.y / 2.0f)};
+		::DrawRectangleRec({statusTextBackgroundPosition.x, statusTextBackgroundPosition.y, statusTextBackgroundSize.x,
+		                       statusTextBackgroundSize.y},
+		    STATUS_BACKGROUND);
+		const raylib::Vector2 statusTextPosition{
+		    centerPosition.x - (statusTextSize.x / 2), centerPosition.y - (statusTextSize.y / 2)};
+		::DrawTextEx(::GetFontDefault(), statusText.data(), {statusTextPosition.x, statusTextPosition.y},
+		    STATUS_FONT_SIZE, statusTextSpacing, RED);
 	}
 
 	::EndDrawing();
@@ -231,7 +266,7 @@ Game::Game(App& app) :
     previewOffsetsExtended{
         calcCenterOffsetsExtended(baseTetrominos, {SIDEBAR_WIDTH, previewElementHeightExtended}, cellSizeExtended())},
     currentTetromino{getNextTetromino(app.settings.previewCount)},
-    scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}
+    scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running}
 {
 }
 
