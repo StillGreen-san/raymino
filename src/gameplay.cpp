@@ -857,4 +857,67 @@ std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
 		return shuffledIndices<ShuffleType::TripleBag>;
 	}
 }
+
+LevelState LevelState::make(LevelGoal ttype)
+{
+	return {1, 0, ttype == LevelGoal::Dynamic ? 5 : 10};
+}
+template<>
+LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, int lines, LevelState state)
+{
+	switch(event)
+	{
+	case ScoreEvent::LineClear:
+	case ScoreEvent::PerfectClear:
+	case ScoreEvent::MiniTSpin:
+	case ScoreEvent::TSpin:
+	{
+		state.linesCleared += lines;
+		if(state.linesCleared >= state.linesToClear)
+		{
+			state.linesCleared = 0;
+			state.currentLevel += 1;
+		}
+		return state;
+	}
+	case ScoreEvent::SoftDrop:
+	case ScoreEvent::HardDrop:
+		return state;
+	}
+}
+template<>
+LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState state)
+{
+	switch(event)
+	{
+	case ScoreEvent::LineClear:
+	case ScoreEvent::PerfectClear:
+	case ScoreEvent::MiniTSpin:
+	case ScoreEvent::TSpin:
+	{
+		state.linesCleared += lines;
+		if(state.linesCleared >= state.linesToClear)
+		{
+			state.linesCleared = 0;
+			state.currentLevel += 1;
+			state.linesToClear = state.currentLevel * 5;
+		}
+		return state;
+	}
+	case ScoreEvent::SoftDrop:
+	case ScoreEvent::HardDrop:
+		return state;
+	}
+}
+LevelState (*levelUp(LevelGoal ttype))(ScoreEvent event, int lines, LevelState state)
+{
+	switch(ttype)
+	{
+	default:
+	case LevelGoal::Fixed:
+		return levelUp<LevelGoal::Fixed>;
+	case LevelGoal::Dynamic:
+		return levelUp<LevelGoal::Dynamic>;
+	}
+}
 } // namespace raymino
