@@ -266,7 +266,8 @@ Game::Game(App& app) :
     previewOffsetsExtended{
         calcCenterOffsetsExtended(baseTetrominos, {SIDEBAR_WIDTH, previewElementHeightExtended}, cellSizeExtended())},
     currentTetromino{getNextTetromino(app.settings.previewCount)},
-    scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running}
+    scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
+    levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)}
 {
 }
 

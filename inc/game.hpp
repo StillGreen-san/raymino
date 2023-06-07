@@ -45,5 +45,7 @@ struct Game : IScene
 	std::unique_ptr<IScoringSystem> scoringSystem;
 	ptrdiff_t score;
 	State state;
+	decltype(levelUp(LevelGoal{})) levelUpFunc;
+	LevelState levelState;
 };
 } // namespace raymino
