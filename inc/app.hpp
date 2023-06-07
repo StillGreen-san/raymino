@@ -23,6 +23,7 @@ public:
 		TSpin tSpin = TSpin::ThreeCorner;
 		ShuffleType shuffleType = ShuffleType::SingleBag;
 		ScoringSystem scoringSystem = ScoringSystem::Guideline;
+		LevelGoal levelGoal = LevelGoal::Fixed;
 		bool holdPiece = true;
 		int fieldWidth = 10;
 		int fieldHeight = 20;

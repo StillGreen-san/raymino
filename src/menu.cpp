@@ -33,6 +33,7 @@ void Menu::readSettings(const App::Settings& settings)
 	DropdownBoxTSpinActive = static_cast<int>(settings.tSpin);
 	DropdownBoxShuffleTypeActive = static_cast<int>(settings.shuffleType);
 	DropdownBoxScoringSystemActive = static_cast<int>(settings.scoringSystem);
+	DropdownBoxLevelGoalActive = static_cast<int>(settings.levelGoal);
 	DropdownBoxHoldPieceActive = static_cast<int>(settings.holdPiece);
 	SpinnerPreviewCountValue = settings.previewCount;
 	SpinnerFieldWidthValue = settings.fieldWidth;
@@ -49,6 +50,7 @@ void Menu::writeSettings(App::Settings& settings) const
 	settings.tSpin = static_cast<TSpin>(DropdownBoxTSpinActive);
 	settings.shuffleType = static_cast<ShuffleType>(DropdownBoxShuffleTypeActive);
 	settings.scoringSystem = static_cast<ScoringSystem>(DropdownBoxScoringSystemActive);
+	settings.levelGoal = static_cast<LevelGoal>(DropdownBoxLevelGoalActive);
 	settings.holdPiece = static_cast<bool>(DropdownBoxHoldPieceActive);
 	settings.previewCount = SpinnerPreviewCountValue;
 	settings.fieldWidth = SpinnerFieldWidthValue;
@@ -97,6 +99,7 @@ void Menu::UpdateDraw(App& app)
 	GuiLabel(LabelPreviewCountRect, LabelPreviewCountText);
 	GuiLabel(LabelHoldPieceRect, LabelHoldPieceText);
 	GuiLabel(LabelPresetsRect, LabelPresetsText);
+	GuiLabel(LabelLevelGoalRect, LabelLevelGoalText);
 	if(GuiSpinner(SpinnerPreviewCountRect, "", &SpinnerPreviewCountValue, SpinnerPreviewCountMin,
 	       SpinnerPreviewCountMax, SpinnerPreviewCountEditMode))
 	{
@@ -111,6 +114,11 @@ void Menu::UpdateDraw(App& app)
 	       SpinnerFieldHeightEditMode))
 	{
 		SpinnerFieldHeightEditMode = !SpinnerFieldHeightEditMode;
+	}
+	if(GuiDropdownBox(DropdownBoxLevelGoalRect, DropdownBoxLevelGoalText, &DropdownBoxLevelGoalActive,
+	       DropdownBoxLevelGoalEditMode))
+	{
+		DropdownBoxLevelGoalEditMode = !DropdownBoxLevelGoalEditMode;
 	}
 	if(GuiDropdownBox(DropdownBoxHoldPieceRect, DropdownBoxHoldPieceText, &DropdownBoxHoldPieceActive,
 	       DropdownBoxHoldPieceEditMode))

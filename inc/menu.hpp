@@ -28,6 +28,7 @@ struct Menu : public IScene
 	static constexpr const char* LabelTSpinText = "TSpin";
 	static constexpr const char* LabelShuffleTypeText = "Shuffle Type";
 	static constexpr const char* LabelScoringSystemText = "Scoring System";
+	static constexpr const char* LabelLevelGoalText = "Level Goal";
 	static constexpr const char* LabelFieldWidthText = "Field Width";
 	static constexpr const char* LabelFieldHeightText = "Field Height";
 	static constexpr const char* LabelPreviewCountText = "Preview Count";
@@ -42,6 +43,7 @@ struct Menu : public IScene
 	static constexpr const char* DropdownBoxTSpinText = "Immobile;Three Corner;Lenient";
 	static constexpr const char* DropdownBoxShuffleTypeText = "Random;Single Bag;Double Bag;Triple Bag";
 	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;BPS;Sega;Nintendo";
+	static constexpr const char* DropdownBoxLevelGoalText = "Fixed;Dynamic";
 	static constexpr const char* DropdownBoxHoldPieceText = "No;Yes";
 	static constexpr const char* DropdownBoxPresetsText = "Custom;Guideline";
 
@@ -56,6 +58,7 @@ struct Menu : public IScene
 	bool DropdownBoxTSpinEditMode = false;
 	bool DropdownBoxShuffleTypeEditMode = false;
 	bool DropdownBoxScoringSystemEditMode = false;
+	bool DropdownBoxLevelGoalEditMode = false;
 	bool DropdownBoxHoldPieceEditMode = false;
 	bool SpinnerPreviewCountEditMode = false;
 	bool SpinnerFieldWidthEditMode = false;
@@ -69,6 +72,7 @@ struct Menu : public IScene
 	int DropdownBoxInstantDropActive;
 	int DropdownBoxTSpinActive;
 	int DropdownBoxShuffleTypeActive;
+	int DropdownBoxLevelGoalActive;
 	int DropdownBoxScoringSystemActive;
 	int DropdownBoxHoldPieceActive;
 	static constexpr int SpinnerPreviewCountMin = 0;
@@ -106,6 +110,8 @@ struct Menu : public IScene
 	static constexpr Rectangle LabelPreviewCountRect{AnchorSettings.x + 24, AnchorSettings.y + 408, 96, 24};
 	static constexpr Rectangle LabelHoldPieceRect{AnchorSettings.x + 296, AnchorSettings.y + 216, 96, 24};
 	static constexpr Rectangle DropdownBoxHoldPieceRect{AnchorSettings.x + 392, AnchorSettings.y + 216, 136, 24};
+	static constexpr Rectangle LabelLevelGoalRect{AnchorSettings.x + 296, AnchorSettings.y + 264, 96, 24};
+	static constexpr Rectangle DropdownBoxLevelGoalRect{AnchorSettings.x + 392, AnchorSettings.y + 264, 136, 24};
 	static constexpr Rectangle SpinnerPreviewCountRect{AnchorSettings.x + 120, AnchorSettings.y + 408, 136, 24};
 	static constexpr Rectangle SpinnerFieldWidthRect{AnchorSettings.x + 120, AnchorSettings.y + 312, 136, 24};
 	static constexpr Rectangle SpinnerFieldHeightRect{AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24};
