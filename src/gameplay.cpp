@@ -895,7 +895,9 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState s
 	case ScoreEvent::MiniTSpin:
 	case ScoreEvent::TSpin:
 	{
-		state.linesCleared += lines;
+		static constexpr std::array<int, 5> points{0, 1, 3, 5, 8};
+		lines = std::clamp(lines, 0, 4);
+		state.linesCleared += points[lines];
 		if(state.linesCleared >= state.linesToClear)
 		{
 			state.linesCleared = 0;

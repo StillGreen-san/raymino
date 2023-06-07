@@ -444,7 +444,7 @@ TEST_CASE("levelUp", "[gameplay]")
 	REQUIRE(levelUp<LevelGoal::Fixed>(ScoreEvent::PerfectClear, 4, LevelState{2, 8, 10}) == LevelState{3, 0, 10});
 	REQUIRE(levelUp<LevelGoal::Fixed>(ScoreEvent::LineClear, 3, LevelState{3, 7, 10}) == LevelState{4, 0, 10});
 
-	REQUIRE(levelUp<LevelGoal::Dynamic>(ScoreEvent::TSpin, 3, LevelState{1, 2, 5}) == LevelState{2, 0, 10});
-	REQUIRE(levelUp<LevelGoal::Dynamic>(ScoreEvent::MiniTSpin, 2, LevelState{2, 7, 10}) == LevelState{2, 9, 10});
+	REQUIRE(levelUp<LevelGoal::Dynamic>(ScoreEvent::TSpin, 2, LevelState{1, 2, 5}) == LevelState{2, 0, 10});
+	REQUIRE(levelUp<LevelGoal::Dynamic>(ScoreEvent::MiniTSpin, 2, LevelState{2, 6, 10}) == LevelState{2, 9, 10});
 	REQUIRE(levelUp<LevelGoal::Dynamic>(ScoreEvent::PerfectClear, 4, LevelState{4, 18, 20}) == LevelState{5, 0, 25});
 }
