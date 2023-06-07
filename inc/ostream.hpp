@@ -14,4 +14,5 @@ std::ostream& operator<<(std::ostream& os, const Rect& value);
 std::ostream& operator<<(std::ostream& os, const Offset& value);
 std::ostream& operator<<(std::ostream& os, const Grid& value);
 std::ostream& operator<<(std::ostream& os, const TSpinCornerCountResult& value);
+std::ostream& operator<<(std::ostream& os, const LevelState& value);
 } // namespace raymino

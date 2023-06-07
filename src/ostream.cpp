@@ -47,4 +47,9 @@ std::ostream& operator<<(std::ostream& os, const TSpinCornerCountResult& value)
 	os << '{' << value.front << ", " << value.back << '}';
 	return os;
 }
+std::ostream& operator<<(std::ostream& os, const LevelState& value)
+{
+	os << '{' << value.currentLevel << ", " << value.linesCleared << ", " << value.linesToClear << '}';
+	return os;
+}
 } // namespace raymino
