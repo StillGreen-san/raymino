@@ -151,4 +151,9 @@ enum class ScoreEvent
 	SoftDrop,
 	HardDrop,
 };
+enum class LevelGoal
+{
+	Fixed,
+	Dynamic,
+};
 } // namespace raymino

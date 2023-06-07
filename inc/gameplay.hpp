@@ -216,4 +216,33 @@ std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std
  */
 std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
     const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng);
+
+struct LevelState
+{
+	static LevelState make(LevelGoal ttype);
+	int currentLevel;
+	int linesCleared;
+	int linesToClear;
+	bool operator==(const LevelState& rhs) const
+	{
+		return std::tie(currentLevel, linesCleared, linesToClear) ==
+		       std::tie(rhs.currentLevel, rhs.linesCleared, rhs.linesToClear);
+	}
+};
+
+/**
+ * @tparam TType LevelGoal
+ * @param event ScoreEvent
+ * @param lines cleared
+ * @param state current state
+ * @return LevelState
+ */
+template<LevelGoal TType>
+LevelState levelUp(ScoreEvent event, int lines, LevelState state);
+
+/**
+ * @param ttype LevelGoal
+ * @return levelUp function pointer
+ */
+LevelState (*levelUp(LevelGoal ttype))(ScoreEvent event, int lines, LevelState state);
 } // namespace raymino
