@@ -185,7 +185,7 @@ struct IScoringSystem
 	 * @param level
 	 * @return ptrdiff_t score for event
 	 */
-	virtual ptrdiff_t process(ScoreEvent event, int lines, int level) = 0;
+	[[nodiscard]] virtual ptrdiff_t process(ScoreEvent event, int lines, int level) = 0;
 };
 
 /**

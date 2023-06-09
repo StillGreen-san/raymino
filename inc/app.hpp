@@ -33,6 +33,7 @@ public:
 
 		static constexpr int SCREEN_WIDTH = 600;
 		static constexpr int SCREEN_HEIGHT = 600;
+		static constexpr float LOCK_DELAY = 0.5f;
 	};
 
 	/**

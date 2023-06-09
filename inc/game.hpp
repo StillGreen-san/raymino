@@ -37,7 +37,7 @@ struct Game : IScene
 	std::vector<XY> previewOffsetsMain;
 	size_t holdPieceIdx;
 	std::default_random_engine rng;
-	std::vector<size_t> (*shuffledIndicesFunc)(const std::vector<Tetromino>&, std::default_random_engine&);
+	decltype(shuffledIndices(ShuffleType{})) shuffledIndicesFunc;
 	std::deque<size_t> nextTetrominoIndices;
 	int previewElementHeightExtended;
 	std::vector<XY> previewOffsetsExtended;
@@ -47,5 +47,8 @@ struct Game : IScene
 	State state;
 	decltype(levelUp(LevelGoal{})) levelUpFunc;
 	LevelState levelState;
+	Timer lockDelay;
+	bool isLocking;
+	decltype(tSpinCheck(TSpin{})) tSpinFunc;
 };
 } // namespace raymino

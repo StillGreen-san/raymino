@@ -142,13 +142,48 @@ void Game::update(App& app)
 			holdPieceIdx = nextHoldIdx;
 		}
 	}
+
+	Offset nextTetrominoOffset{};
+
 	if(IsKeyPressed(KEY_SPACE))
 	{
-		currentTetromino = getNextTetromino(app.settings.previewCount);
+		for(int yOffset = 1;; ++yOffset)
+		{
+			if(playfield.overlapAt(currentTetromino.position + XY{0, yOffset}, currentTetromino.collision) != 0)
+			{
+				currentTetromino.position += XY{0, yOffset - 1};
+				nextTetrominoOffset = Offset{};
+				score += scoringSystem->process(ScoreEvent::HardDrop, yOffset - 1, levelState.currentLevel);
+				isLocking = true;
+				lockDelay.reset(lockDelay.delay);
+				break;
+			}
+		}
 	}
-	if(IsKeyPressed(KEY_S))
+
+	if(!isLocking && playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) != 0)
 	{
-		score += scoringSystem->process(static_cast<ScoreEvent>(rng() % 6), rng() % 5, rng() % 12);
+		isLocking = true;
+		lockDelay.reset();
+	}
+	if(isLocking && lockDelay.tick(::GetFrameTime()))
+	{
+		const ScoreEvent scoreEvent = nextTetrominoOffset.rotation == 0
+		                                  ? tSpinFunc(playfield, currentTetromino, nextTetrominoOffset)
+		                                  : ScoreEvent::LineClear;
+
+		playfield.setAt(currentTetromino.position, currentTetromino.collision);
+
+		const size_t linesCleared = eraseFullLines(playfield);
+		score += scoringSystem->process(scoreEvent, static_cast<int>(linesCleared), levelState.currentLevel);
+		levelState = levelUpFunc(scoreEvent, static_cast<int>(linesCleared), levelState);
+
+		isLocking = false;
+		currentTetromino = getNextTetromino(app.settings.previewCount);
+		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
+		{
+			state = State::GameOver;
+		}
 	}
 }
 
@@ -267,7 +302,8 @@ Game::Game(App& app) :
         calcCenterOffsetsExtended(baseTetrominos, {SIDEBAR_WIDTH, previewElementHeightExtended}, cellSizeExtended())},
     currentTetromino{getNextTetromino(app.settings.previewCount)},
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
-    levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)}
+    levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
+    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, tSpinFunc{tSpinCheck(app.settings.tSpin)}
 {
 }
 
