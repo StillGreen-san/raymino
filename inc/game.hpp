@@ -50,5 +50,6 @@ struct Game : IScene
 	Timer lockDelay;
 	bool isLocking;
 	decltype(tSpinCheck(TSpin{})) tSpinFunc;
+	Timer gravity;
 };
 } // namespace raymino

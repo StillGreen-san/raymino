@@ -113,7 +113,7 @@ std::vector<XY> calcCenterOffsetsExtended(const std::vector<Tetromino>& tetromin
 
 void Game::update(App& app)
 {
-	if(IsKeyPressed(KEY_END))
+	if(::IsKeyPressed(KEY_END))
 	{
 		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
 		state = State::GameOver;
@@ -128,7 +128,7 @@ void Game::update(App& app)
 		return;
 	}
 
-	if(app.settings.holdPiece && IsKeyPressed(KEY_C))
+	if(app.settings.holdPiece && ::IsKeyPressed(KEY_C))
 	{
 		if(holdPieceIdx == -1)
 		{
@@ -145,7 +145,17 @@ void Game::update(App& app)
 
 	Offset nextTetrominoOffset{};
 
-	if(IsKeyPressed(KEY_SPACE))
+	const size_t delayIdx = std::min<size_t>((::IsKeyDown(KEY_DOWN) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel);
+	gravity.delay = delays[delayIdx];
+
+	if(gravity.tick(::GetFrameTime()))
+	{
+		if(playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) == 0)
+		{
+			nextTetrominoOffset.position += XY{0, 1};
+		}
+	}
+	if(::IsKeyPressed(KEY_SPACE))
 	{
 		for(int yOffset = 1;; ++yOffset)
 		{
@@ -184,7 +194,11 @@ void Game::update(App& app)
 		{
 			state = State::GameOver;
 		}
+
+		nextTetrominoOffset = Offset{};
 	}
+
+	currentTetromino += nextTetrominoOffset;
 }
 
 void Game::draw(App& app)
