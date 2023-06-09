@@ -173,11 +173,22 @@ void Game::update(App& app)
 
 	gravity.delay = delays[std::min<size_t>((::IsKeyDown(KEY_DOWN) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
 
-	if(const KeyAction::Return keyPress = moveRight.tick(::GetFrameTime()); isKeyPress(keyPress))
+	if(const KeyAction::Return moveAction = moveRight.tick(::GetFrameTime()); isKeyPress(moveAction))
 	{
-		if(playfield.overlapAt(currentTetromino.position + XY{keyPress.value, 0}, currentTetromino.collision) == 0)
+		if(playfield.overlapAt(currentTetromino.position + XY{moveAction.value, 0}, currentTetromino.collision) == 0)
 		{
-			currentTetromino.position += XY{keyPress.value, 0};
+			currentTetromino.position += XY{moveAction.value, 0};
+		}
+	}
+	if(const KeyAction::Return rotateAction = rotateRight.tick(::GetFrameTime()); isKeyPress(rotateAction))
+	{
+		const Offset rotation = basicRotationFunc(currentTetromino, rotateAction.value);
+		currentTetromino += rotation;
+		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
+		{
+			currentTetromino -= rotation;
+			const Offset kicks = wallKickFunc(playfield, currentTetromino, rotation);
+			currentTetromino += kicks;
 		}
 	}
 	if(gravity.tick(::GetFrameTime()))
@@ -353,7 +364,9 @@ Game::Game(App& app) :
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
     lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, tSpinFunc{tSpinCheck(app.settings.tSpin)},
-    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT}
+    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT},
+    basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},
+    rotateRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_X, KEY_Z}
 {
 }
 

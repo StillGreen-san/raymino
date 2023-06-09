@@ -52,5 +52,8 @@ struct Game : IScene
 	decltype(tSpinCheck(TSpin{})) tSpinFunc;
 	Timer gravity;
 	KeyAction moveRight;
+	decltype(basicRotation(RotationSystem{})) basicRotationFunc;
+	decltype(wallKick(WallKicks{})) wallKickFunc;
+	KeyAction rotateRight;
 };
 } // namespace raymino
