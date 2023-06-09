@@ -6,7 +6,7 @@ KeyAction::Return KeyAction::tick(float delta)
 {
 	if(const int val = (::IsKeyPressed(lkey) ? -1 : 0) + (::IsKeyPressed(rkey) ? 1 : 0); val != 0)
 	{
-		delayTimer.elapsed = repeatDelay;
+		delayTimer.elapsed = -repeatDelay;
 		return {State::Pressed, static_cast<int8_t>(val)};
 	}
 
