@@ -28,6 +28,12 @@ struct Offset
 		rotation += other.rotation;
 		return *this;
 	}
+	Offset& operator-=(Offset other) noexcept
+	{
+		position -= other.position;
+		rotation -= other.rotation;
+		return *this;
+	}
 	constexpr bool operator==(Offset other) const noexcept
 	{
 		return std::tie(position, rotation) == std::tie(other.position, other.rotation);
@@ -41,6 +47,12 @@ struct Tetromino : public Offset
 	{
 		Offset::operator+=(other);
 		collision.rotate(other.rotation);
+		return *this;
+	}
+	Tetromino& operator-=(Offset other) noexcept
+	{
+		Offset::operator-=(other);
+		collision.rotate(-other.rotation);
 		return *this;
 	}
 };
