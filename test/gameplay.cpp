@@ -285,6 +285,7 @@ TEST_CASE("tSpinCheck<Immobile>", "[gameplay][tSpinCheck]")
 	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
 	minoT.position = {0, 1};
 	const Offset offset{{0, 0}, 1};
+	minoT += offset;
 
 	{
 		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0}};
@@ -303,27 +304,30 @@ TEST_CASE("tSpinCheck<ThreeCorner>", "[gameplay][tSpinCheck]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
 	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
-	const Offset offset{{0, 0}, 1};
 
 	{
-		minoT.position = {0, 1};
+		const Offset lastMovement{{0, 1}, 1};
+		const Tetromino tetromino{Tetromino{minoT} += lastMovement};
 		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0}};
-		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, offset) == ScoreEvent::TSpin);
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, tetromino, lastMovement) == ScoreEvent::TSpin);
 	}
 	{
-		minoT.position = {0, 0};
+		const Offset lastMovement{{2, 0}, 1};
+		const Tetromino tetromino{Tetromino{minoT} += lastMovement};
 		const Grid field{{5, 3}, {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1}};
-		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, Offset{{2, 0}, 1}) == ScoreEvent::TSpin);
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, tetromino, lastMovement) == ScoreEvent::TSpin);
 	}
 	{
-		minoT.position = {0, 1};
+		const Offset lastMovement{{0, 1}, 1};
+		const Tetromino tetromino{Tetromino{minoT} += lastMovement};
 		const Grid field{{4, 4}, {0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0}};
-		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, offset) == ScoreEvent::MiniTSpin);
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, tetromino, lastMovement) == ScoreEvent::MiniTSpin);
 	}
 	{
-		minoT.position = {0, 1};
+		const Offset lastMovement{{0, 1}, 1};
+		const Tetromino tetromino{Tetromino{minoT} += lastMovement};
 		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1}};
-		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, minoT, offset) == ScoreEvent::LineClear);
+		REQUIRE(tSpinCheck<TSpin::ThreeCorner>(field, tetromino, lastMovement) == ScoreEvent::LineClear);
 	}
 }
 TEST_CASE("tSpinCheck<Lenient>", "[gameplay][tSpinCheck]")
@@ -332,6 +336,7 @@ TEST_CASE("tSpinCheck<Lenient>", "[gameplay][tSpinCheck]")
 	Tetromino& minoT = *find(tetrominos, TetrominoType::T);
 	minoT.position = {0, 1};
 	const Offset offset{{0, 0}, 1};
+	minoT += offset;
 
 	{
 		const Grid field{{4, 4}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0}};
@@ -342,7 +347,7 @@ TEST_CASE("tSpinCheck<Lenient>", "[gameplay][tSpinCheck]")
 		REQUIRE(tSpinCheck<TSpin::Lenient>(field, minoT, offset) == ScoreEvent::MiniTSpin);
 	}
 	{
-		const Grid field{{4, 4}, {0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0}};
+		const Grid field{{4, 4}, {0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0}};
 		REQUIRE(tSpinCheck<TSpin::Lenient>(field, minoT, {{}, 0}) == ScoreEvent::LineClear);
 	}
 }

@@ -496,11 +496,10 @@ bool isImmobile(const Grid& field, const Tetromino& tetromino)
 }
 
 template<>
-ScoreEvent tSpinCheck<TSpin::Immobile>(const Grid& field, const Tetromino& tetromino, Offset offset)
+ScoreEvent tSpinCheck<TSpin::Immobile>(
+    const Grid& field, const Tetromino& tetromino, [[maybe_unused]] Offset lastMovement)
 {
-	const Tetromino desired{Tetromino{tetromino} += offset};
-
-	if(!isImmobile(field, desired))
+	if(!isImmobile(field, tetromino))
 	{
 		return ScoreEvent::LineClear;
 	}
@@ -510,15 +509,14 @@ ScoreEvent tSpinCheck<TSpin::Immobile>(const Grid& field, const Tetromino& tetro
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
 template<>
-ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& tetromino, Offset offset)
+ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& tetromino, Offset lastMovement)
 {
-	if(offset.rotation == 0)
+	if(lastMovement.rotation == 0)
 	{
 		return ScoreEvent::LineClear;
 	}
 
-	const Tetromino desired{Tetromino{tetromino} += offset};
-	const TSpinCornerCountResult corners = tSpinCornerCount(field, desired);
+	const TSpinCornerCountResult corners = tSpinCornerCount(field, tetromino);
 
 	if(corners.front == 2 && corners.back >= 1)
 	{
@@ -526,7 +524,7 @@ ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& te
 	}
 	if(corners.front == 1 && corners.back == 2)
 	{
-		if(offset.position.x > 1 || offset.position.y > 1)
+		if(lastMovement.position.x > 1 || lastMovement.position.y > 1)
 		{
 			return ScoreEvent::TSpin;
 		}
@@ -536,14 +534,13 @@ ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& te
 	return ScoreEvent::LineClear;
 }
 template<>
-ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetromino, Offset offset)
+ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetromino, Offset lastMovement)
 {
-	if(offset.rotation == 0)
+	if(lastMovement.rotation == 0)
 	{
 		return ScoreEvent::LineClear;
 	}
 
-	const Tetromino desired{Tetromino{tetromino} += offset};
 	const size_t fullLines = countFullLines(field, tetromino);
 
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;

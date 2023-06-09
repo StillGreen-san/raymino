@@ -160,11 +160,11 @@ bool isImmobile(const Grid& field, const Tetromino& tetromino);
  * @tparam TTSpin TSpin type
  * @param field playfield to test against
  * @param tetromino to test
- * @param offset for tetromino
+ * @param lastMovement of tetromino
  * @return ScoreEvent LineClear, TSpinMini or TSpin
  */
 template<TSpin TTSpin>
-ScoreEvent tSpinCheck(const Grid& field, const Tetromino& tetromino, Offset offset);
+ScoreEvent tSpinCheck(const Grid& field, const Tetromino& tetromino, Offset lastMovement);
 
 /**
  * @param tspin TSpin

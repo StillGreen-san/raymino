@@ -176,11 +176,10 @@ void Game::update(App& app)
 		isLocking = true;
 		lockDelay.reset();
 	}
+	currentTetromino += nextTetrominoOffset;
 	if(isLocking && lockDelay.tick(::GetFrameTime()))
 	{
-		const ScoreEvent scoreEvent = nextTetrominoOffset.rotation == 0
-		                                  ? tSpinFunc(playfield, currentTetromino, nextTetrominoOffset)
-		                                  : ScoreEvent::LineClear;
+		const ScoreEvent scoreEvent = tSpinFunc(playfield, currentTetromino, nextTetrominoOffset);
 
 		playfield.setAt(currentTetromino.position, currentTetromino.collision);
 
@@ -194,11 +193,7 @@ void Game::update(App& app)
 		{
 			state = State::GameOver;
 		}
-
-		nextTetrominoOffset = Offset{};
 	}
-
-	currentTetromino += nextTetrominoOffset;
 }
 
 void Game::draw(App& app)
