@@ -25,6 +25,12 @@ bool constexpr operator<(Color lhs, Color rhs) noexcept
 
 namespace raymino
 {
+template<>
+std::unique_ptr<IScene> MakeScene<Scene::Game>(App& app)
+{
+	return std::make_unique<Game>(app);
+}
+
 constexpr int HIDDEN_HEIGHT = 4;
 constexpr int SIDEBAR_WIDTH = 150;
 constexpr int PREVIEW_ELEMENT_HEIGHT = 100;
@@ -123,9 +129,24 @@ void Game::update(App& app)
 		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
 		state = State::GameOver;
 	}
+	if(::IsKeyPressed(KEY_HOME))
+	{
+		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
+	}
 	if(::IsKeyPressed(KEY_ESCAPE))
 	{
-		state = state == State::Paused ? State::Running : State::Paused;
+		switch(state)
+		{
+		case State::Running:
+			state = State::Paused;
+			break;
+		case State::Paused:
+			state = State::Running;
+			break;
+		case State::GameOver:
+			app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
+			break;
+		}
 	}
 
 	if(state != State::Running)
@@ -358,11 +379,5 @@ Tetromino Game::getNextTetromino(size_t minIndices)
 	nextTetrominoIndices.pop_front();
 	nextTetrominoIndices = fillIndices(std::move(nextTetrominoIndices), minIndices);
 	return baseTetrominos[nextIdx];
-}
-
-template<>
-std::unique_ptr<IScene> MakeScene<Scene::Game>([[maybe_unused]] App& app)
-{
-	return std::make_unique<Game>(app);
 }
 } // namespace raymino
