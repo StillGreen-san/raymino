@@ -150,8 +150,7 @@ void Game::update(App& app)
 
 	Offset prevTetrominoOffset = currentTetromino;
 
-	const size_t delayIdx = std::min<size_t>((::IsKeyDown(KEY_DOWN) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel);
-	gravity.delay = delays[delayIdx];
+	gravity.delay = delays[std::min<size_t>((::IsKeyDown(KEY_DOWN) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
 
 	if(const KeyAction::Return keyPress = moveRight.tick(::GetFrameTime()); isKeyPress(keyPress))
 	{
@@ -165,6 +164,15 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) == 0)
 		{
 			currentTetromino.position += XY{0, 1};
+			if(::IsKeyDown(KEY_DOWN))
+			{
+				score += scoringSystem->process(ScoreEvent::SoftDrop, 1, levelState.currentLevel);
+			}
+		}
+		else if(::IsKeyDown(KEY_DOWN) && app.settings.softDrop == SoftDrop::Locking)
+		{
+			isLocking = true;
+			lockDelay.reset(lockDelay.delay);
 		}
 	}
 	if(::IsKeyPressed(KEY_SPACE))
