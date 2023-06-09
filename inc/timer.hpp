@@ -19,6 +19,10 @@ struct Timer
 		}
 		return false;
 	}
+	void reset(float val = 0)
+	{
+		elapsed = val;
+	}
 	float delay;
 	float elapsed = 0;
 };
