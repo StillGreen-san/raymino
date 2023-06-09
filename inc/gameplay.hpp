@@ -18,6 +18,10 @@ struct Offset
 	{
 		return {position + other.position, rotation + other.rotation};
 	}
+	Offset operator-(Offset other) const noexcept
+	{
+		return {position - other.position, rotation - other.rotation};
+	}
 	Offset& operator+=(Offset other) noexcept
 	{
 		position += other.position;

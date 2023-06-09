@@ -51,5 +51,6 @@ struct Game : IScene
 	bool isLocking;
 	decltype(tSpinCheck(TSpin{})) tSpinFunc;
 	Timer gravity;
+	KeyAction moveRight;
 };
 } // namespace raymino

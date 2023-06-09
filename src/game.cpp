@@ -111,6 +111,11 @@ std::vector<XY> calcCenterOffsetsExtended(const std::vector<Tetromino>& tetromin
 	return offsets;
 }
 
+bool isKeyPress(KeyAction::Return keyPress)
+{
+	return keyPress.value != 0 && keyPress.state != KeyAction::State::Released;
+}
+
 void Game::update(App& app)
 {
 	if(::IsKeyPressed(KEY_END))
@@ -143,16 +148,23 @@ void Game::update(App& app)
 		}
 	}
 
-	Offset nextTetrominoOffset{};
+	Offset prevTetrominoOffset = currentTetromino;
 
 	const size_t delayIdx = std::min<size_t>((::IsKeyDown(KEY_DOWN) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel);
 	gravity.delay = delays[delayIdx];
 
+	if(const KeyAction::Return keyPress = moveRight.tick(::GetFrameTime()); isKeyPress(keyPress))
+	{
+		if(playfield.overlapAt(currentTetromino.position + XY{keyPress.value, 0}, currentTetromino.collision) == 0)
+		{
+			currentTetromino.position += XY{keyPress.value, 0};
+		}
+	}
 	if(gravity.tick(::GetFrameTime()))
 	{
 		if(playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) == 0)
 		{
-			nextTetrominoOffset.position += XY{0, 1};
+			currentTetromino.position += XY{0, 1};
 		}
 	}
 	if(::IsKeyPressed(KEY_SPACE))
@@ -162,7 +174,7 @@ void Game::update(App& app)
 			if(playfield.overlapAt(currentTetromino.position + XY{0, yOffset}, currentTetromino.collision) != 0)
 			{
 				currentTetromino.position += XY{0, yOffset - 1};
-				nextTetrominoOffset = Offset{};
+				prevTetrominoOffset = currentTetromino;
 				score += scoringSystem->process(ScoreEvent::HardDrop, yOffset - 1, levelState.currentLevel);
 				isLocking = true;
 				lockDelay.reset(lockDelay.delay);
@@ -176,10 +188,9 @@ void Game::update(App& app)
 		isLocking = true;
 		lockDelay.reset();
 	}
-	currentTetromino += nextTetrominoOffset;
 	if(isLocking && lockDelay.tick(::GetFrameTime()))
 	{
-		const ScoreEvent scoreEvent = tSpinFunc(playfield, currentTetromino, nextTetrominoOffset);
+		const ScoreEvent scoreEvent = tSpinFunc(playfield, currentTetromino, currentTetromino - prevTetrominoOffset);
 
 		playfield.setAt(currentTetromino.position, currentTetromino.collision);
 
@@ -312,7 +323,8 @@ Game::Game(App& app) :
     currentTetromino{getNextTetromino(app.settings.previewCount)},
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
-    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, tSpinFunc{tSpinCheck(app.settings.tSpin)}
+    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, tSpinFunc{tSpinCheck(app.settings.tSpin)},
+    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT}
 {
 }
 
