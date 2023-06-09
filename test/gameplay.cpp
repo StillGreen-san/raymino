@@ -398,6 +398,13 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 1) == 800);
 		REQUIRE(scoreSys->process(ScoreEvent::PerfectClear, 4, 1) == 3200);
 	}
+	{
+		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::Guideline>();
+		REQUIRE(scoreSys->process(ScoreEvent::SoftDrop, 1, 1) == 1);
+		REQUIRE(scoreSys->process(ScoreEvent::SoftDrop, 2, 2) == 2);
+		REQUIRE(scoreSys->process(ScoreEvent::HardDrop, 3, 1) == 6);
+		REQUIRE(scoreSys->process(ScoreEvent::HardDrop, 2, 3) == 12);
+	}
 }
 
 TEST_CASE("shuffledIndices", "[gameplay]")

@@ -750,7 +750,7 @@ struct Guideline : public IScoringSystem
 		case ScoreEvent::SoftDrop:
 			return actions[Action::Soft].points * level;
 		case ScoreEvent::HardDrop:
-			return actions[Action::Hard].points * level;
+			return actions[Action::Hard].points * level * lines;
 		default:
 			return 0;
 		}
