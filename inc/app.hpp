@@ -25,6 +25,7 @@ public:
 		ScoringSystem scoringSystem = ScoringSystem::Guideline;
 		LevelGoal levelGoal = LevelGoal::Fixed;
 		bool holdPiece = true;
+		bool ghostPiece = true;
 		int fieldWidth = 10;
 		int fieldHeight = 20;
 		int previewCount = 6;

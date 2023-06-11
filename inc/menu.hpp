@@ -33,6 +33,7 @@ struct Menu : public IScene
 	static constexpr const char* LabelFieldHeightText = "Field Height";
 	static constexpr const char* LabelPreviewCountText = "Preview Count";
 	static constexpr const char* LabelHoldPieceText = "Hold Piece";
+	static constexpr const char* LabelGhostPieceText = "Ghost Piece";
 	static constexpr const char* LabelPresetsText = "Presets";
 	static constexpr const char* DropdownBoxRotationSystemText =
 	    "Original;Super;Arika;Sega;Nintendo Left;Nintendo Right";
@@ -45,6 +46,7 @@ struct Menu : public IScene
 	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;BPS;Sega;Nintendo";
 	static constexpr const char* DropdownBoxLevelGoalText = "Fixed;Dynamic";
 	static constexpr const char* DropdownBoxHoldPieceText = "No;Yes";
+	static constexpr const char* DropdownBoxGhostPieceText = "No;Yes";
 	static constexpr const char* DropdownBoxPresetsText = "Custom;Guideline";
 
 	static constexpr Vector2 AnchorGame = {24, 24};
@@ -60,6 +62,7 @@ struct Menu : public IScene
 	bool DropdownBoxScoringSystemEditMode = false;
 	bool DropdownBoxLevelGoalEditMode = false;
 	bool DropdownBoxHoldPieceEditMode = false;
+	bool DropdownBoxGhostPieceEditMode = false;
 	bool SpinnerPreviewCountEditMode = false;
 	bool SpinnerFieldWidthEditMode = false;
 	bool SpinnerFieldHeightEditMode = false;
@@ -75,6 +78,7 @@ struct Menu : public IScene
 	int DropdownBoxLevelGoalActive;
 	int DropdownBoxScoringSystemActive;
 	int DropdownBoxHoldPieceActive;
+	int DropdownBoxGhostPieceActive;
 	static constexpr int SpinnerPreviewCountMin = 0;
 	int SpinnerPreviewCountValue;
 	static constexpr int SpinnerPreviewCountMax = 10;
@@ -112,6 +116,8 @@ struct Menu : public IScene
 	static constexpr Rectangle DropdownBoxHoldPieceRect{AnchorSettings.x + 392, AnchorSettings.y + 216, 136, 24};
 	static constexpr Rectangle LabelLevelGoalRect{AnchorSettings.x + 296, AnchorSettings.y + 264, 96, 24};
 	static constexpr Rectangle DropdownBoxLevelGoalRect{AnchorSettings.x + 392, AnchorSettings.y + 264, 136, 24};
+	static constexpr Rectangle LabelGhostPieceRect{AnchorSettings.x + 296, AnchorSettings.y + 312, 96, 24};
+	static constexpr Rectangle DropdownBoxGhostPieceRect{AnchorSettings.x + 392, AnchorSettings.y + 312, 136, 24};
 	static constexpr Rectangle SpinnerPreviewCountRect{AnchorSettings.x + 120, AnchorSettings.y + 408, 136, 24};
 	static constexpr Rectangle SpinnerFieldWidthRect{AnchorSettings.x + 120, AnchorSettings.y + 312, 136, 24};
 	static constexpr Rectangle SpinnerFieldHeightRect{AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24};
