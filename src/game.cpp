@@ -264,6 +264,20 @@ void Game::draw(App& app)
 	::DrawRectangle(playfieldBounds.x, 0, playfieldBounds.width, static_cast<int>(playfieldBorderBounds.y), LIGHTGRAY);
 	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 
+	if(app.settings.ghostPiece)
+	{
+		int yOffset = 1;
+		while(playfield.overlapAt(currentTetromino.position + XY{0, yOffset}, currentTetromino.collision) == 0)
+		{
+			++yOffset;
+		}
+		--yOffset;
+
+		drawCells(currentTetromino.collision,
+		    ((currentTetromino.position - XY{0, HIDDEN_HEIGHT - yOffset}) * (cellSize + 1)) + playfieldBounds, cellSize,
+		    1, minoColors, 96);
+	}
+
 	drawCells(currentTetromino.collision,
 	    ((currentTetromino.position - XY{0, HIDDEN_HEIGHT}) * (cellSize + 1)) + playfieldBounds, cellSize, 1,
 	    minoColors);
