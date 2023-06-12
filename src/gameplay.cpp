@@ -344,7 +344,8 @@ Offset wallKick<WallKicks::Super>(const Grid& field, const Tetromino& tetromino,
 
 	const Tetromino desiredPosition{Tetromino{tetromino} += offset};
 	const KickTable& kickTable = tetromino.type == TetrominoType::I ? kicksI : kicksJLSTZ;
-	const size_t kickIdx = (std::abs(tetromino.rotation % 4) * 2) + static_cast<int>(offset.rotation > 0);
+	const size_t kickIdx = ((static_cast<size_t>(tetromino.rotation) & size_t{0b11}) * size_t{2}) +
+	                       static_cast<size_t>(offset.rotation > 0);
 	const KickRow& kickRow = kickTable[kickIdx];
 
 	for(const XY kick : kickRow)

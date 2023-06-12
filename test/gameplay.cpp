@@ -138,6 +138,13 @@ TEST_CASE("wallKick<Super>", "[wallKick][gameplay]")
 		REQUIRE(wallKick<WallKicks::Super>(field, minoT, offset) == expected);
 	}
 	{
+		const Tetromino minoTr{Tetromino{minoT} += basicRotation<RotationSystem::Super>(minoT, -1)};
+		const Grid field{{3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+		const Offset offset = basicRotation<RotationSystem::Super>(minoTr, -1) + Offset{{1, 0}, 0};
+		const Offset expected{{-1, 0}, -1};
+		REQUIRE(wallKick<WallKicks::Super>(field, minoTr, offset) == expected);
+	}
+	{
 		const Grid field{{3, 5}, {0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1}};
 		const Tetromino minoZr{Tetromino{minoZ} += basicRotation<RotationSystem::Super>(minoZ, 2)};
 		const Offset offset = basicRotation<RotationSystem::Super>(minoZr, 1);
