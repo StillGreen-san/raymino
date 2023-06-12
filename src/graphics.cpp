@@ -25,7 +25,7 @@ Grid::Cell ColorMap::operator[](Color color) const
 	return static_cast<Grid::Cell>(std::distance(begin(colors), idxIt));
 }
 
-void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors)
+void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors, uint8_t alpha)
 {
 	const Size gridSize = grid.getSize();
 
@@ -41,7 +41,9 @@ void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const Colo
 	{
 		if(cell != 0)
 		{
-			::DrawRectangle(at.x, at.y, cellSize, cellSize, minoColors[cell]);
+			Color color = minoColors[cell];
+			color.a = alpha;
+			::DrawRectangle(at.x, at.y, cellSize, cellSize, color);
 		}
 		at.x += totalCellSize;
 		if(at.x == maxGridOffset)
