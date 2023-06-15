@@ -49,6 +49,7 @@ struct Game : IScene
 	LevelState levelState;
 	Timer lockDelay;
 	bool isLocking;
+	bool holdPieceLocked;
 	decltype(tSpinCheck(TSpin{})) tSpinFunc;
 	Timer gravity;
 	KeyAction moveRight;

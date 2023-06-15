@@ -154,7 +154,7 @@ void Game::update(App& app)
 		return;
 	}
 
-	if(app.settings.holdPiece && ::IsKeyPressed(KEY_C))
+	if(app.settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(KEY_C))
 	{
 		if(holdPieceIdx == -1)
 		{
@@ -167,6 +167,7 @@ void Game::update(App& app)
 			currentTetromino = baseTetrominos[holdPieceIdx];
 			holdPieceIdx = nextHoldIdx;
 		}
+		holdPieceLocked = true;
 	}
 
 	Offset prevTetrominoOffset = currentTetromino;
@@ -239,6 +240,7 @@ void Game::update(App& app)
 		levelState = levelUpFunc(scoreEvent, static_cast<int>(linesCleared), levelState);
 
 		isLocking = false;
+		holdPieceLocked = false;
 		currentTetromino = getNextTetromino(app.settings.previewCount);
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
@@ -377,7 +379,8 @@ Game::Game(App& app) :
     currentTetromino{getNextTetromino(app.settings.previewCount)},
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
-    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, tSpinFunc{tSpinCheck(app.settings.tSpin)},
+    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, holdPieceLocked{false},
+    tSpinFunc{tSpinCheck(app.settings.tSpin)},
     moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT},
     basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},
     rotateRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_X, KEY_Z}
