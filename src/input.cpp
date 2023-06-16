@@ -10,7 +10,7 @@ KeyAction::Return KeyAction::tick(float delta)
 		return {State::Pressed, static_cast<int8_t>(val)};
 	}
 
-	if(const int val = (::IsKeyDown(lkey) ? -1 : 0) + (::IsKeyDown(rkey) ? 1 : 0); val != 0 && delayTimer.tick(delta))
+	if(const int val = (::IsKeyDown(lkey) ? -1 : 0) + (::IsKeyDown(rkey) ? 1 : 0); val != 0 && delayTimer.step(delta))
 	{
 		return {State::Repeated, static_cast<int8_t>(val)};
 	}
