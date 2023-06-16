@@ -48,6 +48,7 @@ struct Game : IScene
 	decltype(levelUp(LevelGoal{})) levelUpFunc;
 	LevelState levelState;
 	Timer lockDelay;
+	int lockCounter;
 	bool isLocking;
 	bool holdPieceLocked;
 	decltype(tSpinCheck(TSpin{})) tSpinFunc;

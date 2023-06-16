@@ -40,6 +40,7 @@ constexpr XY OFFSCREEN_POSITION{-1337, -1337};
 constexpr int SCORE_FONT_SIZE = 30;
 constexpr int STATUS_FONT_SIZE = 50;
 constexpr ::Color STATUS_BACKGROUND{77, 77, 77, 222};
+constexpr int LOCKDOWN_MAX_RESET = 15;
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
@@ -167,6 +168,8 @@ void Game::update(App& app)
 			currentTetromino = baseTetrominos[holdPieceIdx];
 			holdPieceIdx = nextHoldIdx;
 		}
+		isLocking = false;
+		lockCounter = 0;
 		holdPieceLocked = true;
 	}
 
@@ -179,6 +182,14 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position + XY{moveAction.value, 0}, currentTetromino.collision) == 0)
 		{
 			currentTetromino.position += XY{moveAction.value, 0};
+			if(isLocking && app.settings.lockDown <= LockDown::Extended)
+			{
+				if(app.settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
+				{
+					lockCounter += 1;
+					lockDelay.reset(0);
+				}
+			}
 		}
 	}
 	if(const KeyAction::Return rotateAction = rotateRight.tick(::GetFrameTime()); isKeyPress(rotateAction))
@@ -191,6 +202,14 @@ void Game::update(App& app)
 			const Offset kicks = wallKickFunc(playfield, currentTetromino, rotation);
 			currentTetromino += kicks;
 		}
+		if(isLocking && app.settings.lockDown <= LockDown::Extended)
+		{
+			if(app.settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
+			{
+				lockCounter += 1;
+				lockDelay.reset(0);
+			}
+		}
 	}
 	if(gravity.step(::GetFrameTime()))
 	{
@@ -200,6 +219,27 @@ void Game::update(App& app)
 			if(::IsKeyDown(KEY_DOWN))
 			{
 				score += scoringSystem->process(ScoreEvent::SoftDrop, 1, levelState.currentLevel);
+			}
+			if(isLocking)
+			{
+				switch(app.settings.lockDown)
+				{
+				case LockDown::Infinit:
+					lockDelay.reset(0);
+					break;
+				case LockDown::Extended:
+					if(lockCounter < LOCKDOWN_MAX_RESET)
+					{
+						lockCounter += 1;
+						lockDelay.reset(0);
+					}
+					break;
+				case LockDown::Classic:
+					lockDelay.reset(0);
+					break;
+				case LockDown::Entry:
+					break;
+				}
 			}
 		}
 		else if(::IsKeyDown(KEY_DOWN) && app.settings.softDrop == SoftDrop::Locking)
@@ -224,12 +264,18 @@ void Game::update(App& app)
 		}
 	}
 
-	if(!isLocking && playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) != 0)
+	const bool onGround = playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) != 0;
+
+	if(!isLocking && onGround)
 	{
 		isLocking = true;
-		lockDelay.reset();
+		lockDelay.reset(0);
 	}
-	if(isLocking && lockDelay.tick(::GetFrameTime()))
+	if(isLocking && !onGround && app.settings.lockDown == LockDown::Entry)
+	{
+		lockDelay.tick(::GetFrameTime());
+	}
+	if(isLocking && onGround && lockDelay.tick(::GetFrameTime()))
 	{
 		const ScoreEvent scoreEvent = tSpinFunc(playfield, currentTetromino, currentTetromino - prevTetrominoOffset);
 
@@ -241,6 +287,7 @@ void Game::update(App& app)
 
 		isLocking = false;
 		holdPieceLocked = false;
+		lockCounter = 0;
 		currentTetromino = getNextTetromino(app.settings.previewCount);
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
@@ -379,7 +426,7 @@ Game::Game(App& app) :
     currentTetromino{getNextTetromino(app.settings.previewCount)},
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
-    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, holdPieceLocked{false},
+    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, holdPieceLocked{false}, lockCounter{0},
     tSpinFunc{tSpinCheck(app.settings.tSpin)},
     moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT},
     basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},
