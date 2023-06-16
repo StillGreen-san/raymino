@@ -7,9 +7,11 @@ namespace raymino
 struct Timer
 {
 	/**
-	 * @return true if elapsed >= delay
+	 * @brief accumulate delta, will decrease elapsed by delay if elapsed >= delay
+	 * @param delta seconds
+	 * @return true if elapsed was >= delay
 	 */
-	bool tick(float delta)
+	bool step(float delta)
 	{
 		elapsed += delta;
 		if(elapsed >= delay)
@@ -19,7 +21,20 @@ struct Timer
 		}
 		return false;
 	}
-	void reset(float val = 0)
+	/**
+	 * @brief accumulate delta, needs manual reset
+	 * @param delta seconds
+	 * @return true if elapsed is >= delay
+	 */
+	bool tick(float delta)
+	{
+		elapsed += delta;
+		return elapsed >= delay;
+	}
+	/**
+	 * @brief reset accumulated time to val
+	 */
+	void reset(float val)
 	{
 		elapsed = val;
 	}

@@ -192,7 +192,7 @@ void Game::update(App& app)
 			currentTetromino += kicks;
 		}
 	}
-	if(gravity.tick(::GetFrameTime()))
+	if(gravity.step(::GetFrameTime()))
 	{
 		if(playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) == 0)
 		{
