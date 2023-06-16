@@ -53,7 +53,7 @@ void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth)
 	    {
 		    return static_cast<Grid::Cell>(current * color);
 	    });
-	tetromino.position = spawnPosition(tetromino, HIDDEN_HEIGHT, fieldWidth);
+	tetromino.position = spawnPosition(tetromino, HIDDEN_HEIGHT - 2, fieldWidth);
 }
 
 std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino> tetrominos, int fieldWidth)
@@ -313,8 +313,6 @@ void Game::draw(App& app)
 	const XY hiddenOffset{0, (cellSize + 1) * HIDDEN_HEIGHT};
 	drawBackground(playfield, playfieldBounds - hiddenOffset, cellSize, 1, LIGHTGRAY, DARKGRAY);
 	drawCells(playfield, playfieldBounds - hiddenOffset, cellSize, 1, minoColors);
-	::DrawRectangle(playfieldBounds.x, 0, playfieldBounds.width, static_cast<int>(playfieldBorderBounds.y), LIGHTGRAY);
-	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 
 	if(app.settings.ghostPiece)
 	{
@@ -333,6 +331,9 @@ void Game::draw(App& app)
 	drawCells(currentTetromino.collision,
 	    ((currentTetromino.position - XY{0, HIDDEN_HEIGHT}) * (cellSize + 1)) + playfieldBounds, cellSize, 1,
 	    minoColors);
+	
+	::DrawRectangle(playfieldBounds.x, 0, playfieldBounds.width, static_cast<int>(playfieldBorderBounds.y), LIGHTGRAY);
+	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 
 	if(holdPieceIdx != static_cast<size_t>(-1))
 	{
