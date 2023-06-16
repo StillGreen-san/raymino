@@ -257,8 +257,11 @@ void Game::update(App& app)
 				currentTetromino.position += XY{0, yOffset - 1};
 				prevTetrominoOffset = currentTetromino;
 				score += scoringSystem->process(ScoreEvent::HardDrop, yOffset - 1, levelState.currentLevel);
-				isLocking = true;
-				lockDelay.reset(lockDelay.delay);
+				if(app.settings.instantDrop == InstantDrop::Hard)
+				{
+					isLocking = true;
+					lockDelay.reset(lockDelay.delay);
+				}
 				break;
 			}
 		}
