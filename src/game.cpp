@@ -85,7 +85,7 @@ Rect calculatePlayfieldBounds(Size fieldSize)
 	const int xOffset = (SIDEBAR_WIDTH + FIELD_BORDER_WIDTH) + ((availableWidth - actualWidth) / 2);
 	const int yOffset = FIELD_BORDER_WIDTH + ((availableHeight - actualHeight) / 2);
 
-	return {xOffset, yOffset, actualWidth, actualHeight};
+	return {{xOffset, yOffset}, {actualWidth, actualHeight}};
 }
 
 XY calcCenterOffset(const Grid& grid, Size available, int cellSize)
@@ -157,7 +157,7 @@ void Game::update(App& app)
 
 	if(app.settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(KEY_C))
 	{
-		if(holdPieceIdx == -1)
+		if(holdPieceIdx == static_cast<size_t>(-1))
 		{
 			holdPieceIdx = static_cast<size_t>(currentTetromino.type);
 			currentTetromino = getNextTetromino(app.settings.previewCount);
@@ -334,7 +334,7 @@ void Game::draw(App& app)
 	    ((currentTetromino.position - XY{0, HIDDEN_HEIGHT}) * (cellSize + 1)) + playfieldBounds, cellSize, 1,
 	    minoColors);
 
-	if(holdPieceIdx != -1)
+	if(holdPieceIdx != static_cast<size_t>(-1))
 	{
 		drawCells(
 		    baseTetrominos[holdPieceIdx].collision, previewOffsetsMain[holdPieceIdx], PREVIEW_CELL_SIZE, 1, minoColors);
@@ -429,7 +429,7 @@ Game::Game(App& app) :
     currentTetromino{getNextTetromino(app.settings.previewCount)},
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
-    lockDelay{App::Settings::LOCK_DELAY}, isLocking{false}, holdPieceLocked{false}, lockCounter{0},
+    lockDelay{App::Settings::LOCK_DELAY}, lockCounter{0}, isLocking{false}, holdPieceLocked{false},
     tSpinFunc{tSpinCheck(app.settings.tSpin)},
     moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT},
     basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},
@@ -437,9 +437,9 @@ Game::Game(App& app) :
 {
 }
 
-std::deque<size_t> Game::fillIndices(std::deque<size_t> indices, size_t minIndices)
+std::deque<size_t> Game::fillIndices(std::deque<size_t> indices, int minIndices)
 {
-	while(indices.size() < minIndices)
+	while(indices.size() < static_cast<size_t>(minIndices))
 	{
 		std::vector<size_t> newIndices = shuffledIndicesFunc(baseTetrominos, rng);
 		indices.insert(indices.end(), newIndices.begin(), newIndices.end());
@@ -452,7 +452,7 @@ int Game::cellSizeExtended() const
 	return std::min(previewElementHeightExtended / 5, PREVIEW_CELL_SIZE);
 }
 
-Tetromino Game::getNextTetromino(size_t minIndices)
+Tetromino Game::getNextTetromino(int minIndices)
 {
 	minIndices = minIndices == 0 ? 1 : minIndices;
 	const size_t nextIdx = nextTetrominoIndices.front();

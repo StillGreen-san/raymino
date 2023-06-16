@@ -66,7 +66,7 @@ void Menu::UpdateDraw(App& app)
 
 	BeginDrawing();
 
-	ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+	ClearBackground(GetColor(static_cast<unsigned>(GuiGetStyle(DEFAULT, BACKGROUND_COLOR))));
 
 	if(DropdownBoxRotationSystemEditMode || DropdownBoxWallKicksEditMode || DropdownBoxLockDownEditMode ||
 	    DropdownBoxSoftDropEditMode || DropdownBoxInstantDropEditMode || DropdownBoxTSpinEditMode ||

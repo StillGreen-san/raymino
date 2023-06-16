@@ -8,12 +8,12 @@
 
 namespace raymino
 {
-size_t index1D(unsigned x, unsigned y, unsigned width)
+size_t index1D(int x, int y, int width)
 {
-	return (y * width) + x;
+	return (static_cast<size_t>(y) * static_cast<size_t>(width)) + static_cast<size_t>(x);
 }
 
-Grid::Grid(Size size, Grid::Cell fill) : cells(size.area(), fill), size{size}
+Grid::Grid(Size size, Grid::Cell fill) : cells(static_cast<size_t>(size.area()), fill), size{size}
 {
 }
 

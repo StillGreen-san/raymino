@@ -20,9 +20,9 @@ struct Game : IScene
 	void update(App& app);
 	void draw(App& app);
 
-	std::deque<size_t> fillIndices(std::deque<size_t> indices, size_t minIndices);
-	int cellSizeExtended() const;
-	Tetromino getNextTetromino(size_t minIndices);
+	std::deque<size_t> fillIndices(std::deque<size_t> indices, int minIndices);
+	[[nodiscard]] int cellSizeExtended() const;
+	Tetromino getNextTetromino(int minIndices);
 
 	enum class State
 	{

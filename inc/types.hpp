@@ -60,7 +60,7 @@ struct Rect : XY, Size
 	}
 	Rect operator*(int val) const noexcept
 	{
-		return {x * val, y * val, width * val, height * val};
+		return {{x * val, y * val}, {width * val, height * val}};
 	}
 };
 template<typename TIterator>
