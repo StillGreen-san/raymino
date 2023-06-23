@@ -25,7 +25,7 @@ target_compile_features(${PROJECT_NAME}-lib PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res)
 
 add_executable(${PROJECT_NAME} src/main.cpp src/app.cpp src/game.cpp src/menu.cpp src/graphics.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib steinwurf::endian)
 
 enable_testing()
 include(Catch)
