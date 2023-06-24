@@ -16,7 +16,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 Menu::Menu(App& app) // NOLINT(*-member-init) handled by readSettings
 {
 	readSettings(app.settings);
-	App::Settings defaultSettings;
+	const App::Settings defaultSettings;
 	if(defaultSettings != app.settings)
 	{
 		DropdownBoxPresetsActive = 0;
@@ -54,9 +54,9 @@ void Menu::writeSettings(App::Settings& settings) const
 	settings.levelGoal = static_cast<LevelGoal>(DropdownBoxLevelGoalActive);
 	settings.holdPiece = static_cast<bool>(DropdownBoxHoldPieceActive);
 	settings.ghostPiece = static_cast<bool>(DropdownBoxGhostPieceActive);
-	settings.previewCount = SpinnerPreviewCountValue;
-	settings.fieldWidth = SpinnerFieldWidthValue;
-	settings.fieldHeight = SpinnerFieldHeightValue;
+	settings.previewCount = static_cast<uint8_t>(SpinnerPreviewCountValue);
+	settings.fieldWidth = static_cast<uint8_t>(SpinnerFieldWidthValue);
+	settings.fieldHeight = static_cast<uint8_t>(SpinnerFieldHeightValue);
 }
 
 void Menu::UpdateDraw(App& app)

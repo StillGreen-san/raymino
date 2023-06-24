@@ -26,9 +26,9 @@ public:
 		LevelGoal levelGoal = LevelGoal::Fixed;
 		bool holdPiece = true;
 		bool ghostPiece = true;
-		int fieldWidth = 10;
-		int fieldHeight = 20;
-		int previewCount = 6;
+		uint8_t fieldWidth = 10;
+		uint8_t fieldHeight = 20;
+		uint8_t previewCount = 6;
 		bool operator==(const Settings& rhs) const;
 		bool operator!=(const Settings& rhs) const;
 

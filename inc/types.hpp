@@ -86,7 +86,7 @@ struct Range
 	}
 };
 
-enum class TetrominoType
+enum class TetrominoType : uint8_t
 {
 	I,
 	L,
@@ -96,7 +96,7 @@ enum class TetrominoType
 	T,
 	S,
 };
-enum class RotationSystem
+enum class RotationSystem : uint8_t
 {
 	Original,
 	Super,
@@ -105,50 +105,50 @@ enum class RotationSystem
 	NintendoLeft,
 	NintendoRight,
 };
-enum class WallKicks
+enum class WallKicks : uint8_t
 {
 	None,
 	Arika,
 	Super,
 };
-enum class LockDown
+enum class LockDown : uint8_t
 {
 	Infinit,
 	Extended,
 	Classic,
 	Entry,
 };
-enum class SoftDrop
+enum class SoftDrop : uint8_t
 {
 	Locking,
 	NonLocking,
 };
-enum class InstantDrop
+enum class InstantDrop : uint8_t
 {
 	Hard,
 	Sonic,
 };
-enum class TSpin
+enum class TSpin : uint8_t
 {
 	Immobile,
 	ThreeCorner,
 	Lenient,
 };
-enum class ShuffleType
+enum class ShuffleType : uint8_t
 {
 	Random,
 	SingleBag,
 	DoubleBag,
 	TripleBag,
 };
-enum class ScoringSystem
+enum class ScoringSystem : uint8_t
 {
 	Guideline,
 	BPS,
 	Sega,
 	Nintendo,
 };
-enum class ScoreEvent
+enum class ScoreEvent : uint8_t
 {
 	LineClear,
 	PerfectClear, // separat from *Clear & *Spin events
@@ -157,7 +157,7 @@ enum class ScoreEvent
 	SoftDrop,
 	HardDrop,
 };
-enum class LevelGoal
+enum class LevelGoal : uint8_t
 {
 	Fixed,
 	Dynamic,
