@@ -8,6 +8,7 @@
 
 raymino::App::App() : playerName{}
 {
+	HighScoreEntry::copyInto("Mino", playerName);
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
 	::SetExitKey(KEY_NULL);
@@ -60,4 +61,19 @@ bool raymino::App::Settings::operator!=(const raymino::App::Settings& rhs) const
 	       shuffleType != rhs.shuffleType || scoringSystem != rhs.scoringSystem || levelGoal != rhs.levelGoal ||
 	       holdPiece != rhs.holdPiece || ghostPiece != rhs.ghostPiece || fieldWidth != rhs.fieldWidth ||
 	       fieldHeight != rhs.fieldHeight || previewCount != rhs.previewCount;
+}
+
+size_t raymino::App::HighScoreEntry::copyInto(const char* inPtr, raymino::App::HighScoreEntry::NameT& outRef)
+{
+	if(!inPtr)
+	{
+		return 0;
+	}
+	size_t idx = 0;
+	for(; inPtr[idx] != '\0' && idx < outRef.size() - 1; ++idx)
+	{
+		outRef[idx] = inPtr[idx];
+	}
+	outRef[idx] = '\0';
+	return idx;
 }

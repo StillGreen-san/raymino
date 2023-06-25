@@ -44,6 +44,9 @@ public:
 	struct HighScoreEntry
 	{
 		using NameT = std::array<char, 8>;
+		/**
+		 * @return copied chars without ending \0
+		 */
 		static size_t copyInto(const char* inPtr, NameT& outRef);
 		HighScoreEntry(const char* namePtr, ptrdiff_t score, const Settings& settings);
 		NameT name;
