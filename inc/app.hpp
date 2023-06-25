@@ -55,10 +55,11 @@ public:
 		NameT name;
 		ptrdiff_t score;
 		Settings settings;
-		bool operator>(const HighScoreEntry& other) const noexcept
-		{
-			return score > other.score;
-		}
+	};
+	struct HighScores
+	{
+		std::vector<HighScoreEntry> entries;
+		bool add(const char* namePtr, ptrdiff_t score, const Settings& settings);
 	};
 
 	/**
@@ -89,10 +90,8 @@ public:
 	 */
 	void QueueSceneSwitch(std::unique_ptr<IScene> newScene);
 
-	bool addHighScore(ptrdiff_t score, const char* namePtr = nullptr);
-
 	Settings settings;
-	std::vector<HighScoreEntry> highScores;
+	HighScores highScores;
 	HighScoreEntry::NameT playerName;
 
 private:
