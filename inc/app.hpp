@@ -31,8 +31,11 @@ public:
 		uint8_t fieldWidth = 10;
 		uint8_t fieldHeight = 20;
 		uint8_t previewCount = 6;
-		bool operator==(const Settings& rhs) const;
-		bool operator!=(const Settings& rhs) const;
+		bool operator==(const Settings& rhs) const noexcept;
+		bool operator!=(const Settings& rhs) const noexcept;
+		bool operator>(const Settings& rhs) const noexcept;
+		bool operator<(const Settings& rhs) const noexcept;
+		[[nodiscard]] int compare(const Settings& rhs) const noexcept;
 
 		static constexpr int SCREEN_WIDTH = 600;
 		static constexpr int SCREEN_HEIGHT = 600;

@@ -46,21 +46,25 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 	nextScene = std::move(newScene);
 }
 
-bool raymino::App::Settings::operator==(const raymino::App::Settings& rhs) const
+bool raymino::App::Settings::operator==(const raymino::App::Settings& rhs) const noexcept
 {
-	return rotationSystem == rhs.rotationSystem && wallKicks == rhs.wallKicks && lockDown == rhs.lockDown &&
-	       softDrop == rhs.softDrop && instantDrop == rhs.instantDrop && tSpin == rhs.tSpin &&
-	       shuffleType == rhs.shuffleType && scoringSystem == rhs.scoringSystem && levelGoal == rhs.levelGoal &&
-	       holdPiece == rhs.holdPiece && ghostPiece == rhs.ghostPiece && fieldWidth == rhs.fieldWidth &&
-	       fieldHeight == rhs.fieldHeight && previewCount == rhs.previewCount;
+	return compare(rhs) == 0;
 }
-bool raymino::App::Settings::operator!=(const raymino::App::Settings& rhs) const
+bool raymino::App::Settings::operator!=(const raymino::App::Settings& rhs) const noexcept
 {
-	return rotationSystem != rhs.rotationSystem || wallKicks != rhs.wallKicks || lockDown != rhs.lockDown ||
-	       softDrop != rhs.softDrop || instantDrop != rhs.instantDrop || tSpin != rhs.tSpin ||
-	       shuffleType != rhs.shuffleType || scoringSystem != rhs.scoringSystem || levelGoal != rhs.levelGoal ||
-	       holdPiece != rhs.holdPiece || ghostPiece != rhs.ghostPiece || fieldWidth != rhs.fieldWidth ||
-	       fieldHeight != rhs.fieldHeight || previewCount != rhs.previewCount;
+	return compare(rhs) != 0;
+}
+bool raymino::App::Settings::operator>(const raymino::App::Settings& rhs) const noexcept
+{
+	return compare(rhs) > 0;
+}
+bool raymino::App::Settings::operator<(const raymino::App::Settings& rhs) const noexcept
+{
+	return compare(rhs) < 0;
+}
+int raymino::App::Settings::compare(const raymino::App::Settings& rhs) const noexcept
+{
+	return std::memcmp(this, &rhs, sizeof(App::Settings));
 }
 
 size_t raymino::App::HighScoreEntry::copyInto(const char* inPtr, raymino::App::HighScoreEntry::NameT& outRef)
