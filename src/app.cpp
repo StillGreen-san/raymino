@@ -6,7 +6,7 @@
 #include <emscripten/emscripten.h>
 #endif
 
-raymino::App::App()
+raymino::App::App() : playerName{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);

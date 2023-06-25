@@ -5,6 +5,7 @@
 
 #include <array>
 #include <memory>
+#include <vector>
 
 namespace raymino
 {
@@ -82,7 +83,11 @@ public:
 	 */
 	void QueueSceneSwitch(std::unique_ptr<IScene> newScene);
 
+	bool addHighScore(ptrdiff_t score, const char* namePtr = nullptr);
+
 	Settings settings;
+	std::vector<HighScoreEntry> highScores;
+	HighScoreEntry::NameT playerName;
 
 private:
 	App();
