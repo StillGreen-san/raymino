@@ -67,6 +67,7 @@ struct Menu : public IScene
 	bool SpinnerFieldWidthEditMode = false;
 	bool SpinnerFieldHeightEditMode = false;
 	bool DropdownBoxPresetsEditMode = false;
+	bool TextBoxPlayerNameEditMode = false;
 
 	int DropdownBoxRotationSystemActive;
 	int DropdownBoxWallKicksActive;
@@ -90,9 +91,14 @@ struct Menu : public IScene
 	static constexpr int SpinnerFieldHeightMax = 45;
 	int DropdownBoxPresetsActive = 1;
 
+	App::HighScoreEntry::NameT TextBoxPlayerNameBuffer{};
+
 	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
+	static constexpr Rectangle ButtonStartGameRect{AnchorGame.x + 34, AnchorGame.y + 16, 152, 40};
+	static constexpr Rectangle LabelPlayerNameRect{AnchorGame.x + 218, AnchorGame.y + 16, 152, 16};
+	static constexpr Rectangle TextBoxPlayerNameRect{AnchorGame.x + 218, AnchorGame.y + 30, 116, 24};
+	static constexpr Rectangle ButtonHighscoresRect{AnchorGame.x + 366, AnchorGame.y + 16, 152, 40};
 	static constexpr Rectangle GroupBoxSettingsRect{AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456};
-	static constexpr Rectangle ButtonStartGameRect{AnchorGame.x + 88, AnchorGame.y + 16, 152, 40};
 	static constexpr Rectangle LabelRotationSystemRect{AnchorSettings.x + 24, AnchorSettings.y + 72, 96, 24};
 	static constexpr Rectangle LabelWallKicksRect{AnchorSettings.x + 24, AnchorSettings.y + 120, 96, 24};
 	static constexpr Rectangle LabelLockDownRect{AnchorSettings.x + 24, AnchorSettings.y + 168, 96, 24};
@@ -121,7 +127,6 @@ struct Menu : public IScene
 	static constexpr Rectangle SpinnerPreviewCountRect{AnchorSettings.x + 120, AnchorSettings.y + 408, 136, 24};
 	static constexpr Rectangle SpinnerFieldWidthRect{AnchorSettings.x + 120, AnchorSettings.y + 312, 136, 24};
 	static constexpr Rectangle SpinnerFieldHeightRect{AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24};
-	static constexpr Rectangle ButtonHighscoresRect{AnchorGame.x + 312, AnchorGame.y + 16, 152, 40};
 	static constexpr Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32};
 	static constexpr Rectangle LabelPresetsRect{AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24};
 };

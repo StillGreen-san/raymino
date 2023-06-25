@@ -77,15 +77,23 @@ void Menu::UpdateDraw(App& app)
 	}
 
 	GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
+	GuiLabel(LabelPlayerNameRect, "Player Name");
+	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 20);
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
 		writeSettings(app.settings);
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
+	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
+	       static_cast<int>(TextBoxPlayerNameBuffer.size()), TextBoxPlayerNameEditMode))
+	{
+		TextBoxPlayerNameEditMode = !TextBoxPlayerNameEditMode;
+	}
 	if(GuiButton(ButtonHighscoresRect, ButtonHighscoresText))
 	{
 		//! TODO		app.QueueSceneSwitch(MakeScene<Scene::Highscores>(app));
 	}
+	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 10);
 
 	GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
 	GuiLabel(LabelRotationSystemRect, LabelRotationSystemText);
