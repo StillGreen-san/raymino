@@ -3,6 +3,7 @@
 #include "scenes.hpp"
 #include "types.hpp"
 
+#include <array>
 #include <memory>
 
 namespace raymino
@@ -37,6 +38,20 @@ public:
 		static constexpr float LOCK_DELAY = 0.5f;
 		static constexpr float DELAYED_AUTO_SHIFT = 1.0f / 6.0f;
 		static constexpr float AUTO_REPEAT_RATE = 1.0f / 30.0f;
+	};
+
+	struct HighScoreEntry
+	{
+		using NameT = std::array<char, 8>;
+		static size_t copyInto(const char* inPtr, NameT& outRef);
+		HighScoreEntry(const char* namePtr, ptrdiff_t score, const Settings& settings);
+		NameT name;
+		ptrdiff_t score;
+		Settings settings;
+		bool operator>(const HighScoreEntry& other) const noexcept
+		{
+			return score > other.score;
+		}
 	};
 
 	/**
