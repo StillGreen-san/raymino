@@ -59,6 +59,9 @@ public:
 	struct HighScores
 	{
 		std::vector<HighScoreEntry> entries;
+		/**
+		 * @return true if score == highest for namePtr+settings
+		 */
 		bool add(const char* namePtr, ptrdiff_t score, const Settings& settings);
 	};
 
