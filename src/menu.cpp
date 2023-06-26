@@ -14,6 +14,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 }
 
 Menu::Menu(App& app) // NOLINT(*-member-init) handled by readSettings
+    : TextBoxPlayerNameBuffer{app.playerName}
 {
 	readSettings(app.settings);
 	const App::Settings defaultSettings;
@@ -82,6 +83,7 @@ void Menu::UpdateDraw(App& app)
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
 		writeSettings(app.settings);
+		app.playerName = TextBoxPlayerNameBuffer;
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
 	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
