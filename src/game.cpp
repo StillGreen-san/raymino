@@ -295,6 +295,7 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
 			state = State::GameOver;
+			isHighScore = app.highScores.add(app.playerName.data(), score, app.settings);
 		}
 	}
 }
@@ -331,7 +332,7 @@ void Game::draw(App& app)
 	drawCells(currentTetromino.collision,
 	    ((currentTetromino.position - XY{0, HIDDEN_HEIGHT}) * (cellSize + 1)) + playfieldBounds, cellSize, 1,
 	    minoColors);
-	
+
 	::DrawRectangle(playfieldBounds.x, 0, playfieldBounds.width, static_cast<int>(playfieldBorderBounds.y), LIGHTGRAY);
 	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 
@@ -386,7 +387,9 @@ void Game::draw(App& app)
 
 	if(state != State::Running)
 	{
-		const std::string_view statusText = state == State::Paused ? "Paused" : "Game Over";
+		const std::string_view statusText = state == State::Paused ? "Paused"
+		                                    : isHighScore          ? "HighScore\nGame Over"
+		                                                           : "Game Over";
 		const float statusTextSpacing = STATUS_FONT_SIZE / 10.0f;
 		const raylib::Vector2 statusTextSize =
 		    ::MeasureTextEx(::GetFontDefault(), statusText.data(), STATUS_FONT_SIZE, statusTextSpacing);
@@ -430,7 +433,7 @@ Game::Game(App& app) :
     currentTetromino{getNextTetromino(app.settings.previewCount)},
     scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
-    lockDelay{App::Settings::LOCK_DELAY}, lockCounter{0}, isLocking{false}, holdPieceLocked{false},
+    lockDelay{App::Settings::LOCK_DELAY}, lockCounter{0}, isLocking{false}, holdPieceLocked{false}, isHighScore{false},
     tSpinFunc{tSpinCheck(app.settings.tSpin)},
     moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT},
     basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},

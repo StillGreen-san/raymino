@@ -51,6 +51,7 @@ struct Game : IScene
 	int lockCounter;
 	bool isLocking;
 	bool holdPieceLocked;
+	bool isHighScore;
 	decltype(tSpinCheck(TSpin{})) tSpinFunc;
 	Timer gravity;
 	KeyAction moveRight;
