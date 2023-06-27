@@ -295,7 +295,7 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
 			state = State::GameOver;
-			isHighScore = app.highScores.add(app.playerName.data(), score, app.settings);
+			isHighScore = app.addHighScore(score);
 		}
 	}
 }

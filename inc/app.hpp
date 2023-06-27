@@ -93,6 +93,11 @@ public:
 	 */
 	void QueueSceneSwitch(std::unique_ptr<IScene> newScene);
 
+	/**
+	 * @return true if score == highest for namePtr+settings
+	 */
+	bool addHighScore(ptrdiff_t score);
+
 	Settings settings;
 	HighScores highScores;
 	HighScoreEntry::NameT playerName;

@@ -46,6 +46,11 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 	nextScene = std::move(newScene);
 }
 
+bool raymino::App::addHighScore(ptrdiff_t score)
+{
+	return highScores.add(playerName.data(), score, settings);
+}
+
 bool raymino::App::HighScores::add(const char* namePtr, ptrdiff_t score, const Settings& settings)
 {
 	if(entries.empty())
