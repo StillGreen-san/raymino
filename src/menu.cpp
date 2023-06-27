@@ -13,8 +13,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 	return std::make_unique<Menu>(app);
 }
 
-Menu::Menu(App& app) // NOLINT(*-member-init) handled by readSettings
-    : TextBoxPlayerNameBuffer{app.playerName}
+Menu::Menu(App& app) : TextBoxPlayerNameBuffer{app.playerName} // NOLINT(*-member-init) handled by readSettings
 {
 	readSettings(app.settings);
 	const App::Settings defaultSettings;
@@ -62,9 +61,6 @@ void Menu::writeSettings(App::Settings& settings) const
 
 void Menu::UpdateDraw(App& app)
 {
-	App::Settings previous;
-	writeSettings(previous);
-
 	BeginDrawing();
 
 	ClearBackground(GetColor(static_cast<unsigned>(GuiGetStyle(DEFAULT, BACKGROUND_COLOR))));
@@ -91,11 +87,34 @@ void Menu::UpdateDraw(App& app)
 	{
 		TextBoxPlayerNameEditMode = !TextBoxPlayerNameEditMode;
 	}
-	if(GuiButton(ButtonHighscoresRect, ButtonHighscoresText))
+	if(GuiButton(ButtonHighscoresRect, state == State::HighScores ? GroupBoxSettingsText : ButtonHighscoresText))
 	{
-		//! TODO		app.QueueSceneSwitch(MakeScene<Scene::Highscores>(app));
+		state = state == State::HighScores ? State::Settings : State::HighScores;
 	}
 	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 10);
+
+	switch(state)
+	{
+	case State::Settings:
+		UpdateDrawSettings();
+		break;
+	case State::HighScores:
+		UpdateDrawHighscores(app);
+		break;
+	case State::KeyBinds:
+		UpdateDrawKeyBinds(app);
+		break;
+	}
+
+	GuiUnlock();
+
+	EndDrawing();
+}
+
+void Menu::UpdateDrawSettings()
+{
+	App::Settings previous;
+	writeSettings(previous);
 
 	GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
 	GuiLabel(LabelRotationSystemRect, LabelRotationSystemText);
@@ -203,9 +222,15 @@ void Menu::UpdateDraw(App& app)
 			}
 		}
 	}
+}
 
-	GuiUnlock();
+void Menu::UpdateDrawHighscores(App& app)
+{
+	GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
+}
 
-	EndDrawing();
+void Menu::UpdateDrawKeyBinds(App& app)
+{
+	GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
 }
 } // namespace raymino

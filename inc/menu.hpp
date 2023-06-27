@@ -16,9 +16,22 @@ struct Menu : public IScene
 	void readSettings(const App::Settings& settings);
 	void writeSettings(App::Settings& settings) const;
 
+	void UpdateDrawSettings();
+	void UpdateDrawHighscores(App& app);
+	void UpdateDrawKeyBinds(App& app);
+
+	enum class State
+	{
+		Settings,
+		HighScores,
+		KeyBinds,
+	};
+	State state = State::Settings;
+
 	static constexpr const char* GroupBoxGameText = "Game";
 	static constexpr const char* ButtonStartGameText = "Start Game";
 	static constexpr const char* ButtonHighscoresText = "Highscores";
+	static constexpr const char* ButtonKeyBindsText = "Key Binds";
 	static constexpr const char* GroupBoxSettingsText = "Settings";
 	static constexpr const char* LabelRotationSystemText = "Rotation System";
 	static constexpr const char* LabelWallKicksText = "Wall Kicks";
