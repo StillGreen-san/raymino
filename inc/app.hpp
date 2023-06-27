@@ -98,12 +98,18 @@ public:
 	 */
 	bool addHighScore(ptrdiff_t score);
 
+	HighScoreEntry::NameT playerName;
 	Settings settings;
 	HighScores highScores;
-	HighScoreEntry::NameT playerName;
 
 private:
 	App();
+
+	std::vector<unsigned char> serialize();
+	void deserialize(unsigned char* data, unsigned bytes);
+
+	static constexpr size_t FILE_VERSION = 0;
+	static constexpr const char* FILE_PATH = "save.raymino";
 
 	std::unique_ptr<IScene> currentScene;
 	std::unique_ptr<IScene> nextScene = nullptr;

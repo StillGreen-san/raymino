@@ -1,5 +1,8 @@
 #include "app.hpp"
 
+#include <endian/network.hpp>
+#include <endian/stream_reader.hpp>
+#include <endian/stream_writer.hpp>
 #include <raylib-cpp.hpp>
 
 #if defined(PLATFORM_WEB)
@@ -49,6 +52,49 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 bool raymino::App::addHighScore(ptrdiff_t score)
 {
 	return highScores.add(playerName.data(), score, settings);
+}
+
+std::vector<unsigned char> raymino::App::serialize()
+{
+	std::vector<unsigned char> data(40 + (highScores.entries.size() * 32));
+	endian::stream_writer<endian::network> endianWriter(data.data(), data.size());
+
+	endianWriter.write(FILE_VERSION);
+	endianWriter.write(reinterpret_cast<const uint8_t*>(&playerName), 8);
+
+	endianWriter.write(reinterpret_cast<const uint8_t*>(&settings), 14);
+	endianWriter.write(reinterpret_cast<const uint8_t*>("\0\0"), 2);
+
+	endianWriter.write(highScores.entries.size());
+	for(const HighScoreEntry& entry : highScores.entries)
+	{
+		endianWriter.write(reinterpret_cast<const uint8_t*>(&entry.name), 8);
+		endianWriter.write(entry.score);
+		endianWriter.write(reinterpret_cast<const uint8_t*>(&entry.settings), 14);
+		endianWriter.write(reinterpret_cast<const uint8_t*>("\0\0"), 2);
+	}
+
+	return data;
+}
+void raymino::App::deserialize(unsigned char* data, unsigned int bytes)
+{
+	endian::stream_reader<endian::network> endianReader(data, bytes);
+
+	const auto fileVersion = endianReader.read<size_t>();
+	endianReader.read(reinterpret_cast<uint8_t*>(&playerName), 8);
+
+	endianReader.read(reinterpret_cast<uint8_t*>(&settings), 14);
+	endianReader.read<uint16_t>();
+
+	highScores.entries.clear();
+	highScores.entries.resize(endianReader.read<size_t>(), HighScoreEntry(playerName.data(), 0, settings));
+	for(HighScoreEntry& entry : highScores.entries)
+	{
+		endianReader.read(reinterpret_cast<uint8_t*>(&entry.name), 8);
+		endianReader.read(entry.score);
+		endianReader.read(reinterpret_cast<uint8_t*>(&entry.settings), 14);
+		endianReader.read<uint16_t>();
+	}
 }
 
 bool raymino::App::HighScores::add(const char* namePtr, ptrdiff_t score, const Settings& settings)
