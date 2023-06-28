@@ -10,7 +10,7 @@
 namespace raymino
 {
 /**
- * @brief The Application, call Make() with the starting scene to create an instance and Run() to start the loop
+ * @brief The Application, starts in Loading Scene, call Run() to start the loop
  */
 class App
 {
@@ -67,16 +67,8 @@ public:
 
 	/**
 	 * @brief create an instance (only one should exist)
-	 * @tparam TScene starting scene enum
-	 * @return App instance
 	 */
-	template<Scene TScene>
-	static App Make()
-	{
-		App app;
-		app.currentScene = MakeScene<TScene>(app);
-		return app;
-	}
+	App();
 
 	/**
 	 * @brief start the main loop, calling IScene::UpdateDraw() repeatedly
@@ -102,15 +94,13 @@ public:
 	Settings settings;
 	HighScores highScores;
 
-private:
-	App();
+	static constexpr size_t FILE_VERSION = 0;
+	static constexpr const char* FILE_PATH = "save.raymino";
 
 	std::vector<unsigned char> serialize();
 	void deserialize(unsigned char* data, unsigned bytes);
 
-	static constexpr size_t FILE_VERSION = 0;
-	static constexpr const char* FILE_PATH = "save.raymino";
-
+private:
 	std::unique_ptr<IScene> currentScene;
 	std::unique_ptr<IScene> nextScene = nullptr;
 };

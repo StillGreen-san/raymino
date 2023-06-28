@@ -2,7 +2,7 @@
 
 int main()
 {
-	raymino::App app = raymino::App::Make<raymino::Scene::Menu>();
+	raymino::App app;
 
 	app.Run();
 
