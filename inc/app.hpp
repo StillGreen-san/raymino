@@ -97,6 +97,11 @@ public:
 	static constexpr size_t FILE_VERSION = 0;
 	static constexpr const char* FILE_PATH = "save.raymino";
 	static constexpr const char* IDB_PATH = "raymino";
+#if defined(PLATFORM_WEB)
+	static constexpr size_t MAX_SCORES = 200;
+#else
+	static constexpr size_t MAX_SCORES = 5000;
+#endif
 
 	std::vector<unsigned char> serialize();
 	void deserialize(unsigned char* data, unsigned bytes);

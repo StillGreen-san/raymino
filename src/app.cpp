@@ -53,6 +53,10 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 bool raymino::App::addHighScore(ptrdiff_t score)
 {
 	const bool isHighScore = highScores.add(playerName.data(), score, settings);
+	if(highScores.entries.size() > MAX_SCORES)
+	{
+		highScores.entries.erase(next(begin(highScores.entries), MAX_SCORES), end(highScores.entries));
+	}
 	std::vector<unsigned char> fileData = serialize();
 #if defined(PLATFORM_WEB)
 	std::vector<unsigned char>* asyncData = new std::vector<unsigned char>(std::move(fileData));
