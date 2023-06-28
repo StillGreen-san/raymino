@@ -11,11 +11,11 @@
 
 raymino::App::App() : playerName{}
 {
-	currentScene = MakeScene<Scene::Loading>(*this);
-	HighScoreEntry::copyInto("Mino", playerName);
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
 	::SetExitKey(KEY_NULL);
+	HighScoreEntry::copyInto("Mino", playerName);
+	currentScene = MakeScene<Scene::Loading>(*this);
 }
 
 void UpdateDraw(void* app)
@@ -52,7 +52,28 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 
 bool raymino::App::addHighScore(ptrdiff_t score)
 {
-	return highScores.add(playerName.data(), score, settings);
+	const bool isHighScore = highScores.add(playerName.data(), score, settings);
+	std::vector<unsigned char> fileData = serialize();
+#if defined(PLATFORM_WEB)
+	std::vector<unsigned char>* asyncData = new std::vector<unsigned char>(std::move(fileData));
+	emscripten_idb_async_store(
+	    IDB_PATH, FILE_PATH, asyncData->data(), asyncData->size(), asyncData,
+	    [](void* data)
+	    {
+		    auto* asyncData = static_cast<std::vector<unsigned char>*>(data);
+		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File saved successfully", FILE_PATH);
+		    delete asyncData;
+	    },
+	    [](void* data)
+	    {
+		    auto* asyncData = static_cast<std::vector<unsigned char>*>(data);
+		    ::TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to save file", FILE_PATH);
+		    delete asyncData;
+	    });
+#else
+	::SaveFileData(FILE_PATH, fileData.data(), fileData.size());
+#endif
+	return isHighScore;
 }
 
 std::vector<unsigned char> raymino::App::serialize()
