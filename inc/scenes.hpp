@@ -20,6 +20,7 @@ enum class Scene
 {
 	Game,
 	Menu,
+	Loading,
 };
 
 /**
