@@ -199,9 +199,9 @@ struct IScoringSystem
 	 * @param event ScoreEvent to process
 	 * @param lines cleared/dropped
 	 * @param level
-	 * @return ptrdiff_t score for event
+	 * @return int64_t score for event
 	 */
-	[[nodiscard]] virtual ptrdiff_t process(ScoreEvent event, int lines, int level) = 0;
+	[[nodiscard]] virtual int64_t process(ScoreEvent event, int lines, int level) = 0;
 };
 
 /**

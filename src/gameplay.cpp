@@ -562,7 +562,7 @@ ScoreEvent (*tSpinCheck(TSpin tspin))(const Grid& field, const Tetromino& tetrom
 
 struct BPS : public IScoringSystem
 {
-	ptrdiff_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) override
+	int64_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) override
 	{
 		switch(event)
 		{
@@ -571,7 +571,7 @@ struct BPS : public IScoringSystem
 		case ScoreEvent::TSpin:
 		{
 			lines = std::clamp(lines, 0, 4);
-			static constexpr std::array<ptrdiff_t, 5> scores{0, 40, 100, 300, 1200};
+			static constexpr std::array<int64_t, 5> scores{0, 40, 100, 300, 1200};
 			return scores[lines];
 		}
 		case ScoreEvent::PerfectClear:
@@ -590,7 +590,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::BPS>()
 
 struct Sega : public IScoringSystem
 {
-	ptrdiff_t process(ScoreEvent event, int lines, int level) override
+	int64_t process(ScoreEvent event, int lines, int level) override
 	{
 		lines = std::clamp(lines, 0, std::numeric_limits<int>::max());
 		level = std::clamp((level + 1) / 2, 1, 5);
@@ -601,12 +601,12 @@ struct Sega : public IScoringSystem
 		case ScoreEvent::TSpin:
 		{
 			lines = std::clamp(lines, 0, 4);
-			static constexpr std::array<ptrdiff_t, 5> scores{0, 100, 400, 900, 2000};
+			static constexpr std::array<int64_t, 5> scores{0, 100, 400, 900, 2000};
 			return scores[lines] * level;
 		}
 		case ScoreEvent::SoftDrop:
 		{
-			return static_cast<ptrdiff_t>(lines) * level;
+			return static_cast<int64_t>(lines) * level;
 		}
 		case ScoreEvent::PerfectClear:
 		case ScoreEvent::HardDrop:
@@ -623,7 +623,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Sega>()
 
 struct Nintendo : public IScoringSystem
 {
-	ptrdiff_t process(ScoreEvent event, int lines, int level) override
+	int64_t process(ScoreEvent event, int lines, int level) override
 	{
 		switch(event)
 		{
@@ -632,7 +632,7 @@ struct Nintendo : public IScoringSystem
 		case ScoreEvent::TSpin:
 		{
 			lines = std::clamp(lines, 0, 4);
-			static constexpr std::array<ptrdiff_t, 5> scores{0, 40, 100, 300, 1200};
+			static constexpr std::array<int64_t, 5> scores{0, 40, 100, 300, 1200};
 			return scores[lines] * level;
 		}
 		case ScoreEvent::PerfectClear:
@@ -679,7 +679,7 @@ struct Guideline : public IScoringSystem
 
 			COUNT
 		};
-		ptrdiff_t points;
+		int64_t points;
 		bool isDifficult;
 	};
 	static constexpr std::array<Action, Action::COUNT> actions{{/*NoLines*/ {0, false},
@@ -707,9 +707,9 @@ struct Guideline : public IScoringSystem
 	int lastPerfectClearLines = 0;
 	int clearCounter = 0;
 	int combo = -1;
-	ptrdiff_t process(ScoreEvent event, int lines, int level) override
+	int64_t process(ScoreEvent event, int lines, int level) override
 	{
-		ptrdiff_t score = 0;
+		int64_t score = 0;
 		bool isThisEventDifficult = false;
 		switch(event)
 		{

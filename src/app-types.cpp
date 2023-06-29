@@ -1,6 +1,6 @@
 #include "app.hpp"
 
-bool raymino::App::HighScores::add(const char* namePtr, ptrdiff_t score, const Settings& settings)
+bool raymino::App::HighScores::add(const char* namePtr, int64_t score, const Settings& settings)
 {
 	if(entries.empty())
 	{
@@ -13,7 +13,7 @@ bool raymino::App::HighScores::add(const char* namePtr, ptrdiff_t score, const S
 		return true;
 	}
 	const auto scoreRangeEnd = std::upper_bound(entries.begin(), entries.end(), score,
-	    [](ptrdiff_t score, const HighScoreEntry& entry)
+	    [](int64_t score, const HighScoreEntry& entry)
 	    {
 		    return score > entry.score;
 	    });
@@ -48,7 +48,7 @@ int raymino::App::Settings::compare(const raymino::App::Settings& rhs) const noe
 }
 
 raymino::App::HighScoreEntry::HighScoreEntry(
-    const char* namePtr, ptrdiff_t score, const raymino::App::Settings& settings) :
+    const char* namePtr, int64_t score, const raymino::App::Settings& settings) :
     name{},
     score{score}, settings{settings}
 {

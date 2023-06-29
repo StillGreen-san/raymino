@@ -43,7 +43,7 @@ struct Game : IScene
 	std::vector<XY> previewOffsetsExtended;
 	Tetromino currentTetromino;
 	std::unique_ptr<IScoringSystem> scoringSystem;
-	ptrdiff_t score;
+	int64_t score;
 	State state;
 	decltype(levelUp(LevelGoal{})) levelUpFunc;
 	LevelState levelState;

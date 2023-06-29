@@ -50,7 +50,7 @@ void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 	nextScene = std::move(newScene);
 }
 
-bool raymino::App::addHighScore(ptrdiff_t score)
+bool raymino::App::addHighScore(int64_t score)
 {
 	const bool isHighScore = highScores.add(playerName.data(), score, settings);
 	if(highScores.entries.size() > MAX_SCORES)

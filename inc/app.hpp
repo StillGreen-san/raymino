@@ -15,7 +15,7 @@ namespace raymino
 class App
 {
 public:
-	struct Settings
+	struct alignas(int64_t) Settings
 	{
 		RotationSystem rotationSystem = RotationSystem::Super;
 		WallKicks wallKicks = WallKicks::Super;
@@ -31,6 +31,8 @@ public:
 		uint8_t fieldWidth = 10;
 		uint8_t fieldHeight = 20;
 		uint8_t previewCount = 6;
+		[[maybe_unused]] uint8_t _reserved_[2]{}; // NOLINT(*-avoid-c-arrays)
+
 		bool operator==(const Settings& rhs) const noexcept;
 		bool operator!=(const Settings& rhs) const noexcept;
 		bool operator>(const Settings& rhs) const noexcept;
@@ -51,9 +53,9 @@ public:
 		 * @return copied chars without ending \0
 		 */
 		static size_t copyInto(const char* inPtr, NameT& outRef);
-		HighScoreEntry(const char* namePtr, ptrdiff_t score, const Settings& settings);
+		HighScoreEntry(const char* namePtr, int64_t score, const Settings& settings);
 		NameT name;
-		ptrdiff_t score;
+		int64_t score;
 		Settings settings;
 	};
 	struct HighScores
@@ -62,7 +64,7 @@ public:
 		/**
 		 * @return true if score == highest for namePtr+settings
 		 */
-		bool add(const char* namePtr, ptrdiff_t score, const Settings& settings);
+		bool add(const char* namePtr, int64_t score, const Settings& settings);
 	};
 
 	/**
@@ -88,7 +90,7 @@ public:
 	/**
 	 * @return true if score == highest for namePtr+settings
 	 */
-	bool addHighScore(ptrdiff_t score);
+	bool addHighScore(int64_t score);
 
 	HighScoreEntry::NameT playerName;
 	Settings settings;
@@ -103,6 +105,10 @@ public:
 	static constexpr size_t MAX_SCORES = 5000;
 #endif
 
+	static_assert(sizeof(bool) == 1);
+	static_assert(sizeof(Settings) == 16);
+	static_assert(sizeof(HighScoreEntry) == 32);
+	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	std::vector<unsigned char> serialize();
 	void deserialize(unsigned char* data, unsigned bytes);
 
