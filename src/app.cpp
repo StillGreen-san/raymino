@@ -122,3 +122,24 @@ void raymino::App::deserialize(unsigned char* data, unsigned int bytes)
 		endianReader.read<uint16_t>();
 	}
 }
+
+const raymino::App::SaveFile::Header& raymino::App::SaveFile::header() const
+{
+	return *reinterpret_cast<const Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    dataBuffer.data() + sizeof(Header)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+const raymino::App::HighScoreEntry* raymino::App::SaveFile::begin() const
+{
+	return header().scoreCount > 0
+	           ? reinterpret_cast<const HighScoreEntry*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	                 dataBuffer.data() + sizeof(Header))  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	           : nullptr;
+}
+const raymino::App::HighScoreEntry* raymino::App::SaveFile::end() const
+{
+	return header().scoreCount > 0
+	           ? reinterpret_cast<const HighScoreEntry*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	                 dataBuffer.data() + sizeof(Header)) + // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	                 header().scoreCount                   // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	           : nullptr;
+}

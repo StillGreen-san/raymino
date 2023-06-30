@@ -108,13 +108,18 @@ public:
 	class SaveFile
 	{
 	public:
+		struct Header
+		{
+			std::array<char, 4> magic;
+			uint16_t fileVersion;
+			uint16_t scoreCount;
+			HighScoreEntry::NameT playerName;
+			Settings settings;
+		};
 		static constexpr std::array<char, 4> magic{'R', 'M', 'S', 'F'};
-		uint16_t fileVersion() const;
-		uint16_t scoreCount() const;
-		const HighScoreEntry::NameT& playerName() const;
-		const Settings& settings() const;
-		const HighScoreEntry* begin() const;
-		const HighScoreEntry* end() const;
+		[[nodiscard]] const Header& header() const;
+		[[nodiscard]] const HighScoreEntry* begin() const;
+		[[nodiscard]] const HighScoreEntry* end() const;
 
 	private:
 		SaveFile() = default;
