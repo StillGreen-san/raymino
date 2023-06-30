@@ -105,12 +105,34 @@ public:
 	static constexpr size_t MAX_SCORES = 5000;
 #endif
 
+	class SaveFile
+	{
+	public:
+		static constexpr std::array<char, 4> magic{'R', 'M', 'S', 'F'};
+		uint16_t fileVersion() const;
+		uint16_t scoreCount() const;
+		const HighScoreEntry::NameT& playerName() const;
+		const Settings& settings() const;
+		const HighScoreEntry* begin() const;
+		const HighScoreEntry* end() const;
+
+	private:
+		SaveFile() = default;
+		friend class App;
+		std::vector<uint8_t> dataBuffer;
+	};
+
 	static_assert(sizeof(bool) == 1);
 	static_assert(sizeof(Settings) == 16);
 	static_assert(sizeof(HighScoreEntry) == 32);
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
+	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
 	std::vector<unsigned char> serialize();
 	void deserialize(unsigned char* data, unsigned bytes);
+	static SaveFile loadFile();
+	static void storeFile(const SaveFile& save);
+	SaveFile serialize() const;
+	void deserialize(const SaveFile& save);
 
 private:
 	std::unique_ptr<IScene> currentScene;
