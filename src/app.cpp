@@ -153,6 +153,18 @@ const raymino::App::HighScoreEntry* raymino::App::SaveFile::end() const
 	           : nullptr;
 }
 
+raymino::App::SaveFile raymino::App::makeSaveFile(const void* data, int size)
+{
+	const auto* inputHeader = static_cast<const App::SaveFile::Header*>(data);
+	App::SaveFile save;
+	save.dataBuffer.resize(sizeof(App::SaveFile::Header) + (inputHeader->scoreCount * sizeof(App::HighScoreEntry)));
+	std::memcpy(save.dataBuffer.data(), data, sizeof(App::SaveFile::Header));
+	sinflate(save.begin(), static_cast<int>(save.end() - save.begin()),
+	    inputHeader + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	    size - static_cast<int>(sizeof(App::SaveFile::Header)));
+	return save;
+}
+
 void raymino::App::storeFile(const SaveFile& save)
 {
 	auto deflateState = std::make_unique<sdefl>();
