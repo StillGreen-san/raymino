@@ -123,7 +123,9 @@ public:
 
 	private:
 		SaveFile() = default;
+		[[nodiscard]] HighScoreEntry* begin();
 		friend class App;
+		friend class Loading;
 		std::vector<uint8_t> dataBuffer;
 	};
 
@@ -134,9 +136,8 @@ public:
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
 	std::vector<unsigned char> serialize();
 	void deserialize(unsigned char* data, unsigned bytes);
-	static SaveFile loadFile();
 	static void storeFile(const SaveFile& save);
-	SaveFile serialize() const;
+	[[nodiscard]] SaveFile serialize() const;
 	void deserialize(const SaveFile& save);
 
 private:

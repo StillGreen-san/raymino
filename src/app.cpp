@@ -3,6 +3,8 @@
 #include <endian/network.hpp>
 #include <endian/stream_reader.hpp>
 #include <endian/stream_writer.hpp>
+#include <external/sdefl.h>
+#include <external/sinfl.h>
 #include <raylib-cpp.hpp>
 
 #if defined(PLATFORM_WEB)
@@ -128,6 +130,13 @@ const raymino::App::SaveFile::Header& raymino::App::SaveFile::header() const
 	return *reinterpret_cast<const Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	    dataBuffer.data() + sizeof(Header)); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 }
+raymino::App::HighScoreEntry* raymino::App::SaveFile::begin()
+{
+	return header().scoreCount > 0
+	           ? reinterpret_cast<HighScoreEntry*>(      // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	                 dataBuffer.data() + sizeof(Header)) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	           : nullptr;
+}
 const raymino::App::HighScoreEntry* raymino::App::SaveFile::begin() const
 {
 	return header().scoreCount > 0
@@ -142,4 +151,61 @@ const raymino::App::HighScoreEntry* raymino::App::SaveFile::end() const
 	                 dataBuffer.data() + sizeof(Header)) + // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	                 header().scoreCount                   // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	           : nullptr;
+}
+
+void raymino::App::storeFile(const SaveFile& save)
+{
+	auto deflateState = std::make_unique<sdefl>();
+	const int deflateBufferSize = sdefl_bound(static_cast<int>(save.dataBuffer.size() - sizeof(SaveFile::Header)));
+	auto deflateBuffer = std::vector<uint8_t>(sizeof(SaveFile::Header) + static_cast<size_t>(deflateBufferSize), 0);
+	std::memcpy(deflateBuffer.data(), save.dataBuffer.data(), sizeof(SaveFile::Header));
+	const int deflateDataSize = sdeflate(deflateState.get(),
+	    deflateBuffer.data() + sizeof(SaveFile::Header), // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	    save.begin(), static_cast<int>(save.end() - save.begin()), 8);
+	deflateBuffer.resize(static_cast<size_t>(deflateDataSize));
+#if defined(PLATFORM_WEB)
+	std::vector<uint8_t>* asyncData = new std::vector<uint8_t>(std::move(deflateBuffer));
+	emscripten_idb_async_store(
+	    IDB_PATH, FILE_PATH, asyncData->data(), static_cast<int>(asyncData->size()), asyncData,
+	    [](void* data)
+	    {
+		    auto* asyncData = static_cast<std::vector<uint8_t>*>(data);
+		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File saved successfully", FILE_PATH);
+		    delete asyncData;
+	    },
+	    [](void* data)
+	    {
+		    auto* asyncData = static_cast<std::vector<uint8_t>*>(data);
+		    ::TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to save file", FILE_PATH);
+		    delete asyncData;
+	    });
+#else
+	::SaveFileData(FILE_PATH, deflateBuffer.data(), deflateBuffer.size());
+#endif
+}
+
+raymino::App::SaveFile raymino::App::serialize() const
+{
+	SaveFile save;
+
+	save.dataBuffer.resize(sizeof(SaveFile::Header) + (highScores.entries.size() * sizeof(HighScoreEntry)));
+
+	const size_t scoreCount = std::min<size_t>(highScores.entries.size(), std::numeric_limits<uint16_t>::max());
+	new(save.dataBuffer.data())
+	    SaveFile::Header{SaveFile::magic, 1, static_cast<uint16_t>(scoreCount), playerName, settings};
+
+	HighScoreEntry* entryIt = save.begin();
+	for(size_t scoreIdx = 0; scoreIdx < scoreCount; ++scoreIdx, ++entryIt)
+	{
+		new(entryIt) HighScoreEntry{highScores.entries[scoreIdx]};
+	}
+
+	return save;
+}
+
+void raymino::App::deserialize(const raymino::App::SaveFile& save)
+{
+	playerName = save.header().playerName;
+	settings = save.header().settings;
+	highScores.entries.assign(save.begin(), save.end());
 }
