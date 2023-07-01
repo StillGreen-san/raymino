@@ -134,8 +134,6 @@ public:
 	static_assert(sizeof(HighScoreEntry) == 32);
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
-	std::vector<unsigned char> serialize();
-	void deserialize(unsigned char* data, unsigned bytes);
 	static App::SaveFile makeSaveFile(const void* data, int size);
 	static void storeFile(const SaveFile& save);
 	[[nodiscard]] SaveFile serialize() const;
