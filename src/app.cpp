@@ -153,20 +153,39 @@ const raymino::App::HighScoreEntry* raymino::App::SaveFile::end() const
 	           : nullptr;
 }
 
+bool raymino::App::SaveFile::Header::isValid() const
+{
+	return magic == App::SaveFile::magic && fileVersion == App::FILE_VERSION;
+}
+
 raymino::App::SaveFile raymino::App::makeSaveFile(const void* data, int size)
 {
-	const auto* inputHeader = static_cast<const App::SaveFile::Header*>(data);
-	App::SaveFile save;
-	save.dataBuffer.resize(sizeof(App::SaveFile::Header) + (inputHeader->scoreCount * sizeof(App::HighScoreEntry)));
-	std::memcpy(save.dataBuffer.data(), data, sizeof(App::SaveFile::Header));
+	SaveFile save;
+	if(size < static_cast<ptrdiff_t>(sizeof(SaveFile::Header)))
+	{
+		save.dataBuffer.resize(sizeof(SaveFile::Header));
+		return save;
+	}
+	const auto* inputHeader = static_cast<const SaveFile::Header*>(data);
+	if(!inputHeader->isValid())
+	{
+		save.dataBuffer.resize(sizeof(SaveFile::Header));
+		return save;
+	}
+	save.dataBuffer.resize(sizeof(SaveFile::Header) + (inputHeader->scoreCount * sizeof(HighScoreEntry)));
+	std::memcpy(save.dataBuffer.data(), data, sizeof(SaveFile::Header));
 	sinflate(save.begin(), static_cast<int>(save.end() - save.begin()),
 	    inputHeader + 1, // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-	    size - static_cast<int>(sizeof(App::SaveFile::Header)));
+	    size - static_cast<int>(sizeof(SaveFile::Header)));
 	return save;
 }
 
 void raymino::App::storeFile(const SaveFile& save)
 {
+	if(!save.header().isValid())
+	{
+		return;
+	}
 	auto deflateState = std::make_unique<sdefl>();
 	const int deflateBufferSize = sdefl_bound(static_cast<int>(save.dataBuffer.size() - sizeof(SaveFile::Header)));
 	auto deflateBuffer = std::vector<uint8_t>(sizeof(SaveFile::Header) + static_cast<size_t>(deflateBufferSize), 0);
@@ -217,6 +236,10 @@ raymino::App::SaveFile raymino::App::serialize() const
 
 void raymino::App::deserialize(const raymino::App::SaveFile& save)
 {
+	if(!save.header().isValid())
+	{
+		return;
+	}
 	playerName = save.header().playerName;
 	settings = save.header().settings;
 	highScores.entries.assign(save.begin(), save.end());

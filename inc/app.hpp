@@ -115,6 +115,7 @@ public:
 			uint16_t scoreCount;
 			HighScoreEntry::NameT playerName;
 			Settings settings;
+			[[nodiscard]] bool isValid() const;
 		};
 		static constexpr std::array<char, 4> magic{'R', 'M', 'S', 'F'};
 		[[nodiscard]] const Header& header() const;
