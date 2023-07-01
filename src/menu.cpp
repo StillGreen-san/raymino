@@ -228,53 +228,53 @@ void Menu::UpdateDrawSettings()
 	}
 }
 
-void drawScoreList(Rectangle bounds, const char* text, const App::HighScores& scores,
-    std::function<bool(const App::HighScoreEntry&)> selector)
+void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry& entry)
 {
-	GuiGroupBox(bounds, text);
-	int allScoresIdx = 0;
-	for(const App::HighScoreEntry& entry : scores.entries)
-	{
-		if(allScoresIdx >= 17)
-		{
-			break;
-		}
-		if(selector(entry))
-		{
-			std::array<char, 16> buffer{};
-			std::to_chars(&buffer.front(), &buffer.back(), entry.score);
-			GuiLabel({bounds.x + 15, bounds.y + (25 * allScoresIdx) + 5, 65, 24}, entry.name.data());
-			GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * allScoresIdx) + 5, 65, 24}, buffer.data());
-			++allScoresIdx;
-		}
-	}
+	std::array<char, 16> buffer{};
+	std::to_chars(&buffer.front(), &buffer.back(), entry.score);
+	GuiLabel({bounds.x + 15, bounds.y + (25 * scoresIdx) + 5, 65, 24}, entry.name.data());
+	GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
 }
 
 void Menu::UpdateDrawHighscores(App& app)
 {
 	GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
 	const float scoreListWidth = (GroupBoxSettingsRect.width - 40) / 3;
-	drawScoreList(
-	    {GroupBoxSettingsRect.x + 10, GroupBoxSettingsRect.y + 15, scoreListWidth, GroupBoxSettingsRect.height - 25},
-	    "All Scores", app.highScores,
-	    []([[maybe_unused]] const App::HighScoreEntry& entry)
-	    {
-		    return true;
-	    });
-	drawScoreList({GroupBoxSettingsRect.x + 20 + scoreListWidth, GroupBoxSettingsRect.y + 15, scoreListWidth,
-	                  GroupBoxSettingsRect.height - 25},
-	    "Same Name", app.highScores,
-	    [&](const App::HighScoreEntry& entry)
-	    {
-		    return entry.name == app.playerName;
-	    });
-	drawScoreList({GroupBoxSettingsRect.x + 30 + (scoreListWidth * 2), GroupBoxSettingsRect.y + 15, scoreListWidth,
-	                  GroupBoxSettingsRect.height - 25},
-	    "Same Settings", app.highScores,
-	    [&](const App::HighScoreEntry& entry)
-	    {
-		    return entry.settings == app.settings;
-	    });
+	const Rectangle allScoreRect{
+	    GroupBoxSettingsRect.x + 10, GroupBoxSettingsRect.y + 15, scoreListWidth, GroupBoxSettingsRect.height - 25};
+	const Rectangle myScoreRect{GroupBoxSettingsRect.x + 20 + scoreListWidth, GroupBoxSettingsRect.y + 15,
+	    scoreListWidth, GroupBoxSettingsRect.height - 25};
+	const Rectangle setScoreRect{GroupBoxSettingsRect.x + 30 + (scoreListWidth * 2), GroupBoxSettingsRect.y + 15,
+	    scoreListWidth, GroupBoxSettingsRect.height - 25};
+	GuiGroupBox(allScoreRect, "All Scores");
+	GuiGroupBox(myScoreRect, "Same Name");
+	GuiGroupBox(setScoreRect, "Same Settings");
+	int allScoresIdx = 0;
+	int myScoresIdx = 0;
+	int setScoresIdx = 0;
+	constexpr int maxIdx = 17;
+	for(const App::HighScoreEntry& entry : app.highScores.entries)
+	{
+		if(allScoresIdx >= maxIdx && myScoresIdx >= maxIdx && setScoresIdx >= maxIdx)
+		{
+			break;
+		}
+		if(allScoresIdx < maxIdx)
+		{
+			drawEntry(allScoresIdx, allScoreRect, entry);
+			++allScoresIdx;
+		}
+		if(myScoresIdx < maxIdx && entry.name == app.playerName)
+		{
+			drawEntry(myScoresIdx, myScoreRect, entry);
+			++myScoresIdx;
+		}
+		if(setScoresIdx < maxIdx && entry.settings == app.settings)
+		{
+			drawEntry(setScoresIdx, setScoreRect, entry);
+			++setScoresIdx;
+		}
+	}
 }
 
 void Menu::UpdateDrawKeyBinds(App& app)
