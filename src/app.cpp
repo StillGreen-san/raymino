@@ -59,26 +59,7 @@ bool raymino::App::addHighScore(int64_t score)
 	{
 		highScores.entries.erase(next(begin(highScores.entries), MAX_SCORES), end(highScores.entries));
 	}
-	std::vector<unsigned char> fileData = serialize();
-#if defined(PLATFORM_WEB)
-	std::vector<unsigned char>* asyncData = new std::vector<unsigned char>(std::move(fileData));
-	emscripten_idb_async_store(
-	    IDB_PATH, FILE_PATH, asyncData->data(), asyncData->size(), asyncData,
-	    [](void* data)
-	    {
-		    auto* asyncData = static_cast<std::vector<unsigned char>*>(data);
-		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File saved successfully", FILE_PATH);
-		    delete asyncData;
-	    },
-	    [](void* data)
-	    {
-		    auto* asyncData = static_cast<std::vector<unsigned char>*>(data);
-		    ::TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to save file", FILE_PATH);
-		    delete asyncData;
-	    });
-#else
-	::SaveFileData(FILE_PATH, fileData.data(), fileData.size());
-#endif
+	App::storeFile(std::as_const(*this).serialize());
 	return isHighScore;
 }
 
@@ -224,7 +205,7 @@ raymino::App::SaveFile raymino::App::serialize() const
 
 	const size_t scoreCount = std::min<size_t>(highScores.entries.size(), std::numeric_limits<uint16_t>::max());
 	new(save.dataBuffer.data())
-	    SaveFile::Header{SaveFile::magic, 1, static_cast<uint16_t>(scoreCount), playerName, settings};
+	    SaveFile::Header{SaveFile::magic, FILE_VERSION, static_cast<uint16_t>(scoreCount), playerName, settings};
 
 	HighScoreEntry* entryIt = save.begin();
 	for(size_t scoreIdx = 0; scoreIdx < scoreCount;
