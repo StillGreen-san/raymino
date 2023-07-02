@@ -92,6 +92,7 @@ void Menu::UpdateDraw(App& app)
 	{
 		TextBoxPlayerNameEditMode = !TextBoxPlayerNameEditMode;
 	}
+	app.playerName = TextBoxPlayerNameBuffer;
 	if(GuiButton(ButtonHighscoresRect, state == State::HighScores ? GroupBoxSettingsText : ButtonHighscoresText))
 	{
 		state = state == State::HighScores ? State::Settings : State::HighScores;
@@ -101,7 +102,7 @@ void Menu::UpdateDraw(App& app)
 	switch(state)
 	{
 	case State::Settings:
-		UpdateDrawSettings();
+		UpdateDrawSettings(app);
 		break;
 	case State::HighScores:
 		UpdateDrawHighscores(app);
@@ -116,7 +117,7 @@ void Menu::UpdateDraw(App& app)
 	EndDrawing();
 }
 
-void Menu::UpdateDrawSettings()
+void Menu::UpdateDrawSettings(App& app)
 {
 	App::Settings previous;
 	writeSettings(previous);
@@ -211,6 +212,7 @@ void Menu::UpdateDrawSettings()
 	writeSettings(current);
 	if(current != previous)
 	{
+		writeSettings(app.settings);
 		DropdownBoxPresetsActive = 0;
 	}
 
@@ -224,6 +226,7 @@ void Menu::UpdateDrawSettings()
 			{
 			case 1:
 				readSettings(App::Settings{});
+				writeSettings(app.settings);
 			}
 		}
 	}

@@ -16,7 +16,7 @@ struct Menu : public IScene
 	void readSettings(const App::Settings& settings);
 	void writeSettings(App::Settings& settings) const;
 
-	void UpdateDrawSettings();
+	void UpdateDrawSettings(App& app);
 	void UpdateDrawHighscores(App& app);
 	void UpdateDrawKeyBinds(App& app);
 
