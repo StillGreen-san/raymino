@@ -8,6 +8,7 @@
 #include <array>
 #include <charconv>
 #include <functional>
+#include <random>
 
 namespace raymino
 {
@@ -236,6 +237,18 @@ void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry
 	GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
 }
 
+void drawClose(
+    const Rectangle& bounds, const char* text, App& app, std::function<bool(const App::HighScoreEntry&)> selector)
+{
+	GuiGroupBox(bounds, text);
+	if(::GuiButton({bounds.x + bounds.width - 22, bounds.y - 6, 16, 16}, "X"))
+	{
+		app.highScores.entries.erase(
+		    std::remove_if(app.highScores.entries.begin(), app.highScores.entries.end(), selector),
+		    app.highScores.entries.end());
+	}
+}
+
 void Menu::UpdateDrawHighscores(App& app)
 {
 	GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
@@ -246,9 +259,21 @@ void Menu::UpdateDrawHighscores(App& app)
 	    scoreListWidth, GroupBoxSettingsRect.height - 25};
 	const Rectangle setScoreRect{GroupBoxSettingsRect.x + 30 + (scoreListWidth * 2), GroupBoxSettingsRect.y + 15,
 	    scoreListWidth, GroupBoxSettingsRect.height - 25};
-	GuiGroupBox(allScoreRect, "All Scores");
-	GuiGroupBox(myScoreRect, "Same Name");
-	GuiGroupBox(setScoreRect, "Same Settings");
+	drawClose(allScoreRect, "All Scores", app,
+	    [&]([[maybe_unused]] const App::HighScoreEntry& entry)
+	    {
+		    return true;
+	    });
+	drawClose(myScoreRect, "Same Name", app,
+	    [&](const App::HighScoreEntry& entry)
+	    {
+		    return entry.name == app.playerName;
+	    });
+	drawClose(setScoreRect, "Same Settings", app,
+	    [&](const App::HighScoreEntry& entry)
+	    {
+		    return entry.settings == app.settings;
+	    });
 	int allScoresIdx = 0;
 	int myScoresIdx = 0;
 	int setScoresIdx = 0;
@@ -277,7 +302,7 @@ void Menu::UpdateDrawHighscores(App& app)
 	}
 }
 
-void Menu::UpdateDrawKeyBinds(App& app)
+void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
 {
 	GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
 }
