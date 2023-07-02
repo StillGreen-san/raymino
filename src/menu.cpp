@@ -237,8 +237,51 @@ void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry
 	GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
 }
 
-void drawClose(
-    const Rectangle& bounds, const char* text, App& app, std::function<bool(const App::HighScoreEntry&)> selector)
+void genEntries(App& app, int entryCount, const char* namePtr, const App::Settings* setPtr)
+{
+	std::default_random_engine rng(std::random_device{}());
+	std::uniform_int_distribution<int> charDist(' ', '~');
+	std::uniform_int_distribution<int> scoreDist(99, 999999);
+	std::uniform_int_distribution<int> settDist6(0, 5);
+	std::uniform_int_distribution<int> settDist4(0, 3);
+	std::uniform_int_distribution<int> settDist3(0, 2);
+	std::uniform_int_distribution<int> settDist2(0, 1);
+	App::Settings settings;
+	App::HighScoreEntry::NameT name{};
+	for(int i = 0; i < entryCount; ++i)
+	{
+		if(!namePtr)
+		{
+			std::for_each(name.begin(), name.end(),
+			    [&](auto& chr)
+			    {
+				    chr = static_cast<char>(charDist(rng));
+			    });
+		}
+		if(!setPtr)
+		{
+			settings.rotationSystem = static_cast<RotationSystem>(settDist6(rng));
+			settings.wallKicks = static_cast<WallKicks>(settDist3(rng));
+			settings.lockDown = static_cast<LockDown>(settDist4(rng));
+			settings.softDrop = static_cast<SoftDrop>(settDist2(rng));
+			settings.instantDrop = static_cast<InstantDrop>(settDist2(rng));
+			settings.tSpin = static_cast<TSpin>(settDist3(rng));
+			settings.shuffleType = static_cast<ShuffleType>(settDist4(rng));
+			settings.scoringSystem = static_cast<ScoringSystem>(settDist4(rng));
+			settings.levelGoal = static_cast<LevelGoal>(settDist2(rng));
+			settings.holdPiece = static_cast<bool>(settDist2(rng));
+			settings.ghostPiece = static_cast<bool>(settDist2(rng));
+			settings.previewCount = static_cast<uint8_t>(settDist6(rng));
+			settings.fieldWidth = static_cast<uint8_t>(settDist6(rng) + 10);
+			settings.fieldHeight = static_cast<uint8_t>(settDist6(rng) + 10);
+		}
+		app.highScores.add(namePtr ? namePtr : name.data(), scoreDist(rng), setPtr ? *setPtr : settings);
+	}
+	App::storeFile(app.serialize());
+}
+
+void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unused]] const char* namePtr,
+    [[maybe_unused]] const App::Settings* setPtr, std::function<bool(const App::HighScoreEntry&)> selector)
 {
 	GuiGroupBox(bounds, text);
 	if(::GuiButton({bounds.x + bounds.width - 22, bounds.y - 6, 16, 16}, "X"))
@@ -247,6 +290,12 @@ void drawClose(
 		    std::remove_if(app.highScores.entries.begin(), app.highScores.entries.end(), selector),
 		    app.highScores.entries.end());
 	}
+#ifndef NDEBUG
+	if(::GuiButton({bounds.x + bounds.width - 45, bounds.y - 6, 16, 16}, "+"))
+	{
+		genEntries(app, 20, namePtr, setPtr);
+	}
+#endif
 }
 
 void Menu::UpdateDrawHighscores(App& app)
@@ -259,17 +308,17 @@ void Menu::UpdateDrawHighscores(App& app)
 	    scoreListWidth, GroupBoxSettingsRect.height - 25};
 	const Rectangle setScoreRect{GroupBoxSettingsRect.x + 30 + (scoreListWidth * 2), GroupBoxSettingsRect.y + 15,
 	    scoreListWidth, GroupBoxSettingsRect.height - 25};
-	drawClose(allScoreRect, "All Scores", app,
+	drawClose(allScoreRect, "All Scores", app, nullptr, nullptr,
 	    [&]([[maybe_unused]] const App::HighScoreEntry& entry)
 	    {
 		    return true;
 	    });
-	drawClose(myScoreRect, "Same Name", app,
+	drawClose(myScoreRect, "Same Name", app, app.playerName.data(), nullptr,
 	    [&](const App::HighScoreEntry& entry)
 	    {
 		    return entry.name == app.playerName;
 	    });
-	drawClose(setScoreRect, "Same Settings", app,
+	drawClose(setScoreRect, "Same Settings", app, nullptr, &app.settings,
 	    [&](const App::HighScoreEntry& entry)
 	    {
 		    return entry.settings == app.settings;
