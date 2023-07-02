@@ -25,7 +25,7 @@ target_compile_features(${PROJECT_NAME}-lib PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res)
 
 add_executable(${PROJECT_NAME} src/main.cpp src/graphics.cpp src/app.cpp src/loading.cpp src/menu.cpp src/game.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib magic_enum::magic_enum)
 
 enable_testing()
 include(Catch)
