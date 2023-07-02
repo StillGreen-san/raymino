@@ -301,24 +301,17 @@ void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unus
 void Menu::UpdateDrawHighscores(App& app)
 {
 	GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
-	const float scoreListWidth = (GroupBoxSettingsRect.width - 40) / 3;
-	const Rectangle allScoreRect{
-	    GroupBoxSettingsRect.x + 10, GroupBoxSettingsRect.y + 15, scoreListWidth, GroupBoxSettingsRect.height - 25};
-	const Rectangle myScoreRect{GroupBoxSettingsRect.x + 20 + scoreListWidth, GroupBoxSettingsRect.y + 15,
-	    scoreListWidth, GroupBoxSettingsRect.height - 25};
-	const Rectangle setScoreRect{GroupBoxSettingsRect.x + 30 + (scoreListWidth * 2), GroupBoxSettingsRect.y + 15,
-	    scoreListWidth, GroupBoxSettingsRect.height - 25};
-	drawClose(allScoreRect, "All Scores", app, nullptr, nullptr,
+	drawClose(AllScoreRect, "All Scores", app, nullptr, nullptr,
 	    [&]([[maybe_unused]] const App::HighScoreEntry& entry)
 	    {
 		    return true;
 	    });
-	drawClose(myScoreRect, "Same Name", app, app.playerName.data(), nullptr,
+	drawClose(MyScoreRect, "Same Name", app, app.playerName.data(), nullptr,
 	    [&](const App::HighScoreEntry& entry)
 	    {
 		    return entry.name == app.playerName;
 	    });
-	drawClose(setScoreRect, "Same Settings", app, nullptr, &app.settings,
+	drawClose(SetScoreRect, "Same Settings", app, nullptr, &app.settings,
 	    [&](const App::HighScoreEntry& entry)
 	    {
 		    return entry.settings == app.settings;
@@ -335,17 +328,17 @@ void Menu::UpdateDrawHighscores(App& app)
 		}
 		if(allScoresIdx < maxIdx)
 		{
-			drawEntry(allScoresIdx, allScoreRect, entry);
+			drawEntry(allScoresIdx, AllScoreRect, entry);
 			++allScoresIdx;
 		}
 		if(myScoresIdx < maxIdx && entry.name == app.playerName)
 		{
-			drawEntry(myScoresIdx, myScoreRect, entry);
+			drawEntry(myScoresIdx, MyScoreRect, entry);
 			++myScoresIdx;
 		}
 		if(setScoresIdx < maxIdx && entry.settings == app.settings)
 		{
-			drawEntry(setScoresIdx, setScoreRect, entry);
+			drawEntry(setScoresIdx, SetScoreRect, entry);
 			++setScoresIdx;
 		}
 	}

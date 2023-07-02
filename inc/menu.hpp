@@ -142,5 +142,13 @@ struct Menu : public IScene
 	static constexpr Rectangle SpinnerFieldHeightRect{AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24};
 	static constexpr Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32};
 	static constexpr Rectangle LabelPresetsRect{AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24};
+
+	static constexpr float ScoreListWidth = (GroupBoxSettingsRect.width - 40) / 3;
+	static constexpr Rectangle AllScoreRect{
+	    GroupBoxSettingsRect.x + 10, GroupBoxSettingsRect.y + 15, ScoreListWidth, GroupBoxSettingsRect.height - 25};
+	static constexpr Rectangle MyScoreRect{GroupBoxSettingsRect.x + 20 + ScoreListWidth, GroupBoxSettingsRect.y + 15,
+	    ScoreListWidth, GroupBoxSettingsRect.height - 25};
+	static constexpr Rectangle SetScoreRect{GroupBoxSettingsRect.x + 30 + (ScoreListWidth * 2),
+	    GroupBoxSettingsRect.y + 15, ScoreListWidth, GroupBoxSettingsRect.height - 25};
 };
 } // namespace raymino
