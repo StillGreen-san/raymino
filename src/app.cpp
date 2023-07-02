@@ -1,8 +1,5 @@
 #include "app.hpp"
 
-#include <endian/network.hpp>
-#include <endian/stream_reader.hpp>
-#include <endian/stream_writer.hpp>
 #include <external/sdefl.h>
 #include <external/sinfl.h>
 #include <raylib-cpp.hpp>

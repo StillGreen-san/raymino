@@ -22,7 +22,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 add_library(${PROJECT_NAME}-lib src/gameplay.cpp src/grid.cpp src/input.cpp src/app-types.cpp)
 target_include_directories(${PROJECT_NAME}-lib PUBLIC inc)
 target_compile_features(${PROJECT_NAME}-lib PUBLIC cxx_std_17)
-target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res steinwurf::endian)
+target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res)
 
 add_executable(${PROJECT_NAME} src/main.cpp src/graphics.cpp src/app.cpp src/loading.cpp src/menu.cpp src/game.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)

@@ -17,7 +17,5 @@ target_include_directories(rres PUBLIC rres/src)
 target_link_libraries(rres PUBLIC raylib)
 add_library(raylib::res ALIAS rres)
 
-add_subdirectory(endian)
-
 add_subdirectory(Catch2)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)

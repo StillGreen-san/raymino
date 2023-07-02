@@ -8,4 +8,3 @@ tetris with raylib
 - [raylib-cpp](https://github.com/RobLoach/raylib-cpp) [ZLIB]
 - [raygui](https://github.com/raysan5/raygui) [ZLIB]
 - [rres](https://github.com/raysan5/rres) [MIT]
-- [endian](https://github.com/steinwurf/endian) [BSD3]
