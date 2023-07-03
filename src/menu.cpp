@@ -1,6 +1,7 @@
 #include "menu.hpp"
 
 #include "app.hpp"
+#include "dependency_info.hpp"
 
 #include <raygui.h>
 #include <raylib-cpp.hpp>
@@ -73,7 +74,7 @@ void Menu::UpdateDraw(App& app)
 	if(DropdownBoxRotationSystemEditMode || DropdownBoxWallKicksEditMode || DropdownBoxLockDownEditMode ||
 	    DropdownBoxSoftDropEditMode || DropdownBoxInstantDropEditMode || DropdownBoxTSpinEditMode ||
 	    DropdownBoxShuffleTypeEditMode || DropdownBoxScoringSystemEditMode || DropdownBoxHoldPieceEditMode ||
-	    DropdownBoxPresetsEditMode)
+	    DropdownBoxPresetsEditMode || AboutDialogShowing)
 	{
 		GuiLock();
 	}
@@ -110,6 +111,15 @@ void Menu::UpdateDraw(App& app)
 	case State::KeyBinds:
 		UpdateDrawKeyBinds(app);
 		break;
+	}
+
+	if(::GuiButton({GroupBoxGameRect.x + GroupBoxGameRect.width - 22, GroupBoxGameRect.y - 7, 16, 16}, "?"))
+	{
+		AboutDialogShowing = true;
+	}
+	if(AboutDialogShowing)
+	{
+		UpdateDrawAbout(app);
 	}
 
 	GuiUnlock();
@@ -350,5 +360,50 @@ void Menu::UpdateDrawHighscores(App& app)
 void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
 {
 	GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
+}
+
+void Menu::UpdateDrawAbout([[maybe_unused]] App& app)
+{
+	const float entryHeight = 24;
+	const float totalEntriesHeight = (entryHeight * (DEPENDENCY_INFOS.size() + 2)) + 30;
+	const float aboutYOffset = (static_cast<float>(App::Settings::SCREEN_HEIGHT) / 2) - (totalEntriesHeight / 2);
+	const Rectangle aboutBounds{150, aboutYOffset, 300, totalEntriesHeight};
+	const bool clickedOutside =
+	    ::IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !::CheckCollisionPointRec(::GetMousePosition(), aboutBounds);
+	::GuiUnlock();
+	if(::GuiWindowBox(aboutBounds, "About") || clickedOutside)
+	{
+		AboutDialogShowing = false;
+		return;
+	}
+
+	const int prevTextColorProp = ::GuiGetStyle(GuiControl::LABEL, GuiControlProperty::TEXT_COLOR_NORMAL);
+	::GuiSetStyle(GuiControl::LABEL, GuiControlProperty::TEXT_COLOR_NORMAL, ColorToInt(BLUE));
+
+	if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.url.data()))
+	{
+		::OpenURL(PROJECT_INFO.url.data());
+	}
+	float entryYOffset = (entryHeight * 2) + 30;
+	for(const LibraryInfo& dep : DEPENDENCY_INFOS)
+	{
+		if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + entryYOffset, 0, 20}, dep.url.data()))
+		{
+			::OpenURL(dep.url.data());
+		}
+		entryYOffset += entryHeight;
+	}
+
+	::GuiSetStyle(GuiControl::LABEL, GuiControlProperty::TEXT_COLOR_NORMAL, prevTextColorProp);
+
+	::GuiLabel({aboutBounds.x + 20, aboutBounds.y + 54, 0, 20}, "build with:");
+
+	::GuiLabel({aboutBounds.x + 250, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.lic.data());
+	entryYOffset = (entryHeight * 2) + 30;
+	for(const LibraryInfo& dep : DEPENDENCY_INFOS)
+	{
+		::GuiLabel({aboutBounds.x + 235, aboutBounds.y + entryYOffset, 0, 20}, dep.lic.data());
+		entryYOffset += entryHeight;
+	}
 }
 } // namespace raymino

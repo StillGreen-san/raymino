@@ -19,6 +19,7 @@ struct Menu : public IScene
 	void UpdateDrawSettings(App& app);
 	void UpdateDrawHighscores(App& app);
 	void UpdateDrawKeyBinds(App& app);
+	void UpdateDrawAbout(App& app);
 
 	enum class State
 	{
@@ -65,6 +66,7 @@ struct Menu : public IScene
 	static constexpr Vector2 AnchorGame = {24, 24};
 	static constexpr Vector2 AnchorSettings = {24, 120};
 
+	bool AboutDialogShowing = false;
 	bool DropdownBoxRotationSystemEditMode = false;
 	bool DropdownBoxWallKicksEditMode = false;
 	bool DropdownBoxLockDownEditMode = false;
