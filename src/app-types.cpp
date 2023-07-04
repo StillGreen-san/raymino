@@ -1,6 +1,8 @@
 #include "app.hpp"
 
-bool raymino::App::HighScores::add(const char* namePtr, int64_t score, const Settings& settings)
+namespace raymino
+{
+bool App::HighScores::add(const char* namePtr, int64_t score, const Settings& settings)
 {
 	if(entries.empty())
 	{
@@ -26,36 +28,34 @@ bool raymino::App::HighScores::add(const char* namePtr, int64_t score, const Set
 	return entryPos == recordPos;
 }
 
-bool raymino::App::Settings::operator==(const raymino::App::Settings& rhs) const noexcept
+bool App::Settings::operator==(const App::Settings& rhs) const noexcept
 {
 	return compare(rhs) == 0;
 }
-bool raymino::App::Settings::operator!=(const raymino::App::Settings& rhs) const noexcept
+bool App::Settings::operator!=(const App::Settings& rhs) const noexcept
 {
 	return compare(rhs) != 0;
 }
-bool raymino::App::Settings::operator>(const raymino::App::Settings& rhs) const noexcept
+bool App::Settings::operator>(const App::Settings& rhs) const noexcept
 {
 	return compare(rhs) > 0;
 }
-bool raymino::App::Settings::operator<(const raymino::App::Settings& rhs) const noexcept
+bool App::Settings::operator<(const App::Settings& rhs) const noexcept
 {
 	return compare(rhs) < 0;
 }
-int raymino::App::Settings::compare(const raymino::App::Settings& rhs) const noexcept
+int App::Settings::compare(const App::Settings& rhs) const noexcept
 {
 	return std::memcmp(this, &rhs, sizeof(App::Settings));
 }
 
-raymino::App::HighScoreEntry::HighScoreEntry(
-    const char* namePtr, int64_t score, const raymino::App::Settings& settings) :
-    name{},
-    score{score}, settings{settings}
+App::HighScoreEntry::HighScoreEntry(const char* namePtr, int64_t score, const App::Settings& settings) :
+    name{}, score{score}, settings{settings}
 {
 	copyInto(namePtr, name);
 }
 
-size_t raymino::App::HighScoreEntry::copyInto(const char* inPtr, raymino::App::HighScoreEntry::NameT& outRef)
+size_t App::HighScoreEntry::copyInto(const char* inPtr, App::HighScoreEntry::NameT& outRef)
 {
 	if(!inPtr)
 	{
@@ -69,3 +69,4 @@ size_t raymino::App::HighScoreEntry::copyInto(const char* inPtr, raymino::App::H
 	outRef[idx] = '\0';
 	return idx;
 }
+} // namespace raymino

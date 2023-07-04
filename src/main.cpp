@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace raymino; // NOLINT(google-build-using-namespace)
+
 #ifdef WIN32
 int WinMain()
 #else
@@ -19,7 +21,7 @@ int main()
 		std::cout << '[' << depInfo.lic << ']' << std::endl;
 	}
 
-	raymino::App app;
+	App app;
 
 	app.Run();
 

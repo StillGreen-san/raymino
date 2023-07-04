@@ -4,6 +4,8 @@
 #include <array>
 #include <string_view>
 
+namespace raymino
+{
 struct LibraryInfo
 {
 	std::string_view url;
@@ -22,3 +24,4 @@ constexpr size_t DEPENDENCY_INFOS_MAX_URL_LEN = std::max_element(DEPENDENCY_INFO
     {
 	    return lhs.url.size() < rhs.url.size();
     }) -> url.size();
+} // namespace raymino

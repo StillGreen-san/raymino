@@ -8,7 +8,9 @@
 #include <emscripten/emscripten.h>
 #endif
 
-raymino::App::App() : playerName{}
+namespace raymino
+{
+App::App() : playerName{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
@@ -19,11 +21,11 @@ raymino::App::App() : playerName{}
 
 void UpdateDraw(void* app)
 {
-	raymino::App& self = *static_cast<raymino::App*>(app);
+	App& self = *static_cast<App*>(app);
 	self.UpdateDraw();
 }
 
-void raymino::App::UpdateDraw()
+void App::UpdateDraw()
 {
 	if(nextScene)
 	{
@@ -32,24 +34,24 @@ void raymino::App::UpdateDraw()
 	currentScene->UpdateDraw(*this);
 }
 
-void raymino::App::Run()
+void App::Run()
 {
 #if defined(PLATFORM_WEB)
-	emscripten_set_main_loop_arg(::UpdateDraw, this, 0, 1);
+	emscripten_set_main_loop_arg(raymino::UpdateDraw, this, 0, 1);
 #else
 	while(!::WindowShouldClose())
 	{
-		::UpdateDraw(this);
+		raymino::UpdateDraw(this);
 	}
 #endif
 }
 
-void raymino::App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
+void App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
 {
 	nextScene = std::move(newScene);
 }
 
-bool raymino::App::addHighScore(int64_t score)
+bool App::addHighScore(int64_t score)
 {
 	const bool isHighScore = highScores.add(playerName.data(), score, settings);
 	if(highScores.entries.size() > MAX_SCORES)
@@ -60,25 +62,25 @@ bool raymino::App::addHighScore(int64_t score)
 	return isHighScore;
 }
 
-const raymino::App::SaveFile::Header& raymino::App::SaveFile::header() const
+const App::SaveFile::Header& App::SaveFile::header() const
 {
 	return *reinterpret_cast<const Header*>(dataBuffer.data()); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 }
-raymino::App::HighScoreEntry* raymino::App::SaveFile::begin()
+App::HighScoreEntry* App::SaveFile::begin()
 {
 	return header().scoreCount > 0
 	           ? reinterpret_cast<HighScoreEntry*>(      // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	                 dataBuffer.data() + sizeof(Header)) // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	           : nullptr;
 }
-const raymino::App::HighScoreEntry* raymino::App::SaveFile::begin() const
+const App::HighScoreEntry* App::SaveFile::begin() const
 {
 	return header().scoreCount > 0
 	           ? reinterpret_cast<const HighScoreEntry*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	                 dataBuffer.data() + sizeof(Header))  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	           : nullptr;
 }
-const raymino::App::HighScoreEntry* raymino::App::SaveFile::end() const
+const App::HighScoreEntry* App::SaveFile::end() const
 {
 	return header().scoreCount > 0
 	           ? reinterpret_cast<const HighScoreEntry*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -87,12 +89,12 @@ const raymino::App::HighScoreEntry* raymino::App::SaveFile::end() const
 	           : nullptr;
 }
 
-bool raymino::App::SaveFile::Header::isValid() const
+bool App::SaveFile::Header::isValid() const
 {
 	return magic == App::SaveFile::magic && fileVersion == App::FILE_VERSION;
 }
 
-raymino::App::SaveFile raymino::App::makeSaveFile(const void* data, int size)
+App::SaveFile App::makeSaveFile(const void* data, int size)
 {
 	SaveFile save;
 	if(size < static_cast<ptrdiff_t>(sizeof(SaveFile::Header)))
@@ -115,7 +117,7 @@ raymino::App::SaveFile raymino::App::makeSaveFile(const void* data, int size)
 	return save;
 }
 
-void raymino::App::storeFile(const SaveFile& save)
+void App::storeFile(const SaveFile& save)
 {
 	if(!save.header().isValid())
 	{
@@ -151,7 +153,7 @@ void raymino::App::storeFile(const SaveFile& save)
 #endif
 }
 
-raymino::App::SaveFile raymino::App::serialize() const
+App::SaveFile App::serialize() const
 {
 	SaveFile save;
 
@@ -171,7 +173,7 @@ raymino::App::SaveFile raymino::App::serialize() const
 	return save;
 }
 
-void raymino::App::deserialize(const raymino::App::SaveFile& save)
+void App::deserialize(const App::SaveFile& save)
 {
 	if(!save.header().isValid())
 	{
@@ -181,3 +183,4 @@ void raymino::App::deserialize(const raymino::App::SaveFile& save)
 	settings = save.header().settings;
 	highScores.entries.assign(save.begin(), save.end());
 }
+} // namespace raymino
