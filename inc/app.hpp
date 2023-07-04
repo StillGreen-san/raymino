@@ -3,6 +3,8 @@
 #include "scenes.hpp"
 #include "types.hpp"
 
+#include <raylib.h>
+
 #include <array>
 #include <memory>
 #include <vector>
@@ -44,6 +46,20 @@ public:
 		static constexpr float LOCK_DELAY = 0.5f;
 		static constexpr float DELAYED_AUTO_SHIFT = 1.0f / 6.0f;
 		static constexpr float AUTO_REPEAT_RATE = 1.0f / 30.0f;
+	};
+	struct alignas(int64_t) KeyBinds
+	{
+		int16_t moveRight = KEY_RIGHT;
+		int16_t moveLeft = KEY_LEFT;
+		int16_t rotateRight = KEY_V;
+		int16_t rotateLeft = KEY_X;
+		int16_t softDrop = KEY_DOWN;
+		int16_t hardDrop = KEY_SPACE;
+		int16_t hold = KEY_C;
+		int16_t pause = KEY_ESCAPE;
+		int16_t restart = KEY_HOME;
+		int16_t menu = KEY_END;
+		[[maybe_unused]] int16_t _reserved_[2]{}; // NOLINT(*-avoid-c-arrays)
 	};
 
 	struct HighScoreEntry
@@ -94,6 +110,7 @@ public:
 
 	HighScoreEntry::NameT playerName;
 	Settings settings;
+	KeyBinds keyBinds;
 	HighScores highScores;
 
 	static constexpr size_t FILE_VERSION = 1;
@@ -131,6 +148,7 @@ public:
 
 	static_assert(sizeof(bool) == 1);
 	static_assert(sizeof(Settings) == 16);
+	static_assert(sizeof(KeyBinds) == 24);
 	static_assert(sizeof(HighScoreEntry) == 32);
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
