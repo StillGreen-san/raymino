@@ -2,8 +2,6 @@
 
 #include "timer.hpp"
 
-#include <raylib-cpp.hpp>
-
 namespace raymino
 {
 struct KeyAction
@@ -21,14 +19,14 @@ struct KeyAction
 		int8_t value;
 	};
 	KeyAction() = delete;
-	KeyAction(float repeatDelay, float repeatRate, ::KeyboardKey rkey, ::KeyboardKey lkey = KEY_NULL) :
+	KeyAction(float repeatDelay, float repeatRate, int16_t rkey, int16_t lkey = 0) :
 	    repeatDelay{repeatDelay}, delayTimer{repeatRate}, rkey{rkey}, lkey{lkey}
 	{
 	}
 	Return tick(float delta);
 	float repeatDelay;
 	Timer delayTimer;
-	::KeyboardKey rkey;
-	::KeyboardKey lkey;
+	int16_t rkey;
+	int16_t lkey;
 };
 } // namespace raymino

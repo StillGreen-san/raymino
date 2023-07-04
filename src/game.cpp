@@ -125,16 +125,16 @@ bool isKeyPress(KeyAction::Return keyPress)
 
 void Game::update(App& app)
 {
-	if(::IsKeyPressed(KEY_END))
+	if(::IsKeyPressed(app.keyBinds.menu))
 	{
 		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
 		state = State::GameOver;
 	}
-	if(::IsKeyPressed(KEY_HOME))
+	if(::IsKeyPressed(app.keyBinds.restart))
 	{
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
-	if(::IsKeyPressed(KEY_ESCAPE))
+	if(::IsKeyPressed(app.keyBinds.pause))
 	{
 		switch(state)
 		{
@@ -155,7 +155,7 @@ void Game::update(App& app)
 		return;
 	}
 
-	if(app.settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(KEY_C))
+	if(app.settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(app.keyBinds.hold))
 	{
 		if(holdPieceIdx == static_cast<size_t>(-1))
 		{
@@ -175,7 +175,8 @@ void Game::update(App& app)
 
 	Offset prevTetrominoOffset = currentTetromino;
 
-	gravity.delay = delays[std::min<size_t>((::IsKeyDown(KEY_DOWN) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
+	gravity.delay =
+	    delays[std::min<size_t>((::IsKeyDown(app.keyBinds.softDrop) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
 
 	if(const KeyAction::Return moveAction = moveRight.tick(::GetFrameTime()); isKeyPress(moveAction))
 	{
@@ -216,7 +217,7 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) == 0)
 		{
 			currentTetromino.position += XY{0, 1};
-			if(::IsKeyDown(KEY_DOWN))
+			if(::IsKeyDown(app.keyBinds.softDrop))
 			{
 				score += scoringSystem->process(ScoreEvent::SoftDrop, 1, levelState.currentLevel);
 			}
@@ -242,13 +243,13 @@ void Game::update(App& app)
 				}
 			}
 		}
-		else if(::IsKeyDown(KEY_DOWN) && app.settings.softDrop == SoftDrop::Locking)
+		else if(::IsKeyDown(app.keyBinds.softDrop) && app.settings.softDrop == SoftDrop::Locking)
 		{
 			isLocking = true;
 			lockDelay.reset(lockDelay.delay);
 		}
 	}
-	if(::IsKeyPressed(KEY_SPACE))
+	if(::IsKeyPressed(app.keyBinds.hardDrop))
 	{
 		for(int yOffset = 1;; ++yOffset)
 		{
@@ -435,9 +436,11 @@ Game::Game(App& app) :
     levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
     lockDelay{App::Settings::LOCK_DELAY}, lockCounter{0}, isLocking{false}, holdPieceLocked{false}, isHighScore{false},
     tSpinFunc{tSpinCheck(app.settings.tSpin)},
-    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_RIGHT, KEY_LEFT},
+    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds.moveRight,
+        app.keyBinds.moveLeft},
     basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},
-    rotateRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, KEY_X, KEY_Z}
+    rotateRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds.rotateRight,
+        app.keyBinds.rotateLeft}
 {
 }
 

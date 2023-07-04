@@ -1,5 +1,7 @@
 #include "input.hpp"
 
+#include <raylib-cpp.hpp>
+
 namespace raymino
 {
 KeyAction::Return KeyAction::tick(float delta)
