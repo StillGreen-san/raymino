@@ -49,6 +49,15 @@ struct Menu : public IScene
 	static constexpr const char* LabelHoldPieceText = "Hold Piece";
 	static constexpr const char* LabelGhostPieceText = "Ghost Piece";
 	static constexpr const char* LabelPresetsText = "Presets";
+	static constexpr const char* LabelMoveRightText = "Move Right";
+	static constexpr const char* LabelMoveLeftText = "Move Left";
+	static constexpr const char* LabelRotateRightText = "Rotate Right";
+	static constexpr const char* LabelRotateLeftText = "Rotate Left";
+	static constexpr const char* LabelHardDropText = "Hard Drop";
+	static constexpr const char* LabelHoldText = "Hold";
+	static constexpr const char* LabelPauseText = "Pause";
+	static constexpr const char* LabelRestartText = "Restart";
+	static constexpr const char* LabelMenuText = "Menu";
 	static constexpr const char* DropdownBoxRotationSystemText =
 	    "Original;Super;Arika;Sega;Nintendo Left;Nintendo Right";
 	static constexpr const char* DropdownBoxWallKicksText = "None;Arika;Super";
@@ -83,6 +92,16 @@ struct Menu : public IScene
 	bool SpinnerFieldHeightEditMode = false;
 	bool DropdownBoxPresetsEditMode = false;
 	bool TextBoxPlayerNameEditMode = false;
+	bool TextBoxMoveRightEditMode = false;
+	bool TextBoxMoveLeftEditMode = false;
+	bool TextBoxRotateRightEditMode = false;
+	bool TextBoxRotateLeftEditMode = false;
+	bool TextBoxSoftDropEditMode = false;
+	bool TextBoxHardDropEditMode = false;
+	bool TextBoxHoldEditMode = false;
+	bool TextBoxPauseEditMode = false;
+	bool TextBoxRestartEditMode = false;
+	bool TextBoxMenuEditMode = false;
 
 	int DropdownBoxRotationSystemActive;
 	int DropdownBoxWallKicksActive;
@@ -107,6 +126,17 @@ struct Menu : public IScene
 	int DropdownBoxPresetsActive = 1;
 
 	App::HighScoreEntry::NameT TextBoxPlayerNameBuffer{};
+	using KeyBufferT = std::array<char, 20>;
+	KeyBufferT TextBoxMoveRightBuffer{};
+	KeyBufferT TextBoxMoveLeftBuffer{};
+	KeyBufferT TextBoxRotateRightBuffer{};
+	KeyBufferT TextBoxRotateLeftBuffer{};
+	KeyBufferT TextBoxSoftDropBuffer{};
+	KeyBufferT TextBoxHardDropBuffer{};
+	KeyBufferT TextBoxHoldBuffer{};
+	KeyBufferT TextBoxPauseBuffer{};
+	KeyBufferT TextBoxRestartBuffer{};
+	KeyBufferT TextBoxMenuBuffer{};
 
 	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
 	static constexpr Rectangle ButtonStartGameRect{AnchorGame.x + 34, AnchorGame.y + 16, 152, 40};

@@ -6,6 +6,10 @@
 #include <raygui.h>
 #include <raylib-cpp.hpp>
 
+#define MAGIC_ENUM_RANGE_MIN 0   // NOLINT(cppcoreguidelines-macro-usage)
+#define MAGIC_ENUM_RANGE_MAX 350 // NOLINT(cppcoreguidelines-macro-usage)
+#include <magic_enum.hpp>
+
 #include <array>
 #include <charconv>
 #include <functional>
@@ -19,6 +23,14 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 	return std::make_unique<Menu>(app);
 }
 
+template<typename TEnum, typename TContainer>
+void copyEnumName(int fromKey, TContainer& intoBuffer)
+{
+	const auto name = magic_enum::enum_name(static_cast<TEnum>(fromKey));
+	const auto last = std::copy_n(name.begin(), std::min(name.size(), intoBuffer.size() - 1), intoBuffer.begin());
+	*last = '\0';
+}
+
 Menu::Menu(App& app) : TextBoxPlayerNameBuffer{app.playerName} // NOLINT(*-member-init) handled by readSettings
 {
 	readSettings(app.settings);
@@ -27,6 +39,16 @@ Menu::Menu(App& app) : TextBoxPlayerNameBuffer{app.playerName} // NOLINT(*-membe
 	{
 		DropdownBoxPresetsActive = 0;
 	}
+	copyEnumName<::KeyboardKey>(app.keyBinds.moveRight, TextBoxMoveRightBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.moveLeft, TextBoxMoveLeftBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.rotateRight, TextBoxRotateRightBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.rotateLeft, TextBoxRotateLeftBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.softDrop, TextBoxSoftDropBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.hardDrop, TextBoxHardDropBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.hold, TextBoxHoldBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.pause, TextBoxPauseBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.restart, TextBoxRestartBuffer);
+	copyEnumName<::KeyboardKey>(app.keyBinds.menu, TextBoxMenuBuffer);
 }
 
 void Menu::readSettings(const App::Settings& settings)
@@ -356,9 +378,50 @@ void Menu::UpdateDrawHighscores(App& app)
 	}
 }
 
-void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
+void guiKeyBind(const ::Rectangle& rectLabel, const char* textLabel, const ::Rectangle& rectInput,
+    Menu::KeyBufferT& keyBuffer, bool& editMode, int16_t& keyBind)
 {
-	GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
+	::GuiLabel(rectLabel, textLabel);
+	if(::GuiTextBox(rectInput, keyBuffer.data(), static_cast<int>(keyBuffer.size()), editMode))
+	{
+		editMode = !editMode;
+	}
+	if(editMode)
+	{
+		const int key = ::GetKeyPressed();
+		if(key != KEY_NULL)
+		{
+			copyEnumName<::KeyboardKey>(key, keyBuffer);
+			editMode = false;
+			keyBind = static_cast<int16_t>(key);
+		}
+	}
+}
+
+void Menu::UpdateDrawKeyBinds(App& app)
+{
+	::GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
+	if(::GuiButton(InputB8Rect, GroupBoxSettingsText))
+	{
+		state = State::Settings;
+	}
+	guiKeyBind(LabelB1Rect, LabelMoveRightText, InputB1Rect, TextBoxMoveRightBuffer, TextBoxMoveRightEditMode,
+	    app.keyBinds.moveRight);
+	guiKeyBind(LabelA1Rect, LabelMoveLeftText, InputA1Rect, TextBoxMoveLeftBuffer, TextBoxMoveLeftEditMode,
+	    app.keyBinds.moveLeft);
+	guiKeyBind(LabelB2Rect, LabelRotateRightText, InputB2Rect, TextBoxRotateRightBuffer, TextBoxRotateRightEditMode,
+	    app.keyBinds.rotateRight);
+	guiKeyBind(LabelA2Rect, LabelRotateLeftText, InputA2Rect, TextBoxRotateLeftBuffer, TextBoxRotateLeftEditMode,
+	    app.keyBinds.rotateLeft);
+	guiKeyBind(LabelA3Rect, LabelSoftDropText, InputA3Rect, TextBoxSoftDropBuffer, TextBoxSoftDropEditMode,
+	    app.keyBinds.softDrop);
+	guiKeyBind(LabelB3Rect, LabelHardDropText, InputB3Rect, TextBoxHardDropBuffer, TextBoxHardDropEditMode,
+	    app.keyBinds.hardDrop);
+	guiKeyBind(LabelA4Rect, LabelHoldText, InputA4Rect, TextBoxHoldBuffer, TextBoxHoldEditMode, app.keyBinds.hold);
+	guiKeyBind(LabelA5Rect, LabelPauseText, InputA5Rect, TextBoxPauseBuffer, TextBoxPauseEditMode, app.keyBinds.pause);
+	guiKeyBind(
+	    LabelB5Rect, LabelRestartText, InputB5Rect, TextBoxRestartBuffer, TextBoxRestartEditMode, app.keyBinds.restart);
+	guiKeyBind(LabelB4Rect, LabelMenuText, InputB4Rect, TextBoxMenuBuffer, TextBoxMenuEditMode, app.keyBinds.menu);
 }
 
 void Menu::UpdateDrawAbout([[maybe_unused]] App& app)
