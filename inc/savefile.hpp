@@ -58,17 +58,46 @@ public:
 			TVoidStore* last;
 		};
 		template<typename THeader>
-		struct BaseIterator
+		class BaseIterator
 		{
-			void* ptr;
-			BaseIterator& operator++();
-			THeader& operator*() const;
+			using TVoidStore = same_const_as_t<THeader, void>;
+			using TIntType = same_const_as_t<THeader, uint8_t>;
+
+		public:
+			explicit BaseIterator(THeader& header) : header{&header}
+			{
+			}
+			BaseIterator& operator++()
+			{
+				auto* ptr = static_cast<TIntType*>(header);
+				auto paddingBytes = operator*().dataBytes & (alignof(THeader) - 1);
+				if(paddingBytes != 0)
+				{
+					paddingBytes = alignof(THeader) - paddingBytes;
+				}
+				ptr += sizeof(THeader) + operator*().dataBytes + paddingBytes;
+				header = ptr;
+				return *this;
+			}
+			THeader& operator*() const
+			{
+				return *static_cast<THeader*>(header);
+			}
+			THeader* operator->() const
+			{
+				return static_cast<THeader*>(header);
+			}
 			bool operator==(BaseIterator rhs) const
 			{
+				return header == rhs.header;
 			}
 			bool operator!=(BaseIterator rhs) const
 			{
+				return header != rhs.header;
 			}
+
+		private:
+			TVoidStore* header;
 		};
 		using Iterator = BaseIterator<Header>;
 		using ConstIterator = BaseIterator<const Header>;

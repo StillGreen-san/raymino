@@ -37,3 +37,35 @@ TEST_CASE("SaveFile::Chunk::DataRange", "[SaveFile]")
 		    }());
 	}
 }
+
+TEST_CASE("SaveFile::Chunk::BaseIterator", "[SaveFile]")
+{
+	static constexpr struct
+	{
+		SaveFile::Chunk::Header header1{1, 1, 16};
+		std::array<uint32_t, 4> data1{11, 11, 11, 11};
+		SaveFile::Chunk::Header header2{2, 2, 5};
+		std::array<uint8_t, 8> data2{22, 22, 22, 22, 22, 0, 0, 0};
+		SaveFile::Chunk::Header header3{3, 3, 0};
+		SaveFile::Chunk::Header header4{4, 4, 16};
+		std::array<uint32_t, 8> data4{44, 44, 44, 44, 44, 44, 44, 44};
+	} dummyData;
+	{
+		SaveFile::Chunk::ConstIterator iterator(dummyData.header1);
+		REQUIRE((*iterator).type == 1);
+		REQUIRE((*iterator).dataBytes == 16);
+		++iterator;
+		REQUIRE(iterator->type == 2);
+		REQUIRE(iterator->dataBytes == 5);
+		++iterator;
+		REQUIRE(iterator->type == 3);
+		REQUIRE(iterator->dataBytes == 0);
+		++iterator;
+		REQUIRE(iterator->type == 4);
+	}
+	{
+		SaveFile::Chunk::Header header{0, 0, 0};
+		SaveFile::Chunk::Iterator iterator(header);
+		++iterator;
+	}
+}
