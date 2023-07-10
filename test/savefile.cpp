@@ -69,3 +69,16 @@ TEST_CASE("SaveFile::Chunk::BaseIterator", "[SaveFile]")
 		++iterator;
 	}
 }
+
+TEST_CASE("SaveFile & reset", "[SaveFile]")
+{
+	SaveFile save(2, 120);
+	REQUIRE(save.header().userProp1 == 0);
+	REQUIRE(save.header().userProp2 == 0);
+	REQUIRE(save.header().userProp3 == 0);
+	REQUIRE(save.begin() == save.end());
+
+	save.header().userProp2 = 42;
+	save.reset(0, 0);
+	REQUIRE(save.header().userProp2 == 0);
+}

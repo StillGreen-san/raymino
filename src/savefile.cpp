@@ -45,4 +45,19 @@ uint32_t SaveFile::size() const
 {
 	return dataBuffer.size();
 }
+
+void SaveFile::reset(uint32_t chunks, uint32_t totalBytes)
+{
+	dataBuffer.clear();
+	dataBuffer.reserve(sizeof(Header) + (sizeof(Chunk::Header) * chunks) + totalBytes);
+	dataBuffer.resize(sizeof(Header));
+	new(dataBuffer.data()) Header{magic, 2, 0, 0, 0, 0};
+}
+SaveFile::SaveFile(uint32_t chunks, uint32_t totalBytes)
+{
+	reset(chunks, totalBytes);
+}
+SaveFile::SaveFile(std::vector<uint8_t> data) : dataBuffer{std::move(data)}
+{
+}
 } // namespace raymino

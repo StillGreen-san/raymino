@@ -117,10 +117,26 @@ public:
 	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const;
 	[[nodiscard]] const uint8_t* data() const;
 	[[nodiscard]] uint32_t size() const;
-	void reset(uint32_t chunks, uint32_t totalbytes);
 
-	SaveFile(uint32_t chunks, uint32_t totalbytes);
-	SaveFile(void* data, uint32_t totalbytes);
+	/**
+	 * @brief reset to empty save with reserved storage
+	 * @param chunks number intended to be added
+	 * @param totalBytes of chunk data intended to be added
+	 */
+	void reset(uint32_t chunks, uint32_t totalBytes);
+
+	/**
+	 * @brief create empty save with reserved storage
+	 * @param chunks number intended to be added
+	 * @param totalBytes of chunk data intended to be added
+	 */
+	SaveFile(uint32_t chunks, uint32_t totalBytes);
+
+	/**
+	 * @brief create save from existing buffer
+	 * @warning unchecked
+	 */
+	SaveFile(std::vector<uint8_t> data);
 
 private:
 	std::vector<uint8_t> dataBuffer;
