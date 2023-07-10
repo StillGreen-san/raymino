@@ -2,6 +2,37 @@
 
 namespace raymino
 {
+const SaveFile::Header& SaveFile::header() const
+{
+	return reinterpret_cast<const Header&>(dataBuffer.front()); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+}
+SaveFile::Header& SaveFile::header()
+{
+	return reinterpret_cast<Header&>(dataBuffer.front()); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+}
+SaveFile::Chunk::ConstIterator SaveFile::begin() const
+{
+	return Chunk::ConstIterator{
+	    *reinterpret_cast<const Chunk::Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	        &header() + 1)};                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+SaveFile::Chunk::ConstIterator SaveFile::end() const
+{
+	return Chunk::ConstIterator{
+	    *reinterpret_cast<const Chunk::Header*>(     // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	        dataBuffer.data() + dataBuffer.size())}; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+SaveFile::Chunk::Iterator SaveFile::begin()
+{
+	return Chunk::Iterator{*reinterpret_cast<Chunk::Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    &header() + 1)};                                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+SaveFile::Chunk::Iterator SaveFile::end()
+{
+	return Chunk::Iterator{*reinterpret_cast<Chunk::Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    dataBuffer.data() + dataBuffer.size())};              // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+
 const std::vector<uint8_t>& SaveFile::getBuffer() const
 {
 	return dataBuffer;
