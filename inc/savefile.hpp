@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <vector>
 
+template<typename TIn, typename TOut>
+using same_const_as_t = std::conditional_t<std::is_const_v<TIn>, const TOut, TOut>;
+
 namespace raymino
 {
 class SaveFile
@@ -30,8 +33,8 @@ public:
 		template<typename T>
 		class DataRange
 		{
-			using THeader = std::conditional_t<std::is_const_v<T>, const Header, Header>;
-			using TPtr = std::conditional_t<std::is_const_v<T>, const void, void>;
+			using THeader = same_const_as_t<T, Header>;
+			using TVoidStore = same_const_as_t<T, void>;
 
 		public:
 			explicit DataRange(THeader& header) : first{&header + 1}, last{begin() + (header.dataBytes / sizeof(T))}
@@ -51,8 +54,8 @@ public:
 			}
 
 		private:
-			TPtr* first;
-			TPtr* last;
+			TVoidStore* first;
+			TVoidStore* last;
 		};
 		template<typename THeader>
 		struct BaseIterator
