@@ -8,7 +8,7 @@
 
 using namespace raymino;
 
-TEST_CASE("HighScoreEntry::copyInto", "[app]")
+TEST_CASE("App::HighScoreEntry::copyInto", "[App]")
 {
 	App::HighScoreEntry::NameT nameBuffer{};
 
@@ -32,7 +32,7 @@ TEST_CASE("HighScoreEntry::copyInto", "[app]")
 	REQUIRE(App::HighScoreEntry::copyInto(nullptr, nameBuffer) == 0);
 }
 
-TEST_CASE("HighScores::add", "[app]")
+TEST_CASE("App::HighScores::add", "[App]")
 {
 	App::Settings settings;
 	App::HighScores scores;
