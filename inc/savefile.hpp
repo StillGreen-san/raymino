@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <stdexcept>
 #include <vector>
 
 namespace raymino
@@ -27,14 +28,31 @@ public:
 			uint32_t dataBytes;
 		};
 		template<typename T>
-		struct DataRange
+		class DataRange
 		{
 			using THeader = std::conditional_t<std::is_const_v<T>, const Header, Header>;
-			DataRange(THeader& header);
-			T* first;
-			T* last;
-			T* begin() const;
-			T* end() const;
+			using TPtr = std::conditional_t<std::is_const_v<T>, const void, void>;
+
+		public:
+			explicit DataRange(THeader& header) : first{&header + 1}, last{begin() + (header.dataBytes / sizeof(T))}
+			{
+				if(header.dataBytes % sizeof(T) != 0)
+				{
+					throw std::range_error("data buffer size mismatch");
+				}
+			}
+			T* begin() const
+			{
+				return static_cast<T*>(first);
+			}
+			T* end() const
+			{
+				return static_cast<T*>(last);
+			}
+
+		private:
+			TPtr* first;
+			TPtr* last;
 		};
 		template<typename THeader>
 		struct BaseIterator
@@ -42,8 +60,12 @@ public:
 			void* ptr;
 			BaseIterator& operator++();
 			THeader& operator*() const;
-			bool operator==(BaseIterator rhs) const;
-			bool operator!=(BaseIterator rhs) const;
+			bool operator==(BaseIterator rhs) const
+			{
+			}
+			bool operator!=(BaseIterator rhs) const
+			{
+			}
 		};
 		using Iterator = BaseIterator<Header>;
 		using ConstIterator = BaseIterator<const Header>;
