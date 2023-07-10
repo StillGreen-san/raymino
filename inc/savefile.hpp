@@ -114,13 +114,13 @@ public:
 	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, T first, T last);
 	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, uint32_t minBytes);
 
-	const std::vector<uint8_t>& getBuffer() const;
-	const uint8_t* data() const;
-	uint32_t size() const;
+	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const;
+	[[nodiscard]] const uint8_t* data() const;
+	[[nodiscard]] uint32_t size() const;
 	void reset(uint32_t chunks, uint32_t totalbytes);
 
 	SaveFile(uint32_t chunks, uint32_t totalbytes);
-	SaveFile(void*, uint32_t);
+	SaveFile(void* data, uint32_t totalbytes);
 
 private:
 	std::vector<uint8_t> dataBuffer;
