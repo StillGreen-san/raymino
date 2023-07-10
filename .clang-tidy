@@ -6,6 +6,7 @@ Checks: >
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
   -fuchsia-overloaded-operator,
+  -fuchsia-trailing-return,
   -google-readability-todo,
   -hicpp-uppercase-literal-suffix,
   -llvm-header-guard,
