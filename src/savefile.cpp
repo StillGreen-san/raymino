@@ -66,5 +66,10 @@ SaveFile::SaveFile(uint32_t chunks, uint32_t totalBytes)
 }
 SaveFile::SaveFile(std::vector<uint8_t> data) : dataBuffer{std::move(data)}
 {
+	if(dataBuffer.size() < sizeof(Header) || header().magic != SaveFile::magic || header().formatVersion != 2 ||
+	    header()._reserved_ != 0)
+	{
+		reset(0, 0);
+	}
 }
 } // namespace raymino

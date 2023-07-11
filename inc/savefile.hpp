@@ -158,8 +158,7 @@ public:
 	SaveFile(uint32_t chunks, uint32_t totalBytes);
 
 	/**
-	 * @brief create save from existing buffer
-	 * @warning unchecked
+	 * @brief create save from existing buffer, only checks header
 	 */
 	SaveFile(std::vector<uint8_t> data);
 
