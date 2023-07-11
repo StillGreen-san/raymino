@@ -311,7 +311,7 @@ void genEntries(App& app, int entryCount, const char* namePtr, const App::Settin
 		}
 		app.highScores.add(namePtr ? namePtr : name.data(), scoreDist(rng), setPtr ? *setPtr : settings);
 	}
-	App::storeFile(app.serialize(int{}));
+	App::storeFile(app.serialize());
 }
 
 void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unused]] const char* namePtr,

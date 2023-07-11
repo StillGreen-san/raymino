@@ -58,7 +58,7 @@ bool App::addHighScore(int64_t score)
 	{
 		highScores.entries.erase(next(begin(highScores.entries), MAX_SCORES), end(highScores.entries));
 	}
-	App::storeFile(serialize(int{}));
+	App::storeFile(serialize());
 	return isHighScore;
 }
 
@@ -117,7 +117,7 @@ void App::storeFile(const raymino::SaveFile& save)
 	::SaveFileData(FILE_PATH, deflateBuffer.data(), static_cast<unsigned int>(deflateBuffer.size()));
 #endif
 }
-raymino::SaveFile App::serialize([[maybe_unused]] int _temporary_arg_) const
+raymino::SaveFile App::serialize() const
 {
 	const size_t scoreCount = std::min<size_t>(highScores.entries.size(), std::numeric_limits<uint32_t>::max());
 	const auto scoreSize = static_cast<uint32_t>(scoreCount * sizeof(HighScoreEntry));

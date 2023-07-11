@@ -131,7 +131,7 @@ public:
 
 	static raymino::SaveFile decompressFile(const void* compressedData, uint32_t size);
 	static void storeFile(const raymino::SaveFile& save);
-	[[nodiscard]] raymino::SaveFile serialize(int _temporary_arg_) const;
+	[[nodiscard]] raymino::SaveFile serialize() const;
 	void deserialize(const raymino::SaveFile& save);
 
 private:
