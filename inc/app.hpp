@@ -114,7 +114,6 @@ public:
 	KeyBinds keyBinds;
 	HighScores highScores;
 
-	static constexpr size_t FILE_VERSION = 1;
 	static constexpr const char* FILE_PATH = "save.raymino";
 	static constexpr const char* IDB_PATH = "raymino";
 #if defined(PLATFORM_WEB)
@@ -123,40 +122,12 @@ public:
 	static constexpr size_t MAX_SCORES = 5000;
 #endif
 
-	class SaveFile
-	{
-	public:
-		struct Header
-		{
-			std::array<char, 4> magic;
-			uint16_t fileVersion;
-			uint16_t scoreCount;
-			HighScoreEntry::NameT playerName;
-			Settings settings;
-			[[nodiscard]] bool isValid() const;
-		};
-		static constexpr std::array<char, 4> magic{'R', 'M', 'S', 'F'};
-		[[nodiscard]] const Header& header() const;
-		[[nodiscard]] const HighScoreEntry* begin() const;
-		[[nodiscard]] const HighScoreEntry* end() const;
-
-	private:
-		SaveFile() = default;
-		[[nodiscard]] HighScoreEntry* begin();
-		friend class App;
-		std::vector<uint8_t> dataBuffer;
-	};
-
 	static_assert(sizeof(bool) == 1);
 	static_assert(sizeof(Settings) == 16);
 	static_assert(sizeof(KeyBinds) == 24);
 	static_assert(sizeof(HighScoreEntry) == 32);
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
-	static App::SaveFile makeSaveFile(const void* data, int size);
-	static void storeFile(const SaveFile& save);
-	[[nodiscard]] SaveFile serialize() const;
-	void deserialize(const SaveFile& save);
 
 	static raymino::SaveFile decompressFile(const void* compressedData, uint32_t size);
 	static void storeFile(const raymino::SaveFile& save);
