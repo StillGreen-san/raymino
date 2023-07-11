@@ -183,4 +183,26 @@ void App::deserialize(const App::SaveFile& save)
 	settings = save.header().settings;
 	highScores.entries.assign(save.begin(), save.end());
 }
+
+raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
+{
+	static constexpr auto HeaderSize = sizeof(raymino::SaveFile::Header);
+	if(size < HeaderSize)
+	{
+		return {0, 0};
+	}
+
+	const auto* inputHeader = static_cast<const raymino::SaveFile::Header*>(compressedData);
+	std::vector<uint8_t> decompressedData(HeaderSize + inputHeader->userProp3, 0);
+	new(decompressedData.data()) raymino::SaveFile::Header{*inputHeader};
+
+	const int decompressedSize = sinflate(&decompressedData[HeaderSize], static_cast<int>(inputHeader->userProp3),
+	    inputHeader + 1, static_cast<int>(size - HeaderSize)); // NOLINT(*-pro-bounds-pointer-arithmetic)
+
+	if(decompressedSize != inputHeader->userProp3)
+	{
+		return {0, 0};
+	}
+	return {std::move(decompressedData)};
+}
 } // namespace raymino
