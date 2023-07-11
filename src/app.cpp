@@ -239,4 +239,19 @@ void App::storeFile(const raymino::SaveFile& save)
 	::SaveFileData(FILE_PATH, deflateBuffer.data(), deflateBuffer.size());
 #endif
 }
+raymino::SaveFile App::serialize([[maybe_unused]] int _temporary_arg_) const
+{
+	const uint32_t scoreCount = std::min<uint32_t>(highScores.entries.size(), std::numeric_limits<uint32_t>::max());
+	const uint32_t scoreSize = scoreCount * sizeof(HighScoreEntry);
+	const uint32_t appStateSize = sizeof(HighScoreEntry::NameT) + sizeof(Settings);
+
+	raymino::SaveFile save(3, scoreSize + appStateSize);
+
+	save.appendChunk(ChunkType::PlayerName, 0, &playerName, std::next(&playerName));
+	save.appendChunk(ChunkType::Settings, 0, &settings, std::next(&settings));
+	save.appendChunk(ChunkType::HighScores, 0, highScores.entries.begin(), highScores.entries.end());
+
+	save.header().userProp3 = save.size() - HeaderSize;
+	return save;
+}
 } // namespace raymino
