@@ -199,7 +199,7 @@ raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 	const int decompressedSize = sinflate(&decompressedData[HeaderSize], static_cast<int>(inputHeader->userProp3),
 	    inputHeader + 1, static_cast<int>(size - HeaderSize)); // NOLINT(*-pro-bounds-pointer-arithmetic)
 
-	if(decompressedSize != inputHeader->userProp3)
+	if(decompressedSize != static_cast<ptrdiff_t>(inputHeader->userProp3))
 	{
 		return {0, 0};
 	}
@@ -236,13 +236,13 @@ void App::storeFile(const raymino::SaveFile& save)
 		    delete asyncData;
 	    });
 #else
-	::SaveFileData(FILE_PATH, deflateBuffer.data(), deflateBuffer.size());
+	::SaveFileData(FILE_PATH, deflateBuffer.data(), static_cast<unsigned int>(deflateBuffer.size()));
 #endif
 }
 raymino::SaveFile App::serialize([[maybe_unused]] int _temporary_arg_) const
 {
-	const uint32_t scoreCount = std::min<uint32_t>(highScores.entries.size(), std::numeric_limits<uint32_t>::max());
-	const uint32_t scoreSize = scoreCount * sizeof(HighScoreEntry);
+	const size_t scoreCount = std::min<size_t>(highScores.entries.size(), std::numeric_limits<uint32_t>::max());
+	const auto scoreSize = static_cast<uint32_t>(scoreCount * sizeof(HighScoreEntry));
 	const uint32_t appStateSize = sizeof(HighScoreEntry::NameT) + sizeof(Settings);
 
 	raymino::SaveFile save(3, scoreSize + appStateSize);
@@ -253,5 +253,26 @@ raymino::SaveFile App::serialize([[maybe_unused]] int _temporary_arg_) const
 
 	save.header().userProp3 = save.size() - HeaderSize;
 	return save;
+}
+void App::deserialize(const raymino::SaveFile& save)
+{
+	for(const raymino::SaveFile::Chunk::Header& chunkHeader : save)
+	{
+		switch(chunkHeader.type)
+		{
+		case ChunkType::PlayerName:
+			playerName = *raymino::SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
+			break;
+		case ChunkType::Settings:
+			settings = *raymino::SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
+			break;
+		case ChunkType::HighScores:
+		{
+			const raymino::SaveFile::Chunk::DataRange<const HighScoreEntry> range(chunkHeader);
+			highScores.entries.assign(range.begin(), range.end());
+		}
+		break;
+		}
+	}
 }
 } // namespace raymino
