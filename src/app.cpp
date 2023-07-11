@@ -58,7 +58,7 @@ bool App::addHighScore(int64_t score)
 	{
 		highScores.entries.erase(next(begin(highScores.entries), MAX_SCORES), end(highScores.entries));
 	}
-	App::storeFile(serialize());
+	App::storeFile(serialize(int{}));
 	return isHighScore;
 }
 

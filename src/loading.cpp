@@ -25,7 +25,7 @@ Loading::Loading(App& app)
 	    [](void* user, void* data, int size)
 	    {
 		    App& app = *static_cast<App*>(user);
-		    app.deserialize(App::makeSaveFile(data, size));
+		    app.deserialize(App::decompressFile(data, static_cast<uint32_t>(size)));
 		    app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
 		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File loaded successfully", App::FILE_PATH);
 	    },
@@ -40,7 +40,7 @@ Loading::Loading(App& app)
 	unsigned char* fileData = ::LoadFileData(App::FILE_PATH, &bytes);
 	if(fileData)
 	{
-		app.deserialize(App::makeSaveFile(fileData, static_cast<int>(bytes)));
+		app.deserialize(App::decompressFile(fileData, bytes));
 		::UnloadFileData(fileData);
 	}
 	app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
