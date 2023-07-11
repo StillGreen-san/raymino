@@ -184,9 +184,9 @@ void App::deserialize(const App::SaveFile& save)
 	highScores.entries.assign(save.begin(), save.end());
 }
 
+static constexpr auto HeaderSize = sizeof(raymino::SaveFile::Header);
 raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 {
-	static constexpr auto HeaderSize = sizeof(raymino::SaveFile::Header);
 	if(size < HeaderSize)
 	{
 		return {0, 0};
@@ -204,5 +204,39 @@ raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 		return {0, 0};
 	}
 	return {std::move(decompressedData)};
+}
+void App::storeFile(const raymino::SaveFile& save)
+{
+	auto deflateState = std::make_unique<sdefl>();
+	const int saveBufferSize = static_cast<int>(save.size() - HeaderSize);
+	const int deflateBufferSize = sdefl_bound(saveBufferSize);
+
+	auto deflateBuffer = std::vector<uint8_t>(HeaderSize + static_cast<size_t>(deflateBufferSize), 0);
+	new(deflateBuffer.data()) raymino::SaveFile::Header{save.header()};
+
+	const int deflateDataSize = sdeflate(deflateState.get(),
+	    deflateBuffer.data() + HeaderSize,            // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	    save.data() + HeaderSize, saveBufferSize, 8); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	deflateBuffer.resize(HeaderSize + static_cast<size_t>(deflateDataSize));
+
+#if defined(PLATFORM_WEB)
+	std::vector<uint8_t>* asyncData = new std::vector<uint8_t>(std::move(deflateBuffer));
+	emscripten_idb_async_store(
+	    IDB_PATH, FILE_PATH, asyncData->data(), static_cast<int>(asyncData->size()), asyncData,
+	    [](void* data)
+	    {
+		    auto* asyncData = static_cast<std::vector<uint8_t>*>(data);
+		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File saved successfully", FILE_PATH);
+		    delete asyncData;
+	    },
+	    [](void* data)
+	    {
+		    auto* asyncData = static_cast<std::vector<uint8_t>*>(data);
+		    ::TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to save file", FILE_PATH);
+		    delete asyncData;
+	    });
+#else
+	::SaveFileData(FILE_PATH, deflateBuffer.data(), deflateBuffer.size());
+#endif
 }
 } // namespace raymino
