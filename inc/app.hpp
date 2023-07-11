@@ -1,5 +1,6 @@
 #pragma once
 
+#include "savefile.hpp"
 #include "scenes.hpp"
 #include "types.hpp"
 
@@ -156,6 +157,11 @@ public:
 	static void storeFile(const SaveFile& save);
 	[[nodiscard]] SaveFile serialize() const;
 	void deserialize(const SaveFile& save);
+
+	static raymino::SaveFile decompressFile(const void* compressedData, uint32_t size);
+	static void storeFile(const raymino::SaveFile& save);
+	[[nodiscard]] raymino::SaveFile serialize(int _temporary_arg_) const;
+	void deserialize(const raymino::SaveFile& save);
 
 private:
 	std::unique_ptr<IScene> currentScene;
