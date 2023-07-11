@@ -28,7 +28,7 @@ public:
 		{
 			uint16_t type;
 			uint16_t userProperty;
-			uint32_t dataBytes;
+			const uint32_t dataBytes; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
 		};
 		template<typename T>
 		class DataRange
@@ -110,9 +110,34 @@ public:
 	[[nodiscard]] Chunk::ConstIterator end() const;
 	[[nodiscard]] Chunk::Iterator begin();
 	[[nodiscard]] Chunk::Iterator end();
+
+	/**
+	 * @brief add chunk filled with data from first to last
+	 * @tparam T iterator type
+	 * @param type of header
+	 * @param flags user property of header
+	 * @param first data range begin
+	 * @param last data range end
+	 * @return Chunk::Header&
+	 */
 	template<typename T>
-	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, T first, T last);
-	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, uint32_t minBytes);
+	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, T first, T last)
+	{
+		using TValueType = std::remove_cv_t<std::remove_reference_t<decltype(*first)>>;
+		const uint32_t bytes = static_cast<uint32_t>(std::distance(first, last)) * sizeof(TValueType);
+		Chunk::Header& header = appendChunk(type, flags, bytes);
+		std::uninitialized_copy(first, last, Chunk::DataRange<TValueType>(header).begin());
+		return header;
+	}
+
+	/**
+	 * @brief add empty chunk (zeroed)
+	 * @param type of header
+	 * @param flags user property of header
+	 * @param bytes of chunk data
+	 * @return Chunk::Header&
+	 */
+	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, uint32_t bytes);
 
 	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const;
 	[[nodiscard]] const uint8_t* data() const;

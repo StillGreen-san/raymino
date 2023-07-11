@@ -33,6 +33,13 @@ SaveFile::Chunk::Iterator SaveFile::end()
 	    dataBuffer.data() + dataBuffer.size())};              // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 }
 
+SaveFile::Chunk::Header& SaveFile::appendChunk(uint16_t type, uint16_t flags, uint32_t bytes)
+{
+	auto headerPos = dataBuffer.insert(dataBuffer.end(), sizeof(Chunk::Header) + bytes, 0);
+	Chunk::Header& header = *new(&*headerPos) Chunk::Header{type, flags, bytes};
+	return header;
+}
+
 const std::vector<uint8_t>& SaveFile::getBuffer() const
 {
 	return dataBuffer;
@@ -43,7 +50,7 @@ const uint8_t* SaveFile::data() const
 }
 uint32_t SaveFile::size() const
 {
-	return dataBuffer.size();
+	return static_cast<uint32_t>(dataBuffer.size());
 }
 
 void SaveFile::reset(uint32_t chunks, uint32_t totalBytes)
