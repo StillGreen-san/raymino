@@ -62,6 +62,17 @@ bool App::addHighScore(int64_t score)
 	return isHighScore;
 }
 
+struct ChunkType
+{
+	enum : uint16_t
+	{
+		PlayerName = 10,
+		Settings = 11,
+		HighScores = 12,
+		KeyBinds = 13,
+	};
+};
+
 static constexpr auto HeaderSize = sizeof(raymino::SaveFile::Header);
 raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 {
@@ -128,6 +139,7 @@ raymino::SaveFile App::serialize() const
 	save.appendChunk(ChunkType::PlayerName, 0, &playerName, std::next(&playerName));
 	save.appendChunk(ChunkType::Settings, 0, &settings, std::next(&settings));
 	save.appendChunk(ChunkType::HighScores, 0, highScores.entries.begin(), highScores.entries.end());
+	save.appendChunk(ChunkType::KeyBinds, 0, &keyBinds, std::next(&keyBinds));
 
 	save.header().userProp3 = save.size() - HeaderSize;
 	return save;
@@ -150,6 +162,9 @@ void App::deserialize(const raymino::SaveFile& save)
 			highScores.entries.assign(range.begin(), range.end());
 		}
 		break;
+		case ChunkType::KeyBinds:
+			keyBinds = *raymino::SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
+			break;
 		}
 	}
 }

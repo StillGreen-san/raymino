@@ -137,15 +137,5 @@ public:
 private:
 	std::unique_ptr<IScene> currentScene;
 	std::unique_ptr<IScene> nextScene = nullptr;
-
-	struct ChunkType
-	{
-		enum : uint16_t
-		{
-			PlayerName = 10,
-			Settings = 11,
-			HighScores = 12,
-		};
-	};
 };
 } // namespace raymino
