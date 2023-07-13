@@ -8,16 +8,19 @@ namespace raymino
 struct Timer
 {
 	/**
-	 * @brief accumulate delta, will decrease elapsed by delay if elapsed >= delay
+	 * @brief accumulate delta, will decrease elapsed until elapsed < delay
 	 * @param delta seconds
-	 * @return true if elapsed was >= delay
+	 * @return true if elapsed became >= delay
 	 */
 	bool step(float delta)
 	{
 		elapsed += delta;
 		if(elapsed >= delay)
 		{
-			elapsed -= delay;
+			while(elapsed >= delay)
+			{
+				elapsed -= delay;
+			}
 			return true;
 		}
 		return false;
