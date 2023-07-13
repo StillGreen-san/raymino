@@ -73,17 +73,17 @@ struct ChunkType
 	};
 };
 
-static constexpr auto HeaderSize = sizeof(raymino::SaveFile::Header);
-raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
+static constexpr auto HeaderSize = sizeof(SaveFile::Header);
+SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 {
 	if(size < HeaderSize)
 	{
 		return {0, 0};
 	}
 
-	const auto* inputHeader = static_cast<const raymino::SaveFile::Header*>(compressedData);
+	const auto* inputHeader = static_cast<const SaveFile::Header*>(compressedData);
 	std::vector<uint8_t> decompressedData(HeaderSize + inputHeader->userProp3, 0);
-	new(decompressedData.data()) raymino::SaveFile::Header{*inputHeader};
+	new(decompressedData.data()) SaveFile::Header{*inputHeader};
 
 	const int decompressedSize = sinflate(&decompressedData[HeaderSize], static_cast<int>(inputHeader->userProp3),
 	    inputHeader + 1, static_cast<int>(size - HeaderSize)); // NOLINT(*-pro-bounds-pointer-arithmetic)
@@ -94,14 +94,14 @@ raymino::SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 	}
 	return {std::move(decompressedData)};
 }
-void App::storeFile(const raymino::SaveFile& save)
+void App::storeFile(const SaveFile& save)
 {
 	auto deflateState = std::make_unique<sdefl>();
 	const int saveBufferSize = static_cast<int>(save.size() - HeaderSize);
 	const int deflateBufferSize = sdefl_bound(saveBufferSize);
 
 	auto deflateBuffer = std::vector<uint8_t>(HeaderSize + static_cast<size_t>(deflateBufferSize), 0);
-	new(deflateBuffer.data()) raymino::SaveFile::Header{save.header()};
+	new(deflateBuffer.data()) SaveFile::Header{save.header()};
 
 	const int deflateDataSize = sdeflate(deflateState.get(),
 	    deflateBuffer.data() + HeaderSize,            // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -128,13 +128,13 @@ void App::storeFile(const raymino::SaveFile& save)
 	::SaveFileData(FILE_PATH, deflateBuffer.data(), static_cast<unsigned int>(deflateBuffer.size()));
 #endif
 }
-raymino::SaveFile App::serialize() const
+SaveFile App::serialize() const
 {
 	const size_t scoreCount = std::min<size_t>(highScores.entries.size(), std::numeric_limits<uint32_t>::max());
 	const auto scoreSize = static_cast<uint32_t>(scoreCount * sizeof(HighScoreEntry));
 	const uint32_t appStateSize = sizeof(HighScoreEntry::NameT) + sizeof(Settings);
 
-	raymino::SaveFile save(3, scoreSize + appStateSize);
+	SaveFile save(3, scoreSize + appStateSize);
 
 	save.appendChunk(ChunkType::PlayerName, 0, &playerName, std::next(&playerName));
 	save.appendChunk(ChunkType::Settings, 0, &settings, std::next(&settings));
@@ -144,26 +144,26 @@ raymino::SaveFile App::serialize() const
 	save.header().userProp3 = save.size() - HeaderSize;
 	return save;
 }
-void App::deserialize(const raymino::SaveFile& save)
+void App::deserialize(const SaveFile& save)
 {
-	for(const raymino::SaveFile::Chunk::Header& chunkHeader : save)
+	for(const SaveFile::Chunk::Header& chunkHeader : save)
 	{
 		switch(chunkHeader.type)
 		{
 		case ChunkType::PlayerName:
-			playerName = *raymino::SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
+			playerName = *SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
 			break;
 		case ChunkType::Settings:
-			settings = *raymino::SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
+			settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
 			break;
 		case ChunkType::HighScores:
 		{
-			const raymino::SaveFile::Chunk::DataRange<const HighScoreEntry> range(chunkHeader);
+			const SaveFile::Chunk::DataRange<const HighScoreEntry> range(chunkHeader);
 			highScores.entries.assign(range.begin(), range.end());
 		}
 		break;
 		case ChunkType::KeyBinds:
-			keyBinds = *raymino::SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
+			keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
 			break;
 		}
 	}

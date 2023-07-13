@@ -129,10 +129,10 @@ public:
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
 
-	static raymino::SaveFile decompressFile(const void* compressedData, uint32_t size);
-	static void storeFile(const raymino::SaveFile& save);
-	[[nodiscard]] raymino::SaveFile serialize() const;
-	void deserialize(const raymino::SaveFile& save);
+	static SaveFile decompressFile(const void* compressedData, uint32_t size);
+	static void storeFile(const SaveFile& save);
+	[[nodiscard]] SaveFile serialize() const;
+	void deserialize(const SaveFile& save);
 
 private:
 	std::unique_ptr<IScene> currentScene;
