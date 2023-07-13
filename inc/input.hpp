@@ -2,6 +2,8 @@
 
 #include "timer.hpp"
 
+#include <cstdint>
+
 namespace raymino
 {
 struct KeyAction

@@ -1,5 +1,8 @@
 #include "app.hpp"
 
+#include <algorithm>
+#include <cstring>
+
 namespace raymino
 {
 bool App::HighScores::add(const char* namePtr, int64_t score, const Settings& settings)
