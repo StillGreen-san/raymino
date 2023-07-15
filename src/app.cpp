@@ -82,6 +82,11 @@ SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 	}
 
 	const auto* inputHeader = static_cast<const SaveFile::Header*>(compressedData);
+	if(!SaveFile::isValid(*inputHeader))
+	{
+		return {0, 0};
+	}
+
 	std::vector<uint8_t> decompressedData(HeaderSize + inputHeader->userProp3, 0);
 	new(decompressedData.data()) SaveFile::Header{*inputHeader};
 

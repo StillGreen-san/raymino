@@ -165,6 +165,8 @@ public:
 	 */
 	SaveFile(std::vector<uint8_t> data);
 
+	static bool isValid(Header header);
+
 private:
 	std::vector<uint8_t> dataBuffer;
 };
