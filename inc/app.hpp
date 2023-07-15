@@ -129,8 +129,20 @@ public:
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
 
+	/**
+	 * @brief attempts to create SaveFile from compressed data
+	 * @param compressedData sdefl compressed data with uncompressed Header
+	 * @param size of data
+	 * @return SaveFile empty if verification failed
+	 */
 	static SaveFile decompressFile(const void* compressedData, uint32_t size);
+
+	/**
+	 * @brief saves SaveFile to disc, compressing with sinfl
+	 * @param save SaveFile
+	 */
 	static void storeFile(const SaveFile& save);
+
 	[[nodiscard]] SaveFile serialize() const;
 	void deserialize(const SaveFile& save);
 

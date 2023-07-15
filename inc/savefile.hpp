@@ -9,6 +9,9 @@ using same_const_as_t = std::conditional_t<std::is_const_v<TIn>, const TOut, TOu
 
 namespace raymino
 {
+/**
+ * @brief somewhat generic binary format
+ */
 class SaveFile
 {
 public:

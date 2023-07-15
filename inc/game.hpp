@@ -20,6 +20,11 @@ struct Game : IScene
 	void update(App& app);
 	void draw(App& app);
 
+	/**
+	 * @param indices to fill
+	 * @param minIndices to be in indices
+	 * @return indices filled via shuffledIndicesFunc
+	 */
 	std::deque<size_t> fillIndices(std::deque<size_t> indices, int minIndices);
 	[[nodiscard]] int cellSizeExtended() const;
 	Tetromino getNextTetromino(int minIndices);
