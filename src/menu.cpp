@@ -149,6 +149,25 @@ void Menu::UpdateDraw(App& app)
 	EndDrawing();
 }
 
+bool GuiSpinner(Rectangle bounds, const char* text, int& value, int minValue, int maxValue, bool& editMode)
+{
+	if(::GuiSpinner(bounds, text, &value, minValue, maxValue, editMode))
+	{
+		editMode = !editMode;
+		return true;
+	}
+	return false;
+}
+bool GuiDropdownBox(Rectangle bounds, const char* text, int& active, bool& editMode)
+{
+	if(::GuiDropdownBox(bounds, text, &active, editMode))
+	{
+		editMode = !editMode;
+		return true;
+	}
+	return false;
+}
+
 void Menu::UpdateDrawSettings(App& app)
 {
 	App::Settings previous;
@@ -174,70 +193,27 @@ void Menu::UpdateDrawSettings(App& app)
 	{
 		state = State::KeyBinds;
 	}
-	if(GuiSpinner(InputA8Rect, "", &SpinnerPreviewCountValue, SpinnerPreviewCountMin, SpinnerPreviewCountMax,
-	       SpinnerPreviewCountEditMode))
-	{
-		SpinnerPreviewCountEditMode = !SpinnerPreviewCountEditMode;
-	}
-	if(GuiSpinner(InputA6Rect, "", &SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax,
-	       SpinnerFieldWidthEditMode))
-	{
-		SpinnerFieldWidthEditMode = !SpinnerFieldWidthEditMode;
-	}
-	if(GuiSpinner(InputA7Rect, "", &SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
-	       SpinnerFieldHeightEditMode))
-	{
-		SpinnerFieldHeightEditMode = !SpinnerFieldHeightEditMode;
-	}
-	if(GuiDropdownBox(
-	       InputB6Rect, DropdownBoxGhostPieceText, &DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode))
-	{
-		DropdownBoxGhostPieceEditMode = !DropdownBoxGhostPieceEditMode;
-	}
-	if(GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalText, &DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode))
-	{
-		DropdownBoxLevelGoalEditMode = !DropdownBoxLevelGoalEditMode;
-	}
-	if(GuiDropdownBox(InputB4Rect, DropdownBoxHoldPieceText, &DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode))
-	{
-		DropdownBoxHoldPieceEditMode = !DropdownBoxHoldPieceEditMode;
-	}
-	if(GuiDropdownBox(InputB3Rect, DropdownBoxScoringSystemText, &DropdownBoxScoringSystemActive,
-	       DropdownBoxScoringSystemEditMode))
-	{
-		DropdownBoxScoringSystemEditMode = !DropdownBoxScoringSystemEditMode;
-	}
-	if(GuiDropdownBox(
-	       InputB2Rect, DropdownBoxShuffleTypeText, &DropdownBoxShuffleTypeActive, DropdownBoxShuffleTypeEditMode))
-	{
-		DropdownBoxShuffleTypeEditMode = !DropdownBoxShuffleTypeEditMode;
-	}
-	if(GuiDropdownBox(InputB1Rect, DropdownBoxTSpinText, &DropdownBoxTSpinActive, DropdownBoxTSpinEditMode))
-	{
-		DropdownBoxTSpinEditMode = !DropdownBoxTSpinEditMode;
-	}
-	if(GuiDropdownBox(
-	       InputA5Rect, DropdownBoxInstantDropText, &DropdownBoxInstantDropActive, DropdownBoxInstantDropEditMode))
-	{
-		DropdownBoxInstantDropEditMode = !DropdownBoxInstantDropEditMode;
-	}
-	if(GuiDropdownBox(InputA4Rect, DropdownBoxSoftDropText, &DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode))
-	{
-		DropdownBoxSoftDropEditMode = !DropdownBoxSoftDropEditMode;
-	}
-	if(GuiDropdownBox(InputA3Rect, DropdownBoxLockDownText, &DropdownBoxLockDownActive, DropdownBoxLockDownEditMode))
-	{
-		DropdownBoxLockDownEditMode = !DropdownBoxLockDownEditMode;
-	}
-	if(GuiDropdownBox(InputA2Rect, DropdownBoxWallKicksText, &DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode))
-	{
-		DropdownBoxWallKicksEditMode = !DropdownBoxWallKicksEditMode;
-	}
-	if(GuiDropdownBox(InputA1Rect, DropdownBoxRotationSystemText, &DropdownBoxRotationSystemActive,
-	       DropdownBoxRotationSystemEditMode))
-	{
-		DropdownBoxRotationSystemEditMode = !DropdownBoxRotationSystemEditMode;
-	}
+	GuiSpinner(InputA8Rect, "", SpinnerPreviewCountValue, SpinnerPreviewCountMin, SpinnerPreviewCountMax,
+	    SpinnerPreviewCountEditMode);
+	GuiSpinner(
+	    InputA6Rect, "", SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax, SpinnerFieldWidthEditMode);
+	GuiSpinner(InputA7Rect, "", SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
+	    SpinnerFieldHeightEditMode);
+	GuiDropdownBox(InputB6Rect, DropdownBoxGhostPieceText, DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode);
+	GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalText, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
+	GuiDropdownBox(InputB4Rect, DropdownBoxHoldPieceText, DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode);
+	GuiDropdownBox(
+	    InputB3Rect, DropdownBoxScoringSystemText, DropdownBoxScoringSystemActive, DropdownBoxScoringSystemEditMode);
+	GuiDropdownBox(
+	    InputB2Rect, DropdownBoxShuffleTypeText, DropdownBoxShuffleTypeActive, DropdownBoxShuffleTypeEditMode);
+	GuiDropdownBox(InputB1Rect, DropdownBoxTSpinText, DropdownBoxTSpinActive, DropdownBoxTSpinEditMode);
+	GuiDropdownBox(
+	    InputA5Rect, DropdownBoxInstantDropText, DropdownBoxInstantDropActive, DropdownBoxInstantDropEditMode);
+	GuiDropdownBox(InputA4Rect, DropdownBoxSoftDropText, DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode);
+	GuiDropdownBox(InputA3Rect, DropdownBoxLockDownText, DropdownBoxLockDownActive, DropdownBoxLockDownEditMode);
+	GuiDropdownBox(InputA2Rect, DropdownBoxWallKicksText, DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode);
+	GuiDropdownBox(
+	    InputA1Rect, DropdownBoxRotationSystemText, DropdownBoxRotationSystemActive, DropdownBoxRotationSystemEditMode);
 
 	App::Settings current;
 	writeSettings(current);
@@ -248,9 +224,8 @@ void Menu::UpdateDrawSettings(App& app)
 	}
 
 	if(GuiDropdownBox(
-	       DropdownBoxPresetsRect, DropdownBoxPresetsText, &DropdownBoxPresetsActive, DropdownBoxPresetsEditMode))
+	       DropdownBoxPresetsRect, DropdownBoxPresetsText, DropdownBoxPresetsActive, DropdownBoxPresetsEditMode))
 	{
-		DropdownBoxPresetsEditMode = !DropdownBoxPresetsEditMode;
 		if(!DropdownBoxPresetsEditMode)
 		{
 			switch(DropdownBoxPresetsActive)
