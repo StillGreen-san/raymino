@@ -167,6 +167,16 @@ bool GuiDropdownBox(Rectangle bounds, const char* text, int& active, bool& editM
 	}
 	return false;
 }
+template<typename TContainer>
+bool GuiTextBox(Rectangle bounds, TContainer& container, bool& editMode)
+{
+	if(::GuiTextBox(bounds, container.data(), static_cast<int>(container.size()), editMode))
+	{
+		editMode = !editMode;
+		return true;
+	}
+	return false;
+}
 
 void Menu::UpdateDrawSettings(App& app)
 {
@@ -357,10 +367,7 @@ void guiKeyBind(const ::Rectangle& rectLabel, const char* textLabel, const ::Rec
     Menu::KeyBufferT& keyBuffer, bool& editMode, int16_t& keyBind)
 {
 	::GuiLabel(rectLabel, textLabel);
-	if(::GuiTextBox(rectInput, keyBuffer.data(), static_cast<int>(keyBuffer.size()), editMode))
-	{
-		editMode = !editMode;
-	}
+	GuiTextBox(rectInput, keyBuffer, editMode);
 	if(editMode)
 	{
 		const int key = ::GetKeyPressed();
