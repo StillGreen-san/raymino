@@ -97,7 +97,8 @@ void Menu::UpdateDraw(App& app)
 	if(DropdownBoxRotationSystemEditMode || DropdownBoxWallKicksEditMode || DropdownBoxLockDownEditMode ||
 	    DropdownBoxSoftDropEditMode || DropdownBoxInstantDropEditMode || DropdownBoxTSpinEditMode ||
 	    DropdownBoxShuffleTypeEditMode || DropdownBoxScoringSystemEditMode || DropdownBoxHoldPieceEditMode ||
-	    DropdownBoxPresetsEditMode || AboutDialogShowing)
+	    DropdownBoxPresetsEditMode || DropdownBoxGhostPieceEditMode || DropdownBoxLevelGoalEditMode ||
+	    AboutDialogShowing)
 	{
 		GuiLock();
 	}
