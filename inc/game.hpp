@@ -41,7 +41,7 @@ struct Game : IScene
 	std::vector<Tetromino> baseTetrominos;
 	std::vector<XY> previewOffsetsMain;
 	size_t holdPieceIdx;
-	std::default_random_engine rng;
+	std::mt19937_64 rng;
 	decltype(shuffledIndices(ShuffleType{})) shuffledIndicesFunc;
 	std::deque<size_t> nextTetrominoIndices;
 	int previewElementHeightExtended;

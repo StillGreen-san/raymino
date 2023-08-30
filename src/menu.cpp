@@ -248,7 +248,7 @@ void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry
 
 void genEntries(App& app, int entryCount, const char* namePtr, const App::Settings* setPtr)
 {
-	std::default_random_engine rng(std::random_device{}());
+	std::mt19937_64 rng(std::random_device{}());
 	std::uniform_int_distribution<int> charDist(' ', '~');
 	std::uniform_int_distribution<int> scoreDist(99, 999999);
 	std::uniform_int_distribution<int> settDist6(0, 5);

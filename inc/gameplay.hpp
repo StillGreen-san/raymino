@@ -224,14 +224,14 @@ std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))();
  * @return std::vector<size_t> of indices into baseMinos
  */
 template<ShuffleType TType>
-std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng);
+std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng);
 
 /**
  * @param ttype ShuffleType
  * @return shuffledIndices function pointer
  */
 std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
-    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng);
+    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng);
 
 struct LevelState
 {

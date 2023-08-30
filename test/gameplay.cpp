@@ -422,7 +422,7 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 TEST_CASE("shuffledIndices", "[gameplay]")
 {
 	const std::vector<Tetromino> baseMinos = makeBaseMinos<RotationSystem::Super>();
-	std::default_random_engine rng(std::random_device{}());
+	std::mt19937_64 rng(std::random_device{}());
 	auto allIndicesValid = [size = baseMinos.size()](const std::vector<size_t>& indices)
 	{
 		return std::all_of(indices.begin(), indices.end(),

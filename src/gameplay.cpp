@@ -795,8 +795,7 @@ std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))()
 }
 
 template<>
-std::vector<size_t> shuffledIndices<ShuffleType::Random>(
-    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+std::vector<size_t> shuffledIndices<ShuffleType::Random>(const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
 {
 	std::vector<size_t> indices(baseMinos.size(), 0);
 	std::uniform_int_distribution<size_t> dist(0, indices.size() - 1);
@@ -809,7 +808,7 @@ std::vector<size_t> shuffledIndices<ShuffleType::Random>(
 }
 template<>
 std::vector<size_t> shuffledIndices<ShuffleType::SingleBag>(
-    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
 {
 	std::vector<size_t> indices(baseMinos.size(), 0);
 	std::iota(indices.begin(), indices.end(), 0);
@@ -818,7 +817,7 @@ std::vector<size_t> shuffledIndices<ShuffleType::SingleBag>(
 }
 template<>
 std::vector<size_t> shuffledIndices<ShuffleType::DoubleBag>(
-    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
 {
 	std::vector<size_t> indices(baseMinos.size() * 2, 0);
 	const auto baseSize = static_cast<ptrdiff_t>(baseMinos.size());
@@ -829,7 +828,7 @@ std::vector<size_t> shuffledIndices<ShuffleType::DoubleBag>(
 }
 template<>
 std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
-    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
 {
 	std::vector<size_t> indices(baseMinos.size() * 3, 0);
 	const auto baseSize = static_cast<ptrdiff_t>(baseMinos.size());
@@ -839,8 +838,7 @@ std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
 	std::shuffle(indices.begin(), indices.end(), rng);
 	return indices;
 }
-std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
-    const std::vector<Tetromino>& baseMinos, std::default_random_engine& rng)
+std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
 {
 	switch(ttype)
 	{
