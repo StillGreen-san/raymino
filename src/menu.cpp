@@ -170,9 +170,9 @@ bool GuiDropdownBox(Rectangle bounds, const char* text, int& active, bool& editM
 	return false;
 }
 template<typename TContainer>
-bool GuiTextBox(Rectangle bounds, TContainer& container, bool& editMode)
+bool GuiTextBox(Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX)
 {
-	if(::GuiTextBox(bounds, container.data(), static_cast<int>(container.size()), editMode))
+	if(::GuiTextBox(bounds, container.data(), std::min(static_cast<int>(container.size()), maxLen), editMode))
 	{
 		editMode = !editMode;
 		return true;
@@ -212,7 +212,7 @@ void Menu::UpdateDrawSettings(App& app)
 	    InputA6Rect, "", SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax, SpinnerFieldWidthEditMode);
 	GuiSpinner(InputA7Rect, "", SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
 	    SpinnerFieldHeightEditMode);
-	GuiTextBox(InputB7Rect, TextBoxSeedBuffer, TextBoxSeedEditMode);
+	GuiTextBox(InputB7Rect, TextBoxSeedBuffer, TextBoxSeedEditMode, 17);
 	GuiDropdownBox(InputB6Rect, DropdownBoxGhostPieceText, DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode);
 	GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalText, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
 	GuiDropdownBox(InputB4Rect, DropdownBoxHoldPieceText, DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode);
