@@ -10,7 +10,7 @@
 
 namespace raymino
 {
-App::App() : playerName{}
+App::App() : playerName{}, seed{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);

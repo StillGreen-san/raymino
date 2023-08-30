@@ -417,12 +417,23 @@ void Game::UpdateDraw(App& app)
 	draw(app);
 }
 
+template<typename TContainer>
+size_t hashSeedString(const TContainer& container)
+{
+	const size_t seedLen = std::strlen(container.data());
+	if(seedLen > 0)
+	{
+		return std::hash<std::string_view>{}({container.data(), seedLen});
+	}
+	return std::hash<std::random_device::result_type>{}(std::random_device{}());
+}
+
 Game::Game(App& app) :
     playfield{{app.settings.fieldWidth, app.settings.fieldHeight + HIDDEN_HEIGHT}, 0},
     playfieldBounds{calculatePlayfieldBounds({app.settings.fieldWidth, app.settings.fieldHeight})},
     baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)},
     previewOffsetsMain{calcCenterOffsets(baseTetrominos, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE)},
-    holdPieceIdx{static_cast<size_t>(-1)}, rng{std::random_device{}()},
+    holdPieceIdx{static_cast<size_t>(-1)}, rng{hashSeedString(app.seed)},
     shuffledIndicesFunc{shuffledIndices(app.settings.shuffleType)},
     nextTetrominoIndices{fillIndices({}, app.settings.previewCount)},
     previewElementHeightExtended{

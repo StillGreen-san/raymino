@@ -113,6 +113,7 @@ public:
 	Settings settings;
 	KeyBinds keyBinds;
 	HighScores highScores;
+	std::array<char, 20> seed;
 
 	static constexpr const char* FILE_PATH = "save.raymino";
 	static constexpr const char* IDB_PATH = "raymino";

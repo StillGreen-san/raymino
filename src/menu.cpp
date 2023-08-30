@@ -31,7 +31,8 @@ void copyEnumName(int fromKey, TContainer& intoBuffer)
 	*last = '\0';
 }
 
-Menu::Menu(App& app) : TextBoxPlayerNameBuffer{app.playerName} // NOLINT(*-member-init) handled by readSettings
+Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
+    TextBoxPlayerNameBuffer{app.playerName}, TextBoxSeedBuffer{app.seed}
 {
 	readSettings(app.settings);
 	const App::Settings defaultSettings;
@@ -108,6 +109,7 @@ void Menu::UpdateDraw(App& app)
 	{
 		writeSettings(app.settings);
 		app.playerName = TextBoxPlayerNameBuffer;
+		app.seed = TextBoxSeedBuffer;
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
 	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
@@ -199,6 +201,7 @@ void Menu::UpdateDrawSettings(App& app)
 	GuiLabel(LabelB6Rect, LabelGhostPieceText);
 	GuiLabel(LabelPresetsRect, LabelPresetsText);
 	GuiLabel(LabelB5Rect, LabelLevelGoalText);
+	::GuiLabel(LabelB7Rect, LabelSeedText);
 	if(GuiButton(InputB8Rect, ButtonKeyBindsText))
 	{
 		state = State::KeyBinds;
@@ -209,6 +212,7 @@ void Menu::UpdateDrawSettings(App& app)
 	    InputA6Rect, "", SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax, SpinnerFieldWidthEditMode);
 	GuiSpinner(InputA7Rect, "", SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
 	    SpinnerFieldHeightEditMode);
+	GuiTextBox(InputB7Rect, TextBoxSeedBuffer, TextBoxSeedEditMode);
 	GuiDropdownBox(InputB6Rect, DropdownBoxGhostPieceText, DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode);
 	GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalText, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
 	GuiDropdownBox(InputB4Rect, DropdownBoxHoldPieceText, DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode);

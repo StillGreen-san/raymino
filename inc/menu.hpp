@@ -58,6 +58,7 @@ struct Menu : public IScene
 	static constexpr const char* LabelPauseText = "Pause";
 	static constexpr const char* LabelRestartText = "Restart";
 	static constexpr const char* LabelMenuText = "Menu";
+	static constexpr const char* LabelSeedText = "Seed";
 	static constexpr const char* DropdownBoxRotationSystemText =
 	    "Original;Super;Arika;Sega;Nintendo Left;Nintendo Right";
 	static constexpr const char* DropdownBoxWallKicksText = "None;Arika;Super";
@@ -102,6 +103,7 @@ struct Menu : public IScene
 	bool TextBoxPauseEditMode = false;
 	bool TextBoxRestartEditMode = false;
 	bool TextBoxMenuEditMode = false;
+	bool TextBoxSeedEditMode = false;
 
 	int DropdownBoxRotationSystemActive;
 	int DropdownBoxWallKicksActive;
@@ -137,6 +139,7 @@ struct Menu : public IScene
 	KeyBufferT TextBoxPauseBuffer{};
 	KeyBufferT TextBoxRestartBuffer{};
 	KeyBufferT TextBoxMenuBuffer{};
+	decltype(App::seed) TextBoxSeedBuffer{};
 
 	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
 	static constexpr Rectangle ButtonStartGameRect{AnchorGame.x + 34, AnchorGame.y + 16, 152, 40};
@@ -160,6 +163,7 @@ struct Menu : public IScene
 	static constexpr Rectangle LabelB4Rect{AnchorSettings.x + 296, AnchorSettings.y + 216, 96, 24};
 	static constexpr Rectangle LabelB5Rect{AnchorSettings.x + 296, AnchorSettings.y + 264, 96, 24};
 	static constexpr Rectangle LabelB6Rect{AnchorSettings.x + 296, AnchorSettings.y + 312, 96, 24};
+	static constexpr Rectangle LabelB7Rect{AnchorSettings.x + 296, AnchorSettings.y + 360, 96, 24};
 	static constexpr Rectangle InputA1Rect{AnchorSettings.x + 120, AnchorSettings.y + 72, 136, 24};
 	static constexpr Rectangle InputA2Rect{AnchorSettings.x + 120, AnchorSettings.y + 120, 136, 24};
 	static constexpr Rectangle InputA3Rect{AnchorSettings.x + 120, AnchorSettings.y + 168, 136, 24};
@@ -174,6 +178,7 @@ struct Menu : public IScene
 	static constexpr Rectangle InputB4Rect{AnchorSettings.x + 392, AnchorSettings.y + 216, 136, 24};
 	static constexpr Rectangle InputB5Rect{AnchorSettings.x + 392, AnchorSettings.y + 264, 136, 24};
 	static constexpr Rectangle InputB6Rect{AnchorSettings.x + 392, AnchorSettings.y + 312, 136, 24};
+	static constexpr Rectangle InputB7Rect{AnchorSettings.x + 392, AnchorSettings.y + 360, 136, 24};
 	static constexpr Rectangle InputB8Rect{AnchorSettings.x + 392, AnchorSettings.y + 408, 136, 24};
 
 	static constexpr float ScoreListWidth = (GroupBoxSettingsRect.width - 40) / 3;
