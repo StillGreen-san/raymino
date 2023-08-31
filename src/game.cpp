@@ -149,6 +149,10 @@ void Game::update(App& app)
 			break;
 		}
 	}
+	if(state == State::Running && !::IsWindowFocused())
+	{
+		state = State::Paused;
+	}
 
 	if(state != State::Running)
 	{
