@@ -20,4 +20,5 @@ add_library(raylib::res ALIAS rres)
 add_subdirectory(magic_enum)
 
 add_subdirectory(Catch2)
+target_compile_features(Catch2 PUBLIC cxx_std_17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
