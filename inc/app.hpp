@@ -61,6 +61,12 @@ public:
 		int16_t restart = KEY_HOME;
 		int16_t menu = KEY_END;
 		[[maybe_unused]] int16_t _reserved_[2]{}; // NOLINT(*-avoid-c-arrays)
+
+		bool operator==(const KeyBinds& rhs) const noexcept;
+		bool operator!=(const KeyBinds& rhs) const noexcept;
+		bool operator>(const KeyBinds& rhs) const noexcept;
+		bool operator<(const KeyBinds& rhs) const noexcept;
+		[[nodiscard]] int compare(const KeyBinds& rhs) const noexcept;
 	};
 
 	struct HighScoreEntry

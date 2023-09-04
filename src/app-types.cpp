@@ -52,6 +52,27 @@ int App::Settings::compare(const App::Settings& rhs) const noexcept
 	return std::memcmp(this, &rhs, sizeof(App::Settings));
 }
 
+bool App::KeyBinds::operator==(const App::KeyBinds& rhs) const noexcept
+{
+	return compare(rhs) == 0;
+}
+bool App::KeyBinds::operator!=(const App::KeyBinds& rhs) const noexcept
+{
+	return compare(rhs) != 0;
+}
+bool App::KeyBinds::operator>(const App::KeyBinds& rhs) const noexcept
+{
+	return compare(rhs) > 0;
+}
+bool App::KeyBinds::operator<(const App::KeyBinds& rhs) const noexcept
+{
+	return compare(rhs) < 0;
+}
+int App::KeyBinds::compare(const App::KeyBinds& rhs) const noexcept
+{
+	return std::memcmp(this, &rhs, sizeof(App::KeyBinds));
+}
+
 App::HighScoreEntry::HighScoreEntry(const char* namePtr, int64_t score, const App::Settings& settings) :
     name{}, score{score}, settings{settings}
 {
