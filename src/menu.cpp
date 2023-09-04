@@ -40,16 +40,21 @@ Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
 	{
 		DropdownBoxPresetsActive = 0;
 	}
-	copyEnumName<::KeyboardKey>(app.keyBinds.moveRight, TextBoxMoveRightBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.moveLeft, TextBoxMoveLeftBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.rotateRight, TextBoxRotateRightBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.rotateLeft, TextBoxRotateLeftBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.softDrop, TextBoxSoftDropBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.hardDrop, TextBoxHardDropBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.hold, TextBoxHoldBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.pause, TextBoxPauseBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.restart, TextBoxRestartBuffer);
-	copyEnumName<::KeyboardKey>(app.keyBinds.menu, TextBoxMenuBuffer);
+	updateKeyBindBuffers(app.keyBinds);
+}
+
+void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
+{
+	copyEnumName<::KeyboardKey>(keyBinds.moveRight, TextBoxMoveRightBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.moveLeft, TextBoxMoveLeftBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.rotateRight, TextBoxRotateRightBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.rotateLeft, TextBoxRotateLeftBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.softDrop, TextBoxSoftDropBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.hardDrop, TextBoxHardDropBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.hold, TextBoxHoldBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.pause, TextBoxPauseBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.restart, TextBoxRestartBuffer);
+	copyEnumName<::KeyboardKey>(keyBinds.menu, TextBoxMenuBuffer);
 }
 
 void Menu::readSettings(const App::Settings& settings)

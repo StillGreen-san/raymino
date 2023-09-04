@@ -14,6 +14,7 @@ struct Menu : public IScene
 
 	void UpdateDraw(App& app) override;
 	void readSettings(const App::Settings& settings);
+	void updateKeyBindBuffers(const App::KeyBinds& keyBinds);
 	void writeSettings(App::Settings& settings) const;
 
 	void UpdateDrawSettings(App& app);
