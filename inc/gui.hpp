@@ -1,5 +1,7 @@
 #pragma once
 
+#include "types.hpp"
+
 #include <string>
 #include <string_view>
 
@@ -22,8 +24,17 @@ public:
 	 * @brief list with items
 	 * @param items to add (0 or more, seperated by ';')
 	 */
-	TextList(std::string_view items) : list{items}
+	explicit TextList(std::string_view items) : list{items}
 	{
+	}
+
+	template<typename TIterator>
+	explicit TextList(Range<TIterator> range)
+	{
+		for(const auto& item : range)
+		{
+			add(item);
+		}
 	}
 
 	/**
