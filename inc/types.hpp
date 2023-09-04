@@ -69,6 +69,10 @@ struct Range
 {
 	TIterator first;
 	TIterator last;
+	template<typename TContainer>
+	explicit Range(TContainer& container) : first{std::begin(container)}, last{std::end(container)}
+	{
+	}
 	[[nodiscard]] auto begin()
 	{
 		return first;
@@ -86,6 +90,8 @@ struct Range
 		return last;
 	}
 };
+template<typename TContainer>
+Range(TContainer& container) -> Range<decltype(std::begin(container))>;
 
 enum class TetrominoType : uint8_t
 {
