@@ -91,6 +91,97 @@ public:
 	};
 
 	/**
+	 * @brief collection of named values with initial set of fixed items
+	 * @tparam TValue type of Item value
+	 */
+	template<typename TValue = int>
+	class Presets
+	{
+	public:
+		using NameT = std::array<char, 16>;
+		struct Item
+		{
+			NameT name;
+			TValue value;
+			operator std::string_view() const noexcept
+			{
+				return {name.data()};
+			}
+		};
+
+		/**
+		 * @brief construct with optional set of fixed items
+		 */
+		Presets(std::initializer_list<Item> fixed) : items{fixed}
+		{
+		}
+
+		/**
+		 * @brief add item to end of collection
+		 */
+		void add(Item item)
+		{
+			items.emplace_back(item);
+		}
+
+		/**
+		 * @brief remove index if item is not fixed
+		 */
+		void remove(size_t index)
+		{
+			if(index >= fixed())
+			{
+				items.erase(items.begin() + index);
+			}
+		}
+
+		/**
+		 * @brief fiend Item index where value == item.value
+		 * @param value to find
+		 * @return index or size() if not found
+		 */
+		[[nodiscard]] size_t find(const TValue& value) const
+		{
+			const auto itemIt = std::find_if(items.begin(), items.end(),
+			    [&](const Item& item)
+			    {
+				    return item.value == value;
+			    });
+			return std::distance(items.begin(), itemIt);
+		}
+
+		[[nodiscard]] const std::vector<Item>& get() const
+		{
+			return items;
+		}
+
+		[[nodiscard]] const Item& get(size_t index) const
+		{
+			return items[index];
+		}
+
+		/**
+		 * @return total number of items
+		 */
+		[[nodiscard]] size_t size() const
+		{
+			return items.size();
+		}
+
+		/**
+		 * @return number of immutable/fixed items
+		 */
+		[[nodiscard]] size_t fixed() const
+		{
+			return fixedItems;
+		}
+
+	private:
+		std::vector<Item> items;
+		size_t fixedItems{items.size()};
+	};
+
+	/**
 	 * @brief create an instance (only one should exist)
 	 */
 	App();
