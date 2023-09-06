@@ -160,6 +160,11 @@ public:
 			return items[index];
 		}
 
+		[[nodiscard]] Item* tryGet(size_t index)
+		{
+			return index >= fixed() ? &items[index] : nullptr;
+		}
+
 		/**
 		 * @return total number of items
 		 */
