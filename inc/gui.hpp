@@ -2,11 +2,42 @@
 
 #include "types.hpp"
 
+#include <raygui.h>
+
 #include <string>
 #include <string_view>
 
 namespace raymino
 {
+inline bool GuiSpinner(::Rectangle bounds, const char* text, int& value, int minValue, int maxValue, bool& editMode)
+{
+	if(::GuiSpinner(bounds, text, &value, minValue, maxValue, editMode))
+	{
+		editMode = !editMode;
+		return true;
+	}
+	return false;
+}
+inline bool GuiDropdownBox(::Rectangle bounds, const char* text, int& active, bool& editMode)
+{
+	if(::GuiDropdownBox(bounds, text, &active, editMode))
+	{
+		editMode = !editMode;
+		return true;
+	}
+	return false;
+}
+template<typename TContainer>
+bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX)
+{
+	if(::GuiTextBox(bounds, container.data(), std::min(static_cast<int>(container.size()), maxLen), editMode))
+	{
+		editMode = !editMode;
+		return true;
+	}
+	return false;
+}
+
 /**
  * @brief a ';' seperated list of strings
  */

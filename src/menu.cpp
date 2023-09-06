@@ -157,35 +157,6 @@ void Menu::UpdateDraw(App& app)
 	EndDrawing();
 }
 
-bool GuiSpinner(Rectangle bounds, const char* text, int& value, int minValue, int maxValue, bool& editMode)
-{
-	if(::GuiSpinner(bounds, text, &value, minValue, maxValue, editMode))
-	{
-		editMode = !editMode;
-		return true;
-	}
-	return false;
-}
-bool GuiDropdownBox(Rectangle bounds, const char* text, int& active, bool& editMode)
-{
-	if(::GuiDropdownBox(bounds, text, &active, editMode))
-	{
-		editMode = !editMode;
-		return true;
-	}
-	return false;
-}
-template<typename TContainer>
-bool GuiTextBox(Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX)
-{
-	if(::GuiTextBox(bounds, container.data(), std::min(static_cast<int>(container.size()), maxLen), editMode))
-	{
-		editMode = !editMode;
-		return true;
-	}
-	return false;
-}
-
 void Menu::UpdateDrawSettings(App& app)
 {
 	App::Settings previous;
