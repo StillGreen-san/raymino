@@ -10,12 +10,11 @@
 
 namespace raymino
 {
-App::App() : playerName{}, seed{}
+App::App() : playerName{"Mino"}, seed{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
 	::SetExitKey(KEY_NULL);
-	HighScoreEntry::copyInto("Mino", playerName);
 	currentScene = MakeScene<Scene::Loading>(*this);
 }
 
