@@ -236,6 +236,10 @@ public:
 	HighScoreEntry::NameT playerName;
 	Settings settings;
 	KeyBinds keyBinds;
+	Presets<KeyBinds> keyBindsPresets;
+	size_t activeKeyBindsPreset;
+	Presets<Settings> settingsPresets;
+	size_t activeSettingsPreset;
 	HighScores highScores;
 	std::array<char, 20> seed;
 

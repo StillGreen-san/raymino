@@ -1,6 +1,7 @@
 #pragma once
 
 #include "app.hpp"
+#include "gui.hpp"
 #include "scenes.hpp"
 
 #include <array>
@@ -72,7 +73,6 @@ struct Menu : public IScene
 	static constexpr const char* DropdownBoxLevelGoalText = "Fixed;Dynamic";
 	static constexpr const char* DropdownBoxHoldPieceText = "No;Yes";
 	static constexpr const char* DropdownBoxGhostPieceText = "No;Yes";
-	static constexpr const char* DropdownBoxPresetsText = "Custom;Guideline";
 
 	static constexpr Vector2 AnchorGame = {24, 24};
 	static constexpr Vector2 AnchorSettings = {24, 120};
@@ -92,7 +92,6 @@ struct Menu : public IScene
 	bool SpinnerPreviewCountEditMode = false;
 	bool SpinnerFieldWidthEditMode = false;
 	bool SpinnerFieldHeightEditMode = false;
-	bool DropdownBoxPresetsEditMode = false;
 	bool TextBoxPlayerNameEditMode = false;
 	bool TextBoxMoveRightEditMode = false;
 	bool TextBoxMoveLeftEditMode = false;
@@ -126,7 +125,6 @@ struct Menu : public IScene
 	static constexpr int SpinnerFieldHeightMin = 10;
 	int SpinnerFieldHeightValue;
 	static constexpr int SpinnerFieldHeightMax = 45;
-	int DropdownBoxPresetsActive = 1;
 
 	App::HighScoreEntry::NameT TextBoxPlayerNameBuffer{};
 	using KeyBufferT = std::array<char, 20>;
@@ -142,6 +140,9 @@ struct Menu : public IScene
 	KeyBufferT TextBoxMenuBuffer{};
 	decltype(App::seed) TextBoxSeedBuffer{};
 
+	PresetSelect<App::KeyBinds> keyBindsPresets;
+	PresetSelect<App::Settings> settingsPresets;
+
 	static constexpr Rectangle GroupBoxGameRect{AnchorGame.x + 0, AnchorGame.y + 0, 552, 72};
 	static constexpr Rectangle ButtonStartGameRect{AnchorGame.x + 34, AnchorGame.y + 16, 152, 40};
 	static constexpr Rectangle LabelPlayerNameRect{AnchorGame.x + 218, AnchorGame.y + 16, 152, 16};
@@ -150,6 +151,8 @@ struct Menu : public IScene
 	static constexpr Rectangle GroupBoxSettingsRect{AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456};
 	static constexpr Rectangle LabelPresetsRect{AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24};
 	static constexpr Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32};
+	static constexpr ::Rectangle InputSaveRect{AnchorSettings.x + 404, AnchorSettings.y + 24, 20, 20};
+	static constexpr ::Rectangle InputRemoveRect{AnchorSettings.x + 432, AnchorSettings.y + 24, 20, 20};
 	static constexpr Rectangle LabelA1Rect{AnchorSettings.x + 24, AnchorSettings.y + 72, 96, 24};
 	static constexpr Rectangle LabelA2Rect{AnchorSettings.x + 24, AnchorSettings.y + 120, 96, 24};
 	static constexpr Rectangle LabelA3Rect{AnchorSettings.x + 24, AnchorSettings.y + 168, 96, 24};

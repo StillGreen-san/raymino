@@ -32,15 +32,22 @@ void copyEnumName(int fromKey, TContainer& intoBuffer)
 }
 
 Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
-    TextBoxPlayerNameBuffer{app.playerName}, TextBoxSeedBuffer{app.seed}
+    keyBindsPresets{app.keyBindsPresets, app.activeKeyBindsPreset},
+    settingsPresets{app.settingsPresets, app.activeSettingsPreset}, TextBoxPlayerNameBuffer{app.playerName},
+    TextBoxSeedBuffer{app.seed}
 {
 	readSettings(app.settings);
-	const App::Settings defaultSettings;
-	if(defaultSettings != app.settings)
-	{
-		DropdownBoxPresetsActive = 0;
-	}
 	updateKeyBindBuffers(app.keyBinds);
+	keyBindsPresets.getValue().moveRight = app.keyBinds.moveRight;
+	keyBindsPresets.getValue().moveLeft = app.keyBinds.moveLeft;
+	keyBindsPresets.getValue().rotateRight = app.keyBinds.rotateRight;
+	keyBindsPresets.getValue().rotateLeft = app.keyBinds.rotateLeft;
+	keyBindsPresets.getValue().softDrop = app.keyBinds.softDrop;
+	keyBindsPresets.getValue().hardDrop = app.keyBinds.hardDrop;
+	keyBindsPresets.getValue().hold = app.keyBinds.hold;
+	keyBindsPresets.getValue().pause = app.keyBinds.pause;
+	keyBindsPresets.getValue().restart = app.keyBinds.restart;
+	keyBindsPresets.getValue().menu = app.keyBinds.menu;
 }
 
 void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
@@ -102,8 +109,8 @@ void Menu::UpdateDraw(App& app)
 	if(DropdownBoxRotationSystemEditMode || DropdownBoxWallKicksEditMode || DropdownBoxLockDownEditMode ||
 	    DropdownBoxSoftDropEditMode || DropdownBoxInstantDropEditMode || DropdownBoxTSpinEditMode ||
 	    DropdownBoxShuffleTypeEditMode || DropdownBoxScoringSystemEditMode || DropdownBoxHoldPieceEditMode ||
-	    DropdownBoxPresetsEditMode || DropdownBoxGhostPieceEditMode || DropdownBoxLevelGoalEditMode ||
-	    AboutDialogShowing)
+	    DropdownBoxGhostPieceEditMode || DropdownBoxLevelGoalEditMode || keyBindsPresets.inEditMode() ||
+	    settingsPresets.inEditMode() || AboutDialogShowing)
 	{
 		GuiLock();
 	}
@@ -113,7 +120,8 @@ void Menu::UpdateDraw(App& app)
 	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 20);
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
-		writeSettings(app.settings);
+		app.settings = settingsPresets.getValue();
+		app.keyBinds = keyBindsPresets.getValue();
 		app.playerName = TextBoxPlayerNameBuffer;
 		app.seed = TextBoxSeedBuffer;
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
@@ -157,11 +165,8 @@ void Menu::UpdateDraw(App& app)
 	EndDrawing();
 }
 
-void Menu::UpdateDrawSettings(App& app)
+void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 {
-	App::Settings previous;
-	writeSettings(previous);
-
 	GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
 	GuiLabel(LabelA1Rect, LabelRotationSystemText);
 	GuiLabel(LabelA2Rect, LabelWallKicksText);
@@ -206,27 +211,15 @@ void Menu::UpdateDrawSettings(App& app)
 	GuiDropdownBox(
 	    InputA1Rect, DropdownBoxRotationSystemText, DropdownBoxRotationSystemActive, DropdownBoxRotationSystemEditMode);
 
-	App::Settings current;
-	writeSettings(current);
-	if(current != previous)
+	writeSettings(settingsPresets.getValue());
+	settingsPresets.updateState();
 	{
-		writeSettings(app.settings);
-		DropdownBoxPresetsActive = 0;
+		const ScopedGuiLock lock(false);
+		settingsPresets.handleSelectionBox(DropdownBoxPresetsRect);
 	}
-
-	if(GuiDropdownBox(
-	       DropdownBoxPresetsRect, DropdownBoxPresetsText, DropdownBoxPresetsActive, DropdownBoxPresetsEditMode))
-	{
-		if(!DropdownBoxPresetsEditMode)
-		{
-			switch(DropdownBoxPresetsActive)
-			{
-			case 1:
-				readSettings(App::Settings{});
-				writeSettings(app.settings);
-			}
-		}
-	}
+	settingsPresets.handleSaveButton(InputSaveRect, "+");
+	settingsPresets.handleRemoveButton(InputRemoveRect, "x");
+	readSettings(settingsPresets.getValue());
 }
 
 void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry& entry)
@@ -361,7 +354,7 @@ void guiKeyBind(const ::Rectangle& rectLabel, const char* textLabel, const ::Rec
 	}
 }
 
-void Menu::UpdateDrawKeyBinds(App& app)
+void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
 {
 	::GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
 	if(::GuiButton(InputB8Rect, GroupBoxSettingsText))
@@ -369,22 +362,37 @@ void Menu::UpdateDrawKeyBinds(App& app)
 		state = State::Settings;
 	}
 	guiKeyBind(LabelB1Rect, LabelMoveRightText, InputB1Rect, TextBoxMoveRightBuffer, TextBoxMoveRightEditMode,
-	    app.keyBinds.moveRight);
+	    keyBindsPresets.getValue().moveRight);
 	guiKeyBind(LabelA1Rect, LabelMoveLeftText, InputA1Rect, TextBoxMoveLeftBuffer, TextBoxMoveLeftEditMode,
-	    app.keyBinds.moveLeft);
+	    keyBindsPresets.getValue().moveLeft);
 	guiKeyBind(LabelB2Rect, LabelRotateRightText, InputB2Rect, TextBoxRotateRightBuffer, TextBoxRotateRightEditMode,
-	    app.keyBinds.rotateRight);
+	    keyBindsPresets.getValue().rotateRight);
 	guiKeyBind(LabelA2Rect, LabelRotateLeftText, InputA2Rect, TextBoxRotateLeftBuffer, TextBoxRotateLeftEditMode,
-	    app.keyBinds.rotateLeft);
+	    keyBindsPresets.getValue().rotateLeft);
 	guiKeyBind(LabelA3Rect, LabelSoftDropText, InputA3Rect, TextBoxSoftDropBuffer, TextBoxSoftDropEditMode,
-	    app.keyBinds.softDrop);
+	    keyBindsPresets.getValue().softDrop);
 	guiKeyBind(LabelB3Rect, LabelHardDropText, InputB3Rect, TextBoxHardDropBuffer, TextBoxHardDropEditMode,
-	    app.keyBinds.hardDrop);
-	guiKeyBind(LabelA4Rect, LabelHoldText, InputA4Rect, TextBoxHoldBuffer, TextBoxHoldEditMode, app.keyBinds.hold);
-	guiKeyBind(LabelA5Rect, LabelPauseText, InputA5Rect, TextBoxPauseBuffer, TextBoxPauseEditMode, app.keyBinds.pause);
-	guiKeyBind(
-	    LabelB5Rect, LabelRestartText, InputB5Rect, TextBoxRestartBuffer, TextBoxRestartEditMode, app.keyBinds.restart);
-	guiKeyBind(LabelB4Rect, LabelMenuText, InputB4Rect, TextBoxMenuBuffer, TextBoxMenuEditMode, app.keyBinds.menu);
+	    keyBindsPresets.getValue().hardDrop);
+	guiKeyBind(LabelA4Rect, LabelHoldText, InputA4Rect, TextBoxHoldBuffer, TextBoxHoldEditMode,
+	    keyBindsPresets.getValue().hold);
+	guiKeyBind(LabelA5Rect, LabelPauseText, InputA5Rect, TextBoxPauseBuffer, TextBoxPauseEditMode,
+	    keyBindsPresets.getValue().pause);
+	guiKeyBind(LabelB5Rect, LabelRestartText, InputB5Rect, TextBoxRestartBuffer, TextBoxRestartEditMode,
+	    keyBindsPresets.getValue().restart);
+	guiKeyBind(LabelB4Rect, LabelMenuText, InputB4Rect, TextBoxMenuBuffer, TextBoxMenuEditMode,
+	    keyBindsPresets.getValue().menu);
+
+	keyBindsPresets.updateState();
+	::GuiLabel(LabelPresetsRect, LabelPresetsText);
+	{
+		const ScopedGuiLock lock(false);
+		if(keyBindsPresets.handleSelectionBox(DropdownBoxPresetsRect))
+		{
+			updateKeyBindBuffers(keyBindsPresets.getValue());
+		}
+	}
+	keyBindsPresets.handleSaveButton(InputSaveRect, "+");
+	keyBindsPresets.handleRemoveButton(InputRemoveRect, "x");
 }
 
 void Menu::UpdateDrawAbout([[maybe_unused]] App& app)

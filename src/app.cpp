@@ -10,7 +10,9 @@
 
 namespace raymino
 {
-App::App() : playerName{"Mino"}, seed{}
+App::App() :
+    playerName{"Mino"}, keyBindsPresets{{"Default", {}}}, activeKeyBindsPreset{0}, settingsPresets{{"Guideline", {}}},
+    activeSettingsPreset{0}, seed{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
