@@ -103,6 +103,13 @@ public:
 		{
 			NameT name;
 			TValue value;
+			Item(const NameT& name, const TValue& value) : name{name}, value{value}
+			{
+			}
+			Item(std::string_view name, const TValue& value) : name{}, value{value}
+			{
+				std::copy_n(name.begin(), std::min(name.size(), this->name.size() - 1), this->name.begin());
+			}
 			operator std::string_view() const noexcept
 			{
 				return {name.data()};
@@ -136,7 +143,7 @@ public:
 		}
 
 		/**
-		 * @brief fiend Item index where value == item.value
+		 * @brief find Item index where value == item.value
 		 * @param value to find
 		 * @return index or size() if not found
 		 */
@@ -146,6 +153,21 @@ public:
 			    [&](const Item& item)
 			    {
 				    return item.value == value;
+			    });
+			return std::distance(items.begin(), itemIt);
+		}
+
+		/**
+		 * @brief find Item index where name == item.name
+		 * @param name to find
+		 * @return index or size() if not found
+		 */
+		[[nodiscard]] size_t find(std::string_view name) const
+		{
+			const auto itemIt = std::find_if(items.begin(), items.end(),
+			    [&](const Item& item)
+			    {
+				    return std::equal(item.name.begin(), item.name.end(), name.begin(), name.end());
 			    });
 			return std::distance(items.begin(), itemIt);
 		}
