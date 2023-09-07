@@ -39,6 +39,43 @@ bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int m
 }
 
 /**
+ * @brief changes gui lock status in it scope, resetting it to its previous state on destruction
+ */
+class ScopedGuiLock
+{
+public:
+	explicit ScopedGuiLock(bool lock) : wasLocked{::GuiIsLocked()}
+	{
+		if(lock)
+		{
+			::GuiLock();
+		}
+		else
+		{
+			::GuiUnlock();
+		}
+	}
+	ScopedGuiLock(const ScopedGuiLock&) = delete;
+	ScopedGuiLock(ScopedGuiLock&&) = default;
+	ScopedGuiLock& operator=(const ScopedGuiLock&) = delete;
+	ScopedGuiLock& operator=(ScopedGuiLock&&) = default;
+	~ScopedGuiLock()
+	{
+		if(wasLocked)
+		{
+			::GuiLock();
+		}
+		else
+		{
+			::GuiUnlock();
+		}
+	}
+
+private:
+	bool wasLocked;
+};
+
+/**
  * @brief a ';' seperated list of strings
  */
 class TextList
