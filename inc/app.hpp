@@ -69,7 +69,7 @@ public:
 		[[nodiscard]] int compare(const KeyBinds& rhs) const noexcept;
 	};
 
-	struct HighScoreEntry
+	struct alignas(int64_t) HighScoreEntry
 	{
 		using NameT = std::array<char, 8>;
 		/**
@@ -99,7 +99,7 @@ public:
 	{
 	public:
 		using NameT = std::array<char, 16>;
-		struct Item
+		struct alignas(int64_t) Item
 		{
 			NameT name;
 			TValue value;
@@ -246,9 +246,9 @@ public:
 	Settings settings;
 	KeyBinds keyBinds;
 	Presets<KeyBinds> keyBindsPresets;
-	size_t activeKeyBindsPreset;
 	Presets<Settings> settingsPresets;
-	size_t activeSettingsPreset;
+	uint32_t activeKeyBindsPreset;
+	uint32_t activeSettingsPreset;
 	HighScores highScores;
 	std::array<char, 20> seed;
 
@@ -264,6 +264,8 @@ public:
 	static_assert(sizeof(Settings) == 16);
 	static_assert(sizeof(KeyBinds) == 24);
 	static_assert(sizeof(HighScoreEntry) == 32);
+	static_assert(sizeof(Presets<KeyBinds>::Item) == 40);
+	static_assert(sizeof(Presets<Settings>::Item) == 32);
 	static_assert(sizeof(decltype(HighScoreEntry::score)) == 8);
 	static_assert(__STDCPP_DEFAULT_NEW_ALIGNMENT__ % 8 == 0);
 

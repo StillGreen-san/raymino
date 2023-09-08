@@ -71,7 +71,17 @@ struct ChunkType
 		Settings = 11,
 		HighScores = 12,
 		KeyBinds = 13,
+		KeyBindsPresets = 14,
+		SettingsPresets = 15,
+		OtherItems = 16,
 	};
+};
+
+struct alignas(int64_t) OtherItems
+{
+	uint32_t activeKeyBindsPreset = 0;
+	uint32_t activeSettingsPreset = 0;
+	[[maybe_unused]] uint32_t _reserved_[10]{}; // NOLINT(*-avoid-c-arrays)
 };
 
 static constexpr auto HeaderSize = sizeof(SaveFile::Header);
@@ -146,6 +156,14 @@ SaveFile App::serialize() const
 	save.appendChunk(ChunkType::Settings, 0, &settings, std::next(&settings));
 	save.appendChunk(ChunkType::HighScores, 0, highScores.entries.begin(), highScores.entries.end());
 	save.appendChunk(ChunkType::KeyBinds, 0, &keyBinds, std::next(&keyBinds));
+	save.appendChunk(ChunkType::KeyBindsPresets, 0,
+	    keyBindsPresets.get().begin() + static_cast<ptrdiff_t>(keyBindsPresets.fixed()), keyBindsPresets.get().end());
+	save.appendChunk(ChunkType::SettingsPresets, 0,
+	    settingsPresets.get().begin() + static_cast<ptrdiff_t>(settingsPresets.fixed()), settingsPresets.get().end());
+	{
+		OtherItems otherItems{activeKeyBindsPreset, activeSettingsPreset};
+		save.appendChunk(ChunkType::OtherItems, 0, &otherItems, std::next(&otherItems));
+	}
 
 	save.header().userProp3 = save.size() - HeaderSize;
 	return save;
@@ -171,6 +189,25 @@ void App::deserialize(const SaveFile& save)
 		case ChunkType::KeyBinds:
 			keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
 			break;
+		case ChunkType::KeyBindsPresets:
+		{
+			const SaveFile::Chunk::DataRange<const Presets<KeyBinds>::Item> range(chunkHeader);
+			keyBindsPresets.add(Range{range});
+		}
+		break;
+		case ChunkType::SettingsPresets:
+		{
+			const SaveFile::Chunk::DataRange<const Presets<Settings>::Item> range(chunkHeader);
+			settingsPresets.add(Range{range});
+		}
+		break;
+		case ChunkType::OtherItems:
+		{
+			const OtherItems& otherItems = *SaveFile::Chunk::DataRange<const OtherItems>(chunkHeader).begin();
+			activeKeyBindsPreset = otherItems.activeKeyBindsPreset;
+			activeSettingsPreset = otherItems.activeSettingsPreset;
+		}
+		break;
 		}
 	}
 }

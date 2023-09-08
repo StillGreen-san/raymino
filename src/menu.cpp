@@ -124,6 +124,10 @@ void Menu::UpdateDraw(App& app)
 		app.keyBinds = keyBindsPresets.getValue();
 		app.playerName = TextBoxPlayerNameBuffer;
 		app.seed = TextBoxSeedBuffer;
+		app.keyBindsPresets = keyBindsPresets.getPresets();
+		app.activeKeyBindsPreset = keyBindsPresets.active();
+		app.settingsPresets = settingsPresets.getPresets();
+		app.activeSettingsPreset = settingsPresets.active();
 		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
 	}
 	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
