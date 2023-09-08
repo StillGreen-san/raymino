@@ -124,6 +124,15 @@ public:
 		}
 
 		/**
+		 * @brief adds a range of items to the end of the collection
+		 */
+		template<typename TItem>
+		void add(Range<TItem> itemRange)
+		{
+			items.insert(items.end(), itemRange.begin(), itemRange.end());
+		}
+
+		/**
 		 * @brief add item to end of collection
 		 */
 		void add(Item item)
