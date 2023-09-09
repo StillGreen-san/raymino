@@ -47,9 +47,20 @@ void App::Run()
 #endif
 }
 
-void App::QueueSceneSwitch(std::unique_ptr<IScene> newScene)
+void App::QueueSceneSwitch(Scene scene)
 {
-	nextScene = std::move(newScene);
+	switch(scene)
+	{
+	case Scene::Game:
+		nextScene = MakeScene<Scene::Game>(*this);
+		break;
+	case Scene::Menu:
+		nextScene = MakeScene<Scene::Menu>(*this);
+		break;
+	case Scene::Loading:
+		nextScene = MakeScene<Scene::Loading>(*this);
+		break;
+	}
 }
 
 bool App::addHighScore(int64_t score)

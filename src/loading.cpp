@@ -26,13 +26,13 @@ Loading::Loading(App& app)
 	    {
 		    App& app = *static_cast<App*>(user);
 		    app.deserialize(App::decompressFile(data, static_cast<uint32_t>(size)));
-		    app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+		    app.QueueSceneSwitch(Scene::Menu);
 		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File loaded successfully", App::FILE_PATH);
 	    },
 	    [](void* user)
 	    {
 		    App& app = *static_cast<App*>(user);
-		    app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+		    app.QueueSceneSwitch(Scene::Menu);
 		    ::TraceLog(LOG_INFO, "FILEIO: [%s] Failed to load file", App::FILE_PATH);
 	    });
 #else
@@ -43,7 +43,7 @@ Loading::Loading(App& app)
 		app.deserialize(App::decompressFile(fileData, bytes));
 		::UnloadFileData(fileData);
 	}
-	app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+	app.QueueSceneSwitch(Scene::Menu);
 #endif
 }
 

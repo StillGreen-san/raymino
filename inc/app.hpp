@@ -233,9 +233,9 @@ public:
 	void UpdateDraw();
 
 	/**
-	 * @param newScene to switch to
+	 * @param scene to switch to
 	 */
-	void QueueSceneSwitch(std::unique_ptr<IScene> newScene);
+	void QueueSceneSwitch(Scene scene);
 
 	/**
 	 * @return true if score == highest for namePtr+settings

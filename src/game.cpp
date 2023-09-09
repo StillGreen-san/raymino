@@ -127,12 +127,12 @@ void Game::update(App& app)
 {
 	if(::IsKeyPressed(app.keyBinds.menu))
 	{
-		app.QueueSceneSwitch(MakeScene<Scene::Menu>(app));
+		app.QueueSceneSwitch(Scene::Menu);
 		state = State::GameOver;
 	}
 	if(::IsKeyPressed(app.keyBinds.restart))
 	{
-		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
+		app.QueueSceneSwitch(Scene::Game);
 	}
 	if(::IsKeyPressed(app.keyBinds.pause))
 	{
@@ -145,7 +145,7 @@ void Game::update(App& app)
 			state = State::Running;
 			break;
 		case State::GameOver:
-			app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
+			app.QueueSceneSwitch(Scene::Game);
 			break;
 		}
 	}

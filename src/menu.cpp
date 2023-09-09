@@ -128,7 +128,7 @@ void Menu::UpdateDraw(App& app)
 		app.activeKeyBindsPreset = keyBindsPresets.active();
 		app.settingsPresets = settingsPresets.getPresets();
 		app.activeSettingsPreset = settingsPresets.active();
-		app.QueueSceneSwitch(MakeScene<Scene::Game>(app));
+		app.QueueSceneSwitch(Scene::Game);
 	}
 	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
 	       static_cast<int>(TextBoxPlayerNameBuffer.size()), TextBoxPlayerNameEditMode))
