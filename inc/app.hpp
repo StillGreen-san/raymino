@@ -252,6 +252,16 @@ public:
 	HighScores highScores;
 	std::array<char, 20> seed;
 
+	/**
+	 * @brief return active KeyBinds preset
+	 */
+	[[nodiscard]] const KeyBinds& keyBinds() const;
+
+	/**
+	 * @brief return active Settings preset
+	 */
+	[[nodiscard]] const Settings& settings() const;
+
 	static constexpr const char* FILE_PATH = "save.raymino";
 	static constexpr const char* IDB_PATH = "raymino";
 #if defined(PLATFORM_WEB)

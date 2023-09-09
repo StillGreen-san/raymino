@@ -102,6 +102,15 @@ struct alignas(int64_t) OtherItems
 	[[maybe_unused]] uint32_t _reserved_[10]{}; // NOLINT(*-avoid-c-arrays, *-magic-numbers)
 };
 
+const App::KeyBinds& App::keyBinds() const
+{
+	return keyBindsPresets.get(activeKeyBindsPreset).value;
+}
+const App::Settings& App::settings() const
+{
+	return settingsPresets.get(activeSettingsPreset).value;
+}
+
 static constexpr auto HeaderSize = sizeof(SaveFile::Header);
 SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 {
