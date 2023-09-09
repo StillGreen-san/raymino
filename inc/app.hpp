@@ -243,8 +243,6 @@ public:
 	bool addHighScore(int64_t score);
 
 	HighScoreEntry::NameT playerName;
-	Settings settings;
-	KeyBinds keyBinds;
 	Presets<KeyBinds> keyBindsPresets;
 	Presets<Settings> settingsPresets;
 	uint32_t activeKeyBindsPreset;

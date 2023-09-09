@@ -36,24 +36,24 @@ Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
     settingsPresets{app.settingsPresets, app.activeSettingsPreset}, TextBoxPlayerNameBuffer{app.playerName},
     TextBoxSeedBuffer{app.seed}
 {
-	readSettings(app.settings);
-	updateKeyBindBuffers(app.keyBinds);
-	keyBindsPresets.getValue().moveRight = app.keyBinds.moveRight;
-	keyBindsPresets.getValue().moveLeft = app.keyBinds.moveLeft;
-	keyBindsPresets.getValue().rotateRight = app.keyBinds.rotateRight;
-	keyBindsPresets.getValue().rotateLeft = app.keyBinds.rotateLeft;
-	keyBindsPresets.getValue().softDrop = app.keyBinds.softDrop;
-	keyBindsPresets.getValue().hardDrop = app.keyBinds.hardDrop;
-	keyBindsPresets.getValue().hold = app.keyBinds.hold;
-	keyBindsPresets.getValue().pause = app.keyBinds.pause;
-	keyBindsPresets.getValue().restart = app.keyBinds.restart;
-	keyBindsPresets.getValue().menu = app.keyBinds.menu;
+	const App::Settings& settings = settingsPresets.getValue();
+	const App::KeyBinds& keyBinds = keyBindsPresets.getValue();
+	readSettings(settings);
+	updateKeyBindBuffers(keyBinds);
+	keyBindsPresets.getValue().moveRight = keyBinds.moveRight;
+	keyBindsPresets.getValue().moveLeft = keyBinds.moveLeft;
+	keyBindsPresets.getValue().rotateRight = keyBinds.rotateRight;
+	keyBindsPresets.getValue().rotateLeft = keyBinds.rotateLeft;
+	keyBindsPresets.getValue().softDrop = keyBinds.softDrop;
+	keyBindsPresets.getValue().hardDrop = keyBinds.hardDrop;
+	keyBindsPresets.getValue().hold = keyBinds.hold;
+	keyBindsPresets.getValue().pause = keyBinds.pause;
+	keyBindsPresets.getValue().restart = keyBinds.restart;
+	keyBindsPresets.getValue().menu = keyBinds.menu;
 }
 
 void Menu::PreDestruct(raymino::App& app)
 {
-	app.settings = settingsPresets.getValue();
-	app.keyBinds = keyBindsPresets.getValue();
 	app.playerName = TextBoxPlayerNameBuffer;
 	app.seed = TextBoxSeedBuffer;
 	app.keyBindsPresets = keyBindsPresets.getPresets();
@@ -306,15 +306,16 @@ void Menu::UpdateDrawHighscores(App& app)
 	    {
 		    return true;
 	    });
-	drawClose(MyScoreRect, "Same Name", app, app.playerName.data(), nullptr,
+	drawClose(MyScoreRect, "Same Name", app, TextBoxPlayerNameBuffer.data(), nullptr,
 	    [&](const App::HighScoreEntry& entry)
 	    {
-		    return entry.name == app.playerName;
+		    return entry.name == TextBoxPlayerNameBuffer;
 	    });
-	drawClose(SetScoreRect, "Same Settings", app, nullptr, &app.settings,
+	const App::Settings& settings = settingsPresets.getValue();
+	drawClose(SetScoreRect, "Same Settings", app, nullptr, &settings,
 	    [&](const App::HighScoreEntry& entry)
 	    {
-		    return entry.settings == app.settings;
+		    return entry.settings == settings;
 	    });
 	int allScoresIdx = 0;
 	int myScoresIdx = 0;
@@ -331,12 +332,12 @@ void Menu::UpdateDrawHighscores(App& app)
 			drawEntry(allScoresIdx, AllScoreRect, entry);
 			++allScoresIdx;
 		}
-		if(myScoresIdx < maxIdx && entry.name == app.playerName)
+		if(myScoresIdx < maxIdx && entry.name == TextBoxPlayerNameBuffer)
 		{
 			drawEntry(myScoresIdx, MyScoreRect, entry);
 			++myScoresIdx;
 		}
-		if(setScoresIdx < maxIdx && entry.settings == app.settings)
+		if(setScoresIdx < maxIdx && entry.settings == settings)
 		{
 			drawEntry(setScoresIdx, SetScoreRect, entry);
 			++setScoresIdx;

@@ -72,7 +72,7 @@ void App::QueueSceneSwitch(Scene scene)
 
 bool App::addHighScore(int64_t score)
 {
-	const bool isHighScore = highScores.add(playerName.data(), score, settings);
+	const bool isHighScore = highScores.add(playerName.data(), score, settingsPresets.get(activeSettingsPreset).value);
 	if(highScores.entries.size() > MAX_SCORES)
 	{
 		highScores.entries.erase(next(begin(highScores.entries), MAX_SCORES), end(highScores.entries));
@@ -180,9 +180,7 @@ SaveFile App::serialize() const
 	SaveFile save(3, scoreSize + appStateSize);
 
 	save.appendChunk(ChunkType::PlayerName, 0, &playerName, std::next(&playerName));
-	save.appendChunk(ChunkType::Settings, 0, &settings, std::next(&settings));
 	save.appendChunk(ChunkType::HighScores, 0, highScores.entries.begin(), highScores.entries.end());
-	save.appendChunk(ChunkType::KeyBinds, 0, &keyBinds, std::next(&keyBinds));
 	save.appendChunk(ChunkType::KeyBindsPresets, 0,
 	    keyBindsPresets.get().begin() + static_cast<ptrdiff_t>(keyBindsPresets.fixed()), keyBindsPresets.get().end());
 	save.appendChunk(ChunkType::SettingsPresets, 0,
@@ -205,8 +203,14 @@ void App::deserialize(const SaveFile& save)
 			playerName = *SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
 			break;
 		case ChunkType::Settings:
-			settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
-			break;
+		{
+			const Settings& settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
+			if(settingsPresets.find(settings) == settingsPresets.size())
+			{
+				settingsPresets.add({"Custom", settings});
+			}
+		}
+		break;
 		case ChunkType::HighScores:
 		{
 			const SaveFile::Chunk::DataRange<const HighScoreEntry> range(chunkHeader);
@@ -214,8 +218,14 @@ void App::deserialize(const SaveFile& save)
 		}
 		break;
 		case ChunkType::KeyBinds:
-			keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
-			break;
+		{
+			const KeyBinds& keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
+			if(keyBindsPresets.find(keyBinds) == keyBindsPresets.size())
+			{
+				keyBindsPresets.add({"Custom", keyBinds});
+			}
+		}
+		break;
 		case ChunkType::KeyBindsPresets:
 		{
 			const SaveFile::Chunk::DataRange<const Presets<KeyBinds>::Item> range(chunkHeader);

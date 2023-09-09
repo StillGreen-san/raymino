@@ -129,16 +129,19 @@ bool isKeyPress(KeyAction::Return keyPress)
 
 void Game::update(App& app)
 {
-	if(::IsKeyPressed(app.keyBinds.menu))
+	const App::KeyBinds& keyBinds = app.keyBinds();
+	const App::Settings& settings = app.settings();
+
+	if(::IsKeyPressed(keyBinds.menu))
 	{
 		app.QueueSceneSwitch(Scene::Menu);
 		state = State::GameOver;
 	}
-	if(::IsKeyPressed(app.keyBinds.restart))
+	if(::IsKeyPressed(keyBinds.restart))
 	{
 		app.QueueSceneSwitch(Scene::Game);
 	}
-	if(::IsKeyPressed(app.keyBinds.pause))
+	if(::IsKeyPressed(keyBinds.pause))
 	{
 		switch(state)
 		{
@@ -163,12 +166,12 @@ void Game::update(App& app)
 		return;
 	}
 
-	if(app.settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(app.keyBinds.hold))
+	if(settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(keyBinds.hold))
 	{
 		if(holdPieceIdx == static_cast<size_t>(-1))
 		{
 			holdPieceIdx = static_cast<size_t>(currentTetromino.type);
-			currentTetromino = getNextTetromino(app.settings.previewCount);
+			currentTetromino = getNextTetromino(settings.previewCount);
 		}
 		else
 		{
@@ -184,16 +187,16 @@ void Game::update(App& app)
 	Offset prevTetrominoOffset = currentTetromino;
 
 	gravity.delay =
-	    delays[std::min<size_t>((::IsKeyDown(app.keyBinds.softDrop) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
+	    delays[std::min<size_t>((::IsKeyDown(keyBinds.softDrop) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
 
 	if(const KeyAction::Return moveAction = moveRight.tick(::GetFrameTime()); isKeyPress(moveAction))
 	{
 		if(playfield.overlapAt(currentTetromino.position + XY{moveAction.value, 0}, currentTetromino.collision) == 0)
 		{
 			currentTetromino.position += XY{moveAction.value, 0};
-			if(isLocking && app.settings.lockDown <= LockDown::Extended)
+			if(isLocking && settings.lockDown <= LockDown::Extended)
 			{
-				if(app.settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
+				if(settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
 				{
 					lockCounter += 1;
 					lockDelay.reset(0);
@@ -211,9 +214,9 @@ void Game::update(App& app)
 			const Offset kicks = wallKickFunc(playfield, currentTetromino, rotation);
 			currentTetromino += kicks;
 		}
-		if(isLocking && app.settings.lockDown <= LockDown::Extended)
+		if(isLocking && settings.lockDown <= LockDown::Extended)
 		{
-			if(app.settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
+			if(settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
 			{
 				lockCounter += 1;
 				lockDelay.reset(0);
@@ -225,13 +228,13 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position + XY{0, 1}, currentTetromino.collision) == 0)
 		{
 			currentTetromino.position += XY{0, 1};
-			if(::IsKeyDown(app.keyBinds.softDrop))
+			if(::IsKeyDown(keyBinds.softDrop))
 			{
 				score += scoringSystem->process(ScoreEvent::SoftDrop, 1, levelState.currentLevel);
 			}
 			if(isLocking)
 			{
-				switch(app.settings.lockDown)
+				switch(settings.lockDown)
 				{
 				case LockDown::Infinit:
 					lockDelay.reset(0);
@@ -251,13 +254,13 @@ void Game::update(App& app)
 				}
 			}
 		}
-		else if(::IsKeyDown(app.keyBinds.softDrop) && app.settings.softDrop == SoftDrop::Locking)
+		else if(::IsKeyDown(keyBinds.softDrop) && settings.softDrop == SoftDrop::Locking)
 		{
 			isLocking = true;
 			lockDelay.reset(lockDelay.delay);
 		}
 	}
-	if(::IsKeyPressed(app.keyBinds.hardDrop))
+	if(::IsKeyPressed(keyBinds.hardDrop))
 	{
 		for(int yOffset = 1;; ++yOffset)
 		{
@@ -266,7 +269,7 @@ void Game::update(App& app)
 				currentTetromino.position += XY{0, yOffset - 1};
 				prevTetrominoOffset = currentTetromino;
 				score += scoringSystem->process(ScoreEvent::HardDrop, yOffset - 1, levelState.currentLevel);
-				if(app.settings.instantDrop == InstantDrop::Hard)
+				if(settings.instantDrop == InstantDrop::Hard)
 				{
 					isLocking = true;
 					lockDelay.reset(lockDelay.delay);
@@ -283,7 +286,7 @@ void Game::update(App& app)
 		isLocking = true;
 		lockDelay.reset(0);
 	}
-	if(isLocking && !onGround && app.settings.lockDown == LockDown::Entry)
+	if(isLocking && !onGround && settings.lockDown == LockDown::Entry)
 	{
 		lockDelay.tick(::GetFrameTime());
 	}
@@ -300,7 +303,7 @@ void Game::update(App& app)
 		isLocking = false;
 		holdPieceLocked = false;
 		lockCounter = 0;
-		currentTetromino = getNextTetromino(app.settings.previewCount);
+		currentTetromino = getNextTetromino(settings.previewCount);
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
 			state = State::GameOver;
@@ -324,7 +327,9 @@ void Game::draw(App& app)
 	drawBackground(playfield, playfieldBounds - hiddenOffset, cellSize, 1, LIGHTGRAY, DARKGRAY);
 	drawCells(playfield, playfieldBounds - hiddenOffset, cellSize, 1, minoColors);
 
-	if(app.settings.ghostPiece)
+	const App::Settings& settings = app.settings();
+
+	if(settings.ghostPiece)
 	{
 		int yOffset = 1;
 		while(playfield.overlapAt(currentTetromino.position + XY{0, yOffset}, currentTetromino.collision) == 0)
@@ -351,13 +356,13 @@ void Game::draw(App& app)
 		    baseTetrominos[holdPieceIdx].collision, previewOffsetsMain[holdPieceIdx], PREVIEW_CELL_SIZE, 1, minoColors);
 	}
 
-	if(app.settings.previewCount > 0)
+	if(settings.previewCount > 0)
 	{
 		drawCells(baseTetrominos[nextTetrominoIndices[0]].collision,
 		    previewOffsetsMain[nextTetrominoIndices[0]] + XY{App::Settings::SCREEN_WIDTH - SIDEBAR_WIDTH, 0},
 		    PREVIEW_CELL_SIZE, 1, minoColors);
 
-		for(int i = 1; i < app.settings.previewCount; ++i)
+		for(int i = 1; i < settings.previewCount; ++i)
 		{
 			drawCells(baseTetrominos[nextTetrominoIndices[i]].collision,
 			    previewOffsetsExtended[nextTetrominoIndices[i]] +
@@ -437,29 +442,29 @@ size_t hashSeedString(const TContainer& container)
 }
 
 Game::Game(App& app) :
-    playfield{{app.settings.fieldWidth, app.settings.fieldHeight + HIDDEN_HEIGHT}, 0},
-    playfieldBounds{calculatePlayfieldBounds({app.settings.fieldWidth, app.settings.fieldHeight})},
-    baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings.rotationSystem)(), playfield.getSize().width)},
+    playfield{{app.settings().fieldWidth, app.settings().fieldHeight + HIDDEN_HEIGHT}, 0},
+    playfieldBounds{calculatePlayfieldBounds({app.settings().fieldWidth, app.settings().fieldHeight})},
+    baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings().rotationSystem)(), playfield.getSize().width)},
     previewOffsetsMain{calcCenterOffsets(baseTetrominos, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE)},
     holdPieceIdx{static_cast<size_t>(-1)}, rng{hashSeedString(app.seed)},
-    shuffledIndicesFunc{shuffledIndices(app.settings.shuffleType)},
-    nextTetrominoIndices{fillIndices({}, app.settings.previewCount)},
+    shuffledIndicesFunc{shuffledIndices(app.settings().shuffleType)},
+    nextTetrominoIndices{fillIndices({}, app.settings().previewCount)},
     previewElementHeightExtended{
-        app.settings.previewCount < 2
+        app.settings().previewCount < 2
             ? 0
-            : (App::Settings::SCREEN_HEIGHT - PREVIEW_ELEMENT_HEIGHT) / (app.settings.previewCount - 1)},
+            : (App::Settings::SCREEN_HEIGHT - PREVIEW_ELEMENT_HEIGHT) / (app.settings().previewCount - 1)},
     previewOffsetsExtended{
         calcCenterOffsetsExtended(baseTetrominos, {SIDEBAR_WIDTH, previewElementHeightExtended}, cellSizeExtended())},
-    currentTetromino{getNextTetromino(app.settings.previewCount)},
-    scoringSystem{makeScoringSystem(app.settings.scoringSystem)()}, score{0}, state{State::Running},
-    levelUpFunc{levelUp(app.settings.levelGoal)}, levelState{LevelState::make(app.settings.levelGoal)},
+    currentTetromino{getNextTetromino(app.settings().previewCount)},
+    scoringSystem{makeScoringSystem(app.settings().scoringSystem)()}, score{0}, state{State::Running},
+    levelUpFunc{levelUp(app.settings().levelGoal)}, levelState{LevelState::make(app.settings().levelGoal)},
     lockDelay{App::Settings::LOCK_DELAY}, lockCounter{0}, isLocking{false}, holdPieceLocked{false}, isHighScore{false},
-    tSpinFunc{tSpinCheck(app.settings.tSpin)},
-    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds.moveRight,
-        app.keyBinds.moveLeft},
-    basicRotationFunc{basicRotation(app.settings.rotationSystem)}, wallKickFunc{wallKick(app.settings.wallKicks)},
-    rotateRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds.rotateRight,
-        app.keyBinds.rotateLeft}
+    tSpinFunc{tSpinCheck(app.settings().tSpin)},
+    moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds().moveRight,
+        app.keyBinds().moveLeft},
+    basicRotationFunc{basicRotation(app.settings().rotationSystem)}, wallKickFunc{wallKick(app.settings().wallKicks)},
+    rotateRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds().rotateRight,
+        app.keyBinds().rotateLeft}
 {
 }
 
