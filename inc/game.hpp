@@ -16,6 +16,7 @@ struct Game : IScene
 {
 	Game(App& app);
 	void UpdateDraw(App& app) override;
+	void PreDestruct(App& app) override;
 
 	void update(App& app);
 	void draw(App& app);

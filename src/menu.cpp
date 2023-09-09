@@ -50,6 +50,10 @@ Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
 	keyBindsPresets.getValue().menu = app.keyBinds.menu;
 }
 
+void Menu::PreDestruct(raymino::App& app)
+{
+}
+
 void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
 {
 	copyEnumName<::KeyboardKey>(keyBinds.moveRight, TextBoxMoveRightBuffer);

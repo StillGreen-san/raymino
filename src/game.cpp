@@ -31,6 +31,10 @@ std::unique_ptr<IScene> MakeScene<Scene::Game>(App& app)
 	return std::make_unique<Game>(app);
 }
 
+void Game::PreDestruct([[maybe_unused]] App& app)
+{
+}
+
 constexpr int HIDDEN_HEIGHT = 4;
 constexpr int SIDEBAR_WIDTH = 150;
 constexpr int PREVIEW_ELEMENT_HEIGHT = 100;

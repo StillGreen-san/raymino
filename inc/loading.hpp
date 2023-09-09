@@ -13,5 +13,6 @@ struct Loading : public IScene
 	Loading(App& app);
 
 	void UpdateDraw(App& app) override;
+	void PreDestruct(App& app) override;
 };
 } // namespace raymino

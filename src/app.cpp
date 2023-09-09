@@ -49,6 +49,10 @@ void App::Run()
 
 void App::QueueSceneSwitch(Scene scene)
 {
+	if(currentScene)
+	{
+		currentScene->PreDestruct(*this);
+	}
 	switch(scene)
 	{
 	case Scene::Game:
