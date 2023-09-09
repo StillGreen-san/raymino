@@ -203,16 +203,16 @@ Rect findTrueSize(const Grid& grid)
 {
 	Rect trueSize{{grid.getSize().width, grid.getSize().height}, {0, 0}};
 
-	for(int y = 0; y < grid.getSize().height; ++y)
+	for(int yPos = 0; yPos < grid.getSize().height; ++yPos)
 	{
-		for(int x = 0; x < grid.getSize().width; ++x)
+		for(int xPos = 0; xPos < grid.getSize().width; ++xPos)
 		{
-			if(grid.getAt({x, y}) != 0)
+			if(grid.getAt({xPos, yPos}) != 0)
 			{
-				trueSize.x = std::min(trueSize.x, x);
-				trueSize.y = std::min(trueSize.y, y);
-				trueSize.width = std::max(trueSize.width, x);
-				trueSize.height = std::max(trueSize.height, y);
+				trueSize.x = std::min(trueSize.x, xPos);
+				trueSize.y = std::min(trueSize.y, yPos);
+				trueSize.width = std::max(trueSize.width, xPos);
+				trueSize.height = std::max(trueSize.height, yPos);
 			}
 		}
 	}
@@ -440,12 +440,12 @@ size_t countFullLines(const Grid& grid, const Tetromino& tetromino)
 	size_t fullLines = 0;
 	const auto gridSize = grid.getSize();
 
-	for(int y = 0; y < gridSize.height; ++y)
+	for(int yPos = 0; yPos < gridSize.height; ++yPos)
 	{
 		bool isFullLine = true;
-		for(int x = 0; x < gridSize.width; ++x)
+		for(int xPos = 0; xPos < gridSize.width; ++xPos)
 		{
-			if(grid.getAt({x, y}) == 0 && tetromino.collision.getAt(XY{x, y} - tetromino.position, 0) == 0)
+			if(grid.getAt({xPos, yPos}) == 0 && tetromino.collision.getAt(XY{xPos, yPos} - tetromino.position, 0) == 0)
 			{
 				isFullLine = false;
 				break;

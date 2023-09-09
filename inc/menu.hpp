@@ -11,7 +11,7 @@ namespace raymino
 {
 struct Menu : public IScene
 {
-	Menu(App& app);
+	explicit Menu(App& app);
 
 	void UpdateDraw(App& app) override;
 	void PreDestruct(App& app) override;
@@ -78,6 +78,9 @@ struct Menu : public IScene
 
 	static constexpr Vector2 AnchorGame = {24, 24};
 	static constexpr Vector2 AnchorSettings = {24, 120};
+
+	static constexpr int TextFontSize = 10;
+	static constexpr int HeadingFontSize = 20;
 
 	bool AboutDialogShowing = false;
 	bool DropdownBoxRotationSystemEditMode = false;

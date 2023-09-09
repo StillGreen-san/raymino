@@ -16,7 +16,7 @@ class ColorMap
 {
 public:
 	ColorMap() = delete;
-	ColorMap(std::vector<Color> colors);
+	explicit ColorMap(std::vector<Color> colors);
 	Color operator[](Grid::Cell idx) const;
 	Grid::Cell operator[](Color color) const;
 

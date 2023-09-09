@@ -8,11 +8,11 @@
 
 namespace raymino
 {
-std::ostream& operator<<(std::ostream& os, const XY& value);
-std::ostream& operator<<(std::ostream& os, const Size& value);
-std::ostream& operator<<(std::ostream& os, const Rect& value);
-std::ostream& operator<<(std::ostream& os, const Offset& value);
-std::ostream& operator<<(std::ostream& os, const Grid& value);
-std::ostream& operator<<(std::ostream& os, const TSpinCornerCountResult& value);
-std::ostream& operator<<(std::ostream& os, const LevelState& value);
+std::ostream& operator<<(std::ostream& ostream, const XY& value);
+std::ostream& operator<<(std::ostream& ostream, const Size& value);
+std::ostream& operator<<(std::ostream& ostream, const Rect& value);
+std::ostream& operator<<(std::ostream& ostream, const Offset& value);
+std::ostream& operator<<(std::ostream& ostream, const Grid& value);
+std::ostream& operator<<(std::ostream& ostream, const TSpinCornerCountResult& value);
+std::ostream& operator<<(std::ostream& ostream, const LevelState& value);
 } // namespace raymino

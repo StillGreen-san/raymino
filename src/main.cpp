@@ -12,13 +12,13 @@ int WinMain()
 int main()
 #endif
 {
-	std::cout << PROJECT_INFO.url << " [" << PROJECT_INFO.lic << ']' << std::endl;
-	std::cout << "  build with:" << std::endl;
+	std::cout << PROJECT_INFO.url << " [" << PROJECT_INFO.lic << "]\n";
+	std::cout << "  build with:\n";
 	for(const LibraryInfo& depInfo : DEPENDENCY_INFOS)
 	{
 		std::cout << depInfo.url;
 		std::cout << std::setw(static_cast<std::streamsize>(DEPENDENCY_INFOS_MAX_URL_LEN - depInfo.url.size()) + 2);
-		std::cout << '[' << depInfo.lic << ']' << std::endl;
+		std::cout << '[' << depInfo.lic << "]\n";
 	}
 
 	App app;

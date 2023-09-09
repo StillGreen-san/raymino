@@ -8,9 +8,9 @@
 
 namespace raymino
 {
-size_t index1D(int x, int y, int width)
+size_t index1D(int xPos, int yPos, int width)
 {
-	return (static_cast<size_t>(y) * static_cast<size_t>(width)) + static_cast<size_t>(x);
+	return (static_cast<size_t>(yPos) * static_cast<size_t>(width)) + static_cast<size_t>(xPos);
 }
 
 Grid::Grid(Size size, Grid::Cell fill) : cells(static_cast<size_t>(size.area()), fill), size{size}
@@ -34,15 +34,15 @@ Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.s
 
 size_t Grid::overlapAt(XY topLeft, const Grid& other) const
 {
-	for(int y = 0; y < other.size.height; ++y)
+	for(int yPos = 0; yPos < other.size.height; ++yPos)
 	{
-		for(int x = 0; x < other.size.width; ++x)
+		for(int xPos = 0; xPos < other.size.width; ++xPos)
 		{
-			const auto otherCell = other.getAt({x, y});
-			const auto thisCell = getAt({x + topLeft.x, y + topLeft.y});
+			const auto otherCell = other.getAt({xPos, yPos});
+			const auto thisCell = getAt({xPos + topLeft.x, yPos + topLeft.y});
 			if(thisCell != 0 && otherCell != 0)
 			{
-				return index1D(x, y, other.size.width) + 1;
+				return index1D(xPos, yPos, other.size.width) + 1;
 			}
 		}
 	}
@@ -70,22 +70,22 @@ Grid::Cell Grid::getAt(XY topLeft, Grid::Cell oobValue) const
 
 void Grid::setAt(XY topLeft, const Grid& other)
 {
-	for(int y = 0; y < other.size.height; ++y)
+	for(int yPos = 0; yPos < other.size.height; ++yPos)
 	{
-		if(topLeft.y + y < 0)
+		if(topLeft.y + yPos < 0)
 		{
 			continue;
 		}
-		for(int x = 0; x < other.size.width; ++x)
+		for(int xPos = 0; xPos < other.size.width; ++xPos)
 		{
-			if(topLeft.x + x >= size.width)
+			if(topLeft.x + xPos >= size.width)
 			{
 				continue;
 			}
-			if(topLeft.x + x >= 0 && topLeft.y + y < size.height)
+			if(topLeft.x + xPos >= 0 && topLeft.y + yPos < size.height)
 			{
-				const auto thisIndex = index1D(x + topLeft.x, y + topLeft.y, size.width);
-				const auto otherIndex = index1D(x, y, other.size.width);
+				const auto thisIndex = index1D(xPos + topLeft.x, yPos + topLeft.y, size.width);
+				const auto otherIndex = index1D(xPos, yPos, other.size.width);
 				cells[thisIndex] |= other.cells[otherIndex];
 			}
 		}

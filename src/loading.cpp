@@ -51,7 +51,7 @@ void Loading::PreDestruct([[maybe_unused]] App& app)
 {
 }
 
-void Loading::UpdateDraw(App& app)
+void Loading::UpdateDraw([[maybe_unused]] App& app)
 {
 	::BeginDrawing();
 

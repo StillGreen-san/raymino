@@ -57,9 +57,9 @@ void Menu::PreDestruct(raymino::App& app)
 	app.playerName = TextBoxPlayerNameBuffer;
 	app.seed = TextBoxSeedBuffer;
 	app.keyBindsPresets = keyBindsPresets.getPresets();
-	app.activeKeyBindsPreset = keyBindsPresets.active();
+	app.activeKeyBindsPreset = static_cast<uint32_t>(keyBindsPresets.active());
 	app.settingsPresets = settingsPresets.getPresets();
-	app.activeSettingsPreset = settingsPresets.active();
+	app.activeSettingsPreset = static_cast<uint32_t>(settingsPresets.active());
 }
 
 void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
@@ -129,7 +129,7 @@ void Menu::UpdateDraw(App& app)
 
 	GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
 	GuiLabel(LabelPlayerNameRect, "Player Name");
-	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 20);
+	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, HeadingFontSize);
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
 		app.QueueSceneSwitch(Scene::Game);
@@ -143,7 +143,7 @@ void Menu::UpdateDraw(App& app)
 	{
 		state = state == State::HighScores ? State::Settings : State::HighScores;
 	}
-	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 10);
+	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, TextFontSize);
 
 	switch(state)
 	{

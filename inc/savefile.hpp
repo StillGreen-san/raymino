@@ -163,7 +163,7 @@ public:
 	/**
 	 * @brief create save from existing buffer, only checks header
 	 */
-	SaveFile(std::vector<uint8_t> data);
+	explicit SaveFile(std::vector<uint8_t> data);
 
 	static bool isValid(Header header);
 

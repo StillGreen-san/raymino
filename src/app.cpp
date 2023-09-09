@@ -11,7 +11,7 @@
 namespace raymino
 {
 App::App() :
-    playerName{"Mino"}, keyBindsPresets{{"Default", {}}}, activeKeyBindsPreset{0}, settingsPresets{{"Guideline", {}}},
+    playerName{"Mino"}, keyBindsPresets{{"Default", {}}}, settingsPresets{{"Guideline", {}}}, activeKeyBindsPreset{0},
     activeSettingsPreset{0}, seed{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
@@ -99,7 +99,7 @@ struct alignas(int64_t) OtherItems
 {
 	uint32_t activeKeyBindsPreset = 0;
 	uint32_t activeSettingsPreset = 0;
-	[[maybe_unused]] uint32_t _reserved_[10]{}; // NOLINT(*-avoid-c-arrays)
+	[[maybe_unused]] uint32_t _reserved_[10]{}; // NOLINT(*-avoid-c-arrays, *-magic-numbers)
 };
 
 static constexpr auto HeaderSize = sizeof(SaveFile::Header);
@@ -126,7 +126,7 @@ SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 	{
 		return {0, 0};
 	}
-	return {std::move(decompressedData)};
+	return SaveFile{std::move(decompressedData)};
 }
 void App::storeFile(const SaveFile& save)
 {

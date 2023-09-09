@@ -2,54 +2,54 @@
 
 namespace raymino
 {
-std::ostream& operator<<(std::ostream& os, const XY& value)
+std::ostream& operator<<(std::ostream& ostream, const XY& value)
 {
-	os << '{' << value.x << ", " << value.y << '}';
-	return os;
+	ostream << '{' << value.x << ", " << value.y << '}';
+	return ostream;
 }
-std::ostream& operator<<(std::ostream& os, const Size& value)
+std::ostream& operator<<(std::ostream& ostream, const Size& value)
 {
-	os << '{' << value.width << ", " << value.height << '}';
-	return os;
+	ostream << '{' << value.width << ", " << value.height << '}';
+	return ostream;
 }
-std::ostream& operator<<(std::ostream& os, const Rect& value)
+std::ostream& operator<<(std::ostream& ostream, const Rect& value)
 {
-	os << '{' << static_cast<const XY&>(value) << ", " << static_cast<const Size&>(value) << '}';
-	return os;
+	ostream << '{' << static_cast<const XY&>(value) << ", " << static_cast<const Size&>(value) << '}';
+	return ostream;
 }
-std::ostream& operator<<(std::ostream& os, const Offset& value)
+std::ostream& operator<<(std::ostream& ostream, const Offset& value)
 {
-	os << '{' << value.position << ", " << value.rotation << '}';
-	return os;
+	ostream << '{' << value.position << ", " << value.rotation << '}';
+	return ostream;
 }
-std::ostream& operator<<(std::ostream& os, const Grid& value)
+std::ostream& operator<<(std::ostream& ostream, const Grid& value)
 {
-	os << '{';
+	ostream << '{';
 
 	auto cellIt = value.begin();
 	const auto cellEnd = value.end();
 
 	for(; cellIt != cellEnd;)
 	{
-		os << *cellIt;
+		ostream << *cellIt;
 		++cellIt;
 		if(cellIt != cellEnd)
 		{
-			os << ", ";
+			ostream << ", ";
 		}
 	}
 
-	os << '}';
-	return os;
+	ostream << '}';
+	return ostream;
 }
-std::ostream& operator<<(std::ostream& os, const TSpinCornerCountResult& value)
+std::ostream& operator<<(std::ostream& ostream, const TSpinCornerCountResult& value)
 {
-	os << '{' << value.front << ", " << value.back << '}';
-	return os;
+	ostream << '{' << value.front << ", " << value.back << '}';
+	return ostream;
 }
-std::ostream& operator<<(std::ostream& os, const LevelState& value)
+std::ostream& operator<<(std::ostream& ostream, const LevelState& value)
 {
-	os << '{' << value.currentLevel << ", " << value.linesCleared << ", " << value.linesToClear << '}';
-	return os;
+	ostream << '{' << value.currentLevel << ", " << value.linesCleared << ", " << value.linesToClear << '}';
+	return ostream;
 }
 } // namespace raymino
