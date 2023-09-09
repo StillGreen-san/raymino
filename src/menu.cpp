@@ -52,6 +52,14 @@ Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
 
 void Menu::PreDestruct(raymino::App& app)
 {
+	app.settings = settingsPresets.getValue();
+	app.keyBinds = keyBindsPresets.getValue();
+	app.playerName = TextBoxPlayerNameBuffer;
+	app.seed = TextBoxSeedBuffer;
+	app.keyBindsPresets = keyBindsPresets.getPresets();
+	app.activeKeyBindsPreset = keyBindsPresets.active();
+	app.settingsPresets = settingsPresets.getPresets();
+	app.activeSettingsPreset = settingsPresets.active();
 }
 
 void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
@@ -124,14 +132,6 @@ void Menu::UpdateDraw(App& app)
 	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, 20);
 	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
-		app.settings = settingsPresets.getValue();
-		app.keyBinds = keyBindsPresets.getValue();
-		app.playerName = TextBoxPlayerNameBuffer;
-		app.seed = TextBoxSeedBuffer;
-		app.keyBindsPresets = keyBindsPresets.getPresets();
-		app.activeKeyBindsPreset = keyBindsPresets.active();
-		app.settingsPresets = settingsPresets.getPresets();
-		app.activeSettingsPreset = settingsPresets.active();
 		app.QueueSceneSwitch(Scene::Game);
 	}
 	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
@@ -139,7 +139,6 @@ void Menu::UpdateDraw(App& app)
 	{
 		TextBoxPlayerNameEditMode = !TextBoxPlayerNameEditMode;
 	}
-	app.playerName = TextBoxPlayerNameBuffer;
 	if(GuiButton(ButtonHighscoresRect, state == State::HighScores ? GroupBoxSettingsText : ButtonHighscoresText))
 	{
 		state = state == State::HighScores ? State::Settings : State::HighScores;
