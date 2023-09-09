@@ -45,6 +45,8 @@ void App::Run()
 		raymino::UpdateDraw(this);
 	}
 #endif
+	currentScene->PreDestruct(*this);
+	storeFile(serialize());
 }
 
 void App::QueueSceneSwitch(Scene scene)
@@ -52,6 +54,7 @@ void App::QueueSceneSwitch(Scene scene)
 	if(currentScene)
 	{
 		currentScene->PreDestruct(*this);
+		storeFile(serialize());
 	}
 	switch(scene)
 	{
