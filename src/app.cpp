@@ -102,11 +102,11 @@ struct alignas(int64_t) OtherItems
 	[[maybe_unused]] uint32_t _reserved_[10]{}; // NOLINT(*-avoid-c-arrays, *-magic-numbers)
 };
 
-const App::KeyBinds& App::keyBinds() const
+const App::KeyBinds& App::keyBinds() const noexcept
 {
 	return keyBindsPresets.get(activeKeyBindsPreset).value;
 }
-const App::Settings& App::settings() const
+const App::Settings& App::settings() const noexcept
 {
 	return settingsPresets.get(activeSettingsPreset).value;
 }

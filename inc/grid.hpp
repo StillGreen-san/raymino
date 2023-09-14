@@ -26,56 +26,63 @@ public:
 	 * @param other Grid to test against
 	 * @return size_t 1 based index into other where overlap occurred
 	 */
-	[[nodiscard]] size_t overlapAt(XY topLeft, const Grid& other) const;
+	[[nodiscard]] size_t overlapAt(XY topLeft, const Grid& other) const noexcept;
 
-	bool isSquare() const;
-	Size getSize() const;
+	[[nodiscard]] bool isSquare() const noexcept
+	{
+		return size.width == size.height;
+	}
+
+	[[nodiscard]] Size getSize() const noexcept
+	{
+		return size;
+	}
 
 	/**
 	 * @param topLeft offset
-	 * @param oobVal = Grid::oobVal
+	 * @param oobValue = Grid::oobVal
 	 * @return Grid::Cell cell value
 	 */
-	Cell getAt(XY topLeft, Cell oobVal = Grid::oobVal) const;
+	[[nodiscard]] Cell getAt(XY topLeft, Cell oobValue = oobVal) const noexcept;
 
-	void transformCells(std::function<TTransformFunc> func);
-	void rotate(int steps);
-	void transpose();
-	void reverseRows();
-	void setAt(XY topLeft, const Grid& other);
-	[[nodiscard]] auto begin()
+	void transformCells(std::function<TTransformFunc> func) noexcept;
+	void rotate(int steps) noexcept;
+	void transpose() noexcept;
+	void reverseRows() noexcept;
+	void setAt(XY topLeft, const Grid& other) noexcept;
+	[[nodiscard]] auto begin() noexcept
 	{
 		return cells.begin();
 	}
-	[[nodiscard]] auto end()
+	[[nodiscard]] auto end() noexcept
 	{
 		return cells.end();
 	}
-	[[nodiscard]] auto begin() const
+	[[nodiscard]] auto begin() const noexcept
 	{
 		return cells.begin();
 	}
-	[[nodiscard]] auto end() const
+	[[nodiscard]] auto end() const noexcept
 	{
 		return cells.end();
 	}
-	[[nodiscard]] auto rbegin() const
+	[[nodiscard]] auto rbegin() const noexcept
 	{
 		return cells.rbegin();
 	}
-	[[nodiscard]] auto rend() const
+	[[nodiscard]] auto rend() const noexcept
 	{
 		return cells.rend();
 	}
-	[[nodiscard]] auto rbegin()
+	[[nodiscard]] auto rbegin() noexcept
 	{
 		return cells.rbegin();
 	}
-	[[nodiscard]] auto rend()
+	[[nodiscard]] auto rend() noexcept
 	{
 		return cells.rend();
 	}
-	[[nodiscard]] bool operator==(const Grid& other)
+	[[nodiscard]] bool operator==(const Grid& other) noexcept
 	{
 		return size == other.size && cells == other.cells;
 	}

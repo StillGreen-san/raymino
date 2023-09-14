@@ -12,7 +12,7 @@ struct Timer
 	 * @param delta seconds
 	 * @return true if elapsed became >= delay
 	 */
-	bool step(float delta)
+	bool step(float delta) noexcept
 	{
 		elapsed += delta;
 		if(elapsed >= delay)
@@ -30,7 +30,7 @@ struct Timer
 	 * @param delta seconds
 	 * @return true if elapsed is >= delay
 	 */
-	bool tick(float delta)
+	bool tick(float delta) noexcept
 	{
 		elapsed += delta;
 		return elapsed >= delay;
@@ -38,7 +38,7 @@ struct Timer
 	/**
 	 * @brief reset accumulated time to val
 	 */
-	void reset(float val)
+	void reset(float val) noexcept
 	{
 		elapsed = val;
 	}

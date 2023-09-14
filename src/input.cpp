@@ -4,7 +4,7 @@
 
 namespace raymino
 {
-KeyAction::Return KeyAction::tick(float delta)
+KeyAction::Return KeyAction::tick(float delta) noexcept
 {
 	if(const int val = (::IsKeyPressed(lkey) ? -1 : 0) + (::IsKeyPressed(rkey) ? 1 : 0); val != 0)
 	{

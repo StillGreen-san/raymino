@@ -16,9 +16,9 @@ class ColorMap
 {
 public:
 	ColorMap() = delete;
-	explicit ColorMap(std::vector<Color> colors);
-	Color operator[](Grid::Cell idx) const;
-	Grid::Cell operator[](Color color) const;
+	explicit ColorMap(std::vector<Color> colors) noexcept;
+	Color operator[](Grid::Cell idx) const noexcept;
+	Grid::Cell operator[](Color color) const noexcept;
 
 private:
 	std::vector<Color> colors;
@@ -33,7 +33,8 @@ private:
  * @param alpha
  * @remarks total size = (grid.size * cellSize) + ((grid.size - 1) * borderSize)
  */
-void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors, uint8_t alpha = 255);
+void drawCells(
+    const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors, uint8_t alpha = 255) noexcept;
 
 /**
  * @param grid to draw background of
@@ -44,5 +45,5 @@ void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const Colo
  * @param lines color
  * @remarks total size = (grid.size * cellSize) + ((grid.size - 1) * borderSize)
  */
-void drawBackground(const Grid& grid, XY at, int cellSize, int borderSize, Color fill, Color lines);
+void drawBackground(const Grid& grid, XY at, int cellSize, int borderSize, Color fill, Color lines) noexcept;
 } // namespace raymino

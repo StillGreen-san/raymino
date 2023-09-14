@@ -70,22 +70,22 @@ struct Range
 	TIterator first;
 	TIterator last;
 	template<typename TContainer>
-	explicit Range(TContainer& container) : first{std::begin(container)}, last{std::end(container)}
+	explicit Range(TContainer& container) noexcept : first{std::begin(container)}, last{std::end(container)}
 	{
 	}
-	[[nodiscard]] auto begin()
+	[[nodiscard]] auto begin() noexcept
 	{
 		return first;
 	}
-	[[nodiscard]] auto end()
+	[[nodiscard]] auto end() noexcept
 	{
 		return last;
 	}
-	[[nodiscard]] auto begin() const
+	[[nodiscard]] auto begin() const noexcept
 	{
 		return first;
 	}
-	[[nodiscard]] auto end() const
+	[[nodiscard]] auto end() const noexcept
 	{
 		return last;
 	}

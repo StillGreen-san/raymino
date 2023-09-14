@@ -49,7 +49,7 @@ std::vector<Tetromino> makeBaseMinos<RotationSystem::Sega>()
 {
 	return makeBaseMinos<RotationSystem::Original>();
 }
-std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys))()
+std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys) noexcept)()
 {
 	switch(tsys)
 	{
@@ -70,7 +70,7 @@ std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys))()
 }
 
 template<int TOddDir>
-inline Offset flip(const Tetromino& mino, int rotation)
+inline Offset flip(const Tetromino& mino, int rotation) noexcept
 {
 	if(rotation % 2 != 0)
 	{
@@ -80,13 +80,13 @@ inline Offset flip(const Tetromino& mino, int rotation)
 }
 
 template<>
-Offset basicRotation<RotationSystem::Super>(const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::Super>(const Tetromino& mino, int rotation) noexcept
 {
 	rotation = mino.type == TetrominoType::O ? 0 : rotation;
 	return {{0, 0}, rotation};
 }
 template<>
-Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation) noexcept
 {
 	rotation %= 4;
 	if(rotation == 0)
@@ -119,12 +119,12 @@ Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
 	}
 }
 template<>
-Offset basicRotation<RotationSystem::Arika>(const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::Arika>(const Tetromino& mino, int rotation) noexcept
 {
 	return basicRotation<RotationSystem::Sega>(mino, rotation);
 }
 template<>
-Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotation) noexcept
 {
 	rotation %= 4;
 	switch(mino.type)
@@ -143,7 +143,7 @@ Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotati
 	}
 }
 template<>
-Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int rotation) noexcept
 {
 	rotation %= 4;
 	switch(mino.type)
@@ -162,7 +162,7 @@ Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int ro
 	}
 }
 template<>
-Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int rotation)
+Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int rotation) noexcept
 {
 	rotation %= 4;
 	switch(mino.type)
@@ -179,7 +179,7 @@ Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int r
 		return {{0, 0}, 0};
 	}
 }
-Offset (*basicRotation(RotationSystem tsys))(const Tetromino&, int)
+Offset (*basicRotation(RotationSystem tsys) noexcept)(const Tetromino&, int) noexcept
 {
 	switch(tsys)
 	{
@@ -199,7 +199,7 @@ Offset (*basicRotation(RotationSystem tsys))(const Tetromino&, int)
 	}
 }
 
-Rect findTrueSize(const Grid& grid)
+Rect findTrueSize(const Grid& grid) noexcept
 {
 	Rect trueSize{{grid.getSize().width, grid.getSize().height}, {0, 0}};
 
@@ -225,7 +225,7 @@ Rect findTrueSize(const Grid& grid)
 	return trueSize;
 }
 
-XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
+XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth) noexcept
 {
 	const Rect trueSize = findTrueSize(tetromino.collision);
 	const int leftOffset = ((totalWidth - trueSize.width) / 2) - trueSize.x;
@@ -234,7 +234,7 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
 }
 
 template<>
-Offset wallKick<WallKicks::Arika>(const Grid& field, const Tetromino& tetromino, Offset offset)
+Offset wallKick<WallKicks::Arika>(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept
 {
 	const Tetromino desiredPosition{Tetromino{tetromino} += offset};
 	const XY right{1, 0};
@@ -312,7 +312,7 @@ Offset wallKick<WallKicks::Arika>(const Grid& field, const Tetromino& tetromino,
 	return {};
 }
 template<>
-Offset wallKick<WallKicks::Super>(const Grid& field, const Tetromino& tetromino, Offset offset)
+Offset wallKick<WallKicks::Super>(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept
 {
 	using KickRow = std::array<XY, 4>;
 	using KickTable = std::array<KickRow, 8>;
@@ -359,12 +359,12 @@ Offset wallKick<WallKicks::Super>(const Grid& field, const Tetromino& tetromino,
 	return {};
 }
 template<>
-Offset wallKick<WallKicks::None>(
-    [[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino, [[maybe_unused]] Offset offset)
+Offset wallKick<WallKicks::None>([[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino,
+    [[maybe_unused]] Offset offset) noexcept
 {
 	return {};
 }
-Offset (*wallKick(WallKicks tsys))(const Grid& field, const Tetromino& tetromino, Offset offset)
+Offset (*wallKick(WallKicks tsys) noexcept)(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept
 {
 	switch(tsys)
 	{
@@ -378,7 +378,7 @@ Offset (*wallKick(WallKicks tsys))(const Grid& field, const Tetromino& tetromino
 	}
 }
 
-size_t eraseFullLines(Grid& grid)
+size_t eraseFullLines(Grid& grid) noexcept
 {
 	const auto gridWidth = grid.getSize().width;
 	const auto isFullLine = [](auto begin, auto end)
@@ -435,7 +435,7 @@ size_t eraseFullLines(Grid& grid)
 	return erasedLines;
 }
 
-size_t countFullLines(const Grid& grid, const Tetromino& tetromino)
+size_t countFullLines(const Grid& grid, const Tetromino& tetromino) noexcept
 {
 	size_t fullLines = 0;
 	const auto gridSize = grid.getSize();
@@ -457,7 +457,7 @@ size_t countFullLines(const Grid& grid, const Tetromino& tetromino)
 	return fullLines;
 }
 
-TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino)
+TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino) noexcept
 {
 	static constexpr std::array<XY, 4> checkOffsets{{{0, 0}, {2, 0}, {0, 2}, {2, 2}}};
 	const Rect trueSize = findTrueSize(tetromino.collision);
@@ -486,7 +486,7 @@ TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetr
 	return {getAt(checkOffsets[1]) + getAt(checkOffsets[3]), getAt(checkOffsets[0]) + getAt(checkOffsets[2])};
 }
 
-bool isImmobile(const Grid& field, const Tetromino& tetromino)
+bool isImmobile(const Grid& field, const Tetromino& tetromino) noexcept
 {
 	static constexpr std::array<XY, 4> directions{{{0, 1}, {1, 0}, {-1, 0}, {0, -1}}};
 	return std::none_of(directions.begin(), directions.end(),
@@ -498,7 +498,7 @@ bool isImmobile(const Grid& field, const Tetromino& tetromino)
 
 template<>
 ScoreEvent tSpinCheck<TSpin::Immobile>(
-    const Grid& field, const Tetromino& tetromino, [[maybe_unused]] Offset lastMovement)
+    const Grid& field, const Tetromino& tetromino, [[maybe_unused]] Offset lastMovement) noexcept
 {
 	if(!isImmobile(field, tetromino))
 	{
@@ -510,7 +510,7 @@ ScoreEvent tSpinCheck<TSpin::Immobile>(
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
 template<>
-ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& tetromino, Offset lastMovement)
+ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& tetromino, Offset lastMovement) noexcept
 {
 	if(lastMovement.rotation == 0)
 	{
@@ -535,7 +535,7 @@ ScoreEvent tSpinCheck<TSpin::ThreeCorner>(const Grid& field, const Tetromino& te
 	return ScoreEvent::LineClear;
 }
 template<>
-ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetromino, Offset lastMovement)
+ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetromino, Offset lastMovement) noexcept
 {
 	if(lastMovement.rotation == 0)
 	{
@@ -546,7 +546,7 @@ ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetrom
 
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
-ScoreEvent (*tSpinCheck(TSpin tspin))(const Grid& field, const Tetromino& tetromino, Offset offset)
+ScoreEvent (*tSpinCheck(TSpin tspin) noexcept)(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept
 {
 	switch(tspin)
 	{
@@ -562,7 +562,7 @@ ScoreEvent (*tSpinCheck(TSpin tspin))(const Grid& field, const Tetromino& tetrom
 
 struct BPS : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) override
+	int64_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) noexcept override
 	{
 		switch(event)
 		{
@@ -590,7 +590,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::BPS>()
 
 struct Sega : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, int lines, int level) override
+	int64_t process(ScoreEvent event, int lines, int level) noexcept override
 	{
 		lines = std::clamp(lines, 0, std::numeric_limits<int>::max());
 		level = std::clamp((level + 1) / 2, 1, 5);
@@ -623,7 +623,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Sega>()
 
 struct Nintendo : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, int lines, int level) override
+	int64_t process(ScoreEvent event, int lines, int level) noexcept override
 	{
 		switch(event)
 		{
@@ -707,7 +707,7 @@ struct Guideline : public IScoringSystem
 	int lastPerfectClearLines = 0;
 	int clearCounter = 0;
 	int combo = -1;
-	int64_t process(ScoreEvent event, int lines, int level) override
+	int64_t process(ScoreEvent event, int lines, int level) noexcept override
 	{
 		int64_t score = 0;
 		bool isThisEventDifficult = false;
@@ -778,7 +778,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Guideline>()
 {
 	return std::make_unique<Guideline>();
 }
-std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))()
+std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept)()
 {
 	switch(tsys)
 	{
@@ -838,7 +838,8 @@ std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
 	std::shuffle(indices.begin(), indices.end(), rng);
 	return indices;
 }
-std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
+std::vector<size_t> (*shuffledIndices(ShuffleType ttype) noexcept)(
+    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
 {
 	switch(ttype)
 	{
@@ -854,12 +855,12 @@ std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(const std::vector<Tetr
 	}
 }
 
-LevelState LevelState::make(LevelGoal ttype)
+LevelState LevelState::make(LevelGoal ttype) noexcept
 {
 	return {1, 0, ttype == LevelGoal::Dynamic ? 5 : 10};
 }
 template<>
-LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, int lines, LevelState state)
+LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, int lines, LevelState state) noexcept
 {
 	switch(event)
 	{
@@ -882,7 +883,7 @@ LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, int lines, LevelState sta
 	}
 }
 template<>
-LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState state)
+LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState state) noexcept
 {
 	switch(event)
 	{
@@ -907,7 +908,7 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState s
 		return state;
 	}
 }
-LevelState (*levelUp(LevelGoal ttype))(ScoreEvent event, int lines, LevelState state)
+LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, int lines, LevelState state) noexcept
 {
 	switch(ttype)
 	{

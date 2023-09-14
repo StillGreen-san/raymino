@@ -24,7 +24,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 }
 
 template<typename TEnum, typename TContainer>
-void copyEnumName(int fromKey, TContainer& intoBuffer)
+void copyEnumName(int fromKey, TContainer& intoBuffer) noexcept
 {
 	const auto name = magic_enum::enum_name(static_cast<TEnum>(fromKey));
 	const auto last = std::copy_n(name.begin(), std::min(name.size(), intoBuffer.size() - 1), intoBuffer.begin());
@@ -62,7 +62,7 @@ void Menu::PreDestruct(raymino::App& app)
 	app.activeSettingsPreset = static_cast<uint32_t>(settingsPresets.active());
 }
 
-void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
+void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds) noexcept
 {
 	copyEnumName<::KeyboardKey>(keyBinds.moveRight, TextBoxMoveRightBuffer);
 	copyEnumName<::KeyboardKey>(keyBinds.moveLeft, TextBoxMoveLeftBuffer);
@@ -76,7 +76,7 @@ void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds)
 	copyEnumName<::KeyboardKey>(keyBinds.menu, TextBoxMenuBuffer);
 }
 
-void Menu::readSettings(const App::Settings& settings)
+void Menu::readSettings(const App::Settings& settings) noexcept
 {
 	DropdownBoxRotationSystemActive = static_cast<int>(settings.rotationSystem);
 	DropdownBoxWallKicksActive = static_cast<int>(settings.wallKicks);
@@ -94,7 +94,7 @@ void Menu::readSettings(const App::Settings& settings)
 	SpinnerFieldHeightValue = settings.fieldHeight;
 }
 
-void Menu::writeSettings(App::Settings& settings) const
+void Menu::writeSettings(App::Settings& settings) const noexcept
 {
 	settings.rotationSystem = static_cast<RotationSystem>(DropdownBoxRotationSystemActive);
 	settings.wallKicks = static_cast<WallKicks>(DropdownBoxWallKicksActive);
@@ -229,7 +229,7 @@ void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 	readSettings(settingsPresets.getValue());
 }
 
-void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry& entry)
+void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry& entry) noexcept
 {
 	std::array<char, 16> buffer{};
 	std::to_chars(&buffer.front(), &buffer.back(), entry.score);
@@ -298,7 +298,7 @@ void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unus
 #endif
 }
 
-void Menu::UpdateDrawHighscores(App& app)
+void Menu::UpdateDrawHighscores(App& app) noexcept
 {
 	GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
 	drawClose(AllScoreRect, "All Scores", app, nullptr, nullptr,
@@ -346,7 +346,7 @@ void Menu::UpdateDrawHighscores(App& app)
 }
 
 void guiKeyBind(const ::Rectangle& rectLabel, const char* textLabel, const ::Rectangle& rectInput,
-    Menu::KeyBufferT& keyBuffer, bool& editMode, int16_t& keyBind)
+    Menu::KeyBufferT& keyBuffer, bool& editMode, int16_t& keyBind) noexcept
 {
 	::GuiLabel(rectLabel, textLabel);
 	GuiTextBox(rectInput, keyBuffer, editMode);
@@ -403,7 +403,7 @@ void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
 	keyBindsPresets.handleRemoveButton(InputRemoveRect, "x");
 }
 
-void Menu::UpdateDrawAbout([[maybe_unused]] App& app)
+void Menu::UpdateDrawAbout([[maybe_unused]] App& app) noexcept
 {
 	const float entryHeight = 24;
 	const float totalEntriesHeight = (entryHeight * (DEPENDENCY_INFOS.size() + 2)) + 30;

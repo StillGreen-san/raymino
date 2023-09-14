@@ -47,11 +47,11 @@ public:
 					throw std::range_error("data buffer size mismatch");
 				}
 			}
-			T* begin() const
+			T* begin() const noexcept
 			{
 				return static_cast<T*>(first);
 			}
-			T* end() const
+			T* end() const noexcept
 			{
 				return static_cast<T*>(last);
 			}
@@ -67,10 +67,10 @@ public:
 			using TIntType = same_const_as_t<THeader, uint8_t>;
 
 		public:
-			explicit BaseIterator(THeader& header) : header{&header}
+			explicit BaseIterator(THeader& header) noexcept : header{&header}
 			{
 			}
-			BaseIterator& operator++()
+			BaseIterator& operator++() noexcept
 			{
 				auto* ptr = static_cast<TIntType*>(header);
 				auto paddingBytes = operator*().dataBytes & (alignof(THeader) - 1);
@@ -82,19 +82,19 @@ public:
 				header = ptr;
 				return *this;
 			}
-			THeader& operator*() const
+			THeader& operator*() const noexcept
 			{
 				return *static_cast<THeader*>(header);
 			}
-			THeader* operator->() const
+			THeader* operator->() const noexcept
 			{
 				return static_cast<THeader*>(header);
 			}
-			bool operator==(BaseIterator rhs) const
+			bool operator==(BaseIterator rhs) const noexcept
 			{
 				return header == rhs.header;
 			}
-			bool operator!=(BaseIterator rhs) const
+			bool operator!=(BaseIterator rhs) const noexcept
 			{
 				return header != rhs.header;
 			}
@@ -107,12 +107,12 @@ public:
 	};
 	static_assert(sizeof(Chunk::Header) == 8);
 	static constexpr std::array<char, 4> magic{'R', 'B', 'S', 'F'};
-	[[nodiscard]] const Header& header() const;
-	[[nodiscard]] Header& header();
-	[[nodiscard]] Chunk::ConstIterator begin() const;
-	[[nodiscard]] Chunk::ConstIterator end() const;
-	[[nodiscard]] Chunk::Iterator begin();
-	[[nodiscard]] Chunk::Iterator end();
+	[[nodiscard]] const Header& header() const noexcept;
+	[[nodiscard]] Header& header() noexcept;
+	[[nodiscard]] Chunk::ConstIterator begin() const noexcept;
+	[[nodiscard]] Chunk::ConstIterator end() const noexcept;
+	[[nodiscard]] Chunk::Iterator begin() noexcept;
+	[[nodiscard]] Chunk::Iterator end() noexcept;
 
 	/**
 	 * @brief add chunk filled with data from first to last
@@ -142,9 +142,9 @@ public:
 	 */
 	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, uint32_t bytes);
 
-	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const;
-	[[nodiscard]] const uint8_t* data() const;
-	[[nodiscard]] uint32_t size() const;
+	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const noexcept;
+	[[nodiscard]] const uint8_t* data() const noexcept;
+	[[nodiscard]] uint32_t size() const noexcept;
 
 	/**
 	 * @brief reset to empty save with reserved storage
@@ -165,7 +165,7 @@ public:
 	 */
 	explicit SaveFile(std::vector<uint8_t> data);
 
-	static bool isValid(Header header);
+	static bool isValid(Header header) noexcept;
 
 private:
 	std::vector<uint8_t> dataBuffer;

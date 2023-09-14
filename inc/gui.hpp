@@ -12,7 +12,8 @@
 
 namespace raymino
 {
-inline bool GuiSpinner(::Rectangle bounds, const char* text, int& value, int minValue, int maxValue, bool& editMode)
+inline bool GuiSpinner(
+    ::Rectangle bounds, const char* text, int& value, int minValue, int maxValue, bool& editMode) noexcept
 {
 	if(::GuiSpinner(bounds, text, &value, minValue, maxValue, editMode))
 	{
@@ -21,7 +22,7 @@ inline bool GuiSpinner(::Rectangle bounds, const char* text, int& value, int min
 	}
 	return false;
 }
-inline bool GuiDropdownBox(::Rectangle bounds, const char* text, int& active, bool& editMode)
+inline bool GuiDropdownBox(::Rectangle bounds, const char* text, int& active, bool& editMode) noexcept
 {
 	if(::GuiDropdownBox(bounds, text, &active, editMode))
 	{
@@ -31,7 +32,7 @@ inline bool GuiDropdownBox(::Rectangle bounds, const char* text, int& active, bo
 	return false;
 }
 template<typename TContainer>
-bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX)
+bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX) noexcept
 {
 	if(::GuiTextBox(bounds, container.data(), std::min(static_cast<int>(container.size()), maxLen), editMode))
 	{
@@ -47,7 +48,7 @@ bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int m
 class ScopedGuiLock
 {
 public:
-	explicit ScopedGuiLock(bool lock) : wasLocked{::GuiIsLocked()}
+	explicit ScopedGuiLock(bool lock) noexcept : wasLocked{::GuiIsLocked()}
 	{
 		if(lock)
 		{
@@ -62,7 +63,7 @@ public:
 	ScopedGuiLock(ScopedGuiLock&&) = default;
 	ScopedGuiLock& operator=(const ScopedGuiLock&) = delete;
 	ScopedGuiLock& operator=(ScopedGuiLock&&) = default;
-	~ScopedGuiLock()
+	~ScopedGuiLock() noexcept
 	{
 		if(wasLocked)
 		{
@@ -116,22 +117,22 @@ public:
 	/**
 	 * @brief remove item at index if present
 	 */
-	void remove(size_t index);
+	void remove(size_t index) noexcept;
 
 	/**
 	 * @return item at index or empty view
 	 */
-	[[nodiscard]] std::string_view get(size_t index) const;
+	[[nodiscard]] std::string_view get(size_t index) const noexcept;
 
 	/**
 	 * @return complete list
 	 */
-	[[nodiscard]] std::string_view get() const;
+	[[nodiscard]] std::string_view get() const noexcept;
 
 	/**
 	 * @return number of items
 	 */
-	[[nodiscard]] size_t size() const;
+	[[nodiscard]] size_t size() const noexcept;
 
 private:
 	std::string list;
@@ -162,19 +163,19 @@ public:
 	    state{presets.size() != 0 && presets.find(customName) == presets.size() - 1 ? State::Custom : State::Normal}
 	{
 	}
-	[[nodiscard]] TValue& getValue()
+	[[nodiscard]] TValue& getValue() noexcept
 	{
 		return valueBuffer;
 	}
-	[[nodiscard]] const App::Presets<TValue>& getPresets() const
+	[[nodiscard]] const App::Presets<TValue>& getPresets() const noexcept
 	{
 		return presets;
 	}
-	[[nodiscard]] size_t active() const
+	[[nodiscard]] size_t active() const noexcept
 	{
 		return static_cast<size_t>(activeItem);
 	}
-	[[nodiscard]] bool inEditMode() const
+	[[nodiscard]] bool inEditMode() const noexcept
 	{
 		return editMode;
 	}
@@ -235,7 +236,7 @@ public:
 			}
 		}
 	}
-	void handleRemoveButton(::Rectangle pos, const char* txt)
+	void handleRemoveButton(::Rectangle pos, const char* txt) noexcept
 	{
 		if(activeItem >= presets.fixed() && ::GuiButton(pos, txt))
 		{

@@ -50,7 +50,7 @@ const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
         DARKBLUE, PURPLE, VIOLET, DARKPURPLE, BEIGE, BROWN, DARKBROWN, WHITE, BLACK, BLANK, MAGENTA, RAYWHITE}};
 
-void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth)
+void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth) noexcept
 {
 	tetromino.collision.transformCells(
 	    [color](Grid::Cell current)
@@ -60,7 +60,7 @@ void prepareTetromino(Tetromino& tetromino, Grid::Cell color, int fieldWidth)
 	tetromino.position = spawnPosition(tetromino, HIDDEN_HEIGHT - 2, fieldWidth);
 }
 
-std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino> tetrominos, int fieldWidth)
+std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino> tetrominos, int fieldWidth) noexcept
 {
 	std::sort(tetrominos.begin(), tetrominos.end(),
 	    [](const Tetromino& lhs, const Tetromino& rhs)
@@ -77,7 +77,7 @@ std::vector<Tetromino> prepareTetrominos(std::vector<Tetromino> tetrominos, int 
 	return tetrominos;
 }
 
-Rect calculatePlayfieldBounds(Size fieldSize)
+Rect calculatePlayfieldBounds(Size fieldSize) noexcept
 {
 	const int availableWidth = ((App::Settings::SCREEN_WIDTH - (SIDEBAR_WIDTH * 2)) - (FIELD_BORDER_WIDTH * 2));
 	const int availableHeight = (App::Settings::SCREEN_HEIGHT - (FIELD_BORDER_WIDTH * 2));
@@ -92,7 +92,7 @@ Rect calculatePlayfieldBounds(Size fieldSize)
 	return {{xOffset, yOffset}, {actualWidth, actualHeight}};
 }
 
-XY calcCenterOffset(const Grid& grid, Size available, int cellSize)
+XY calcCenterOffset(const Grid& grid, Size available, int cellSize) noexcept
 {
 	const Rect actual = findTrueSize(grid) * cellSize;
 	const int xOffset = ((available.width - actual.width) / 2) - actual.x;
@@ -122,7 +122,7 @@ std::vector<XY> calcCenterOffsetsExtended(const std::vector<Tetromino>& tetromin
 	return offsets;
 }
 
-bool isKeyPress(KeyAction::Return keyPress)
+bool isKeyPress(KeyAction::Return keyPress) noexcept
 {
 	return keyPress.value != 0 && keyPress.state != KeyAction::State::Released;
 }
@@ -478,7 +478,7 @@ std::deque<size_t> Game::fillIndices(std::deque<size_t> indices, int minIndices)
 	return indices;
 }
 
-int Game::cellSizeExtended() const
+int Game::cellSizeExtended() const noexcept
 {
 	return std::min(previewElementHeightExtended / 5, PREVIEW_CELL_SIZE);
 }

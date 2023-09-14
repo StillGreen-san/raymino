@@ -68,13 +68,13 @@ std::vector<Tetromino> makeBaseMinos();
  * @param tsys RotationSystem
  * @return makeBaseMinos function pointer
  */
-std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys))();
+std::vector<Tetromino> (*makeBaseMinos(RotationSystem tsys) noexcept)();
 
 /**
  * @return iterator to Tetromino of type or end
  */
 template<typename TContainer>
-inline auto find(TContainer& minos, TetrominoType type)
+inline auto find(TContainer& minos, TetrominoType type) noexcept
 {
 	return std::find_if(minos.begin(), minos.end(),
 	    [=](const Tetromino& mino)
@@ -90,13 +90,13 @@ inline auto find(TContainer& minos, TetrominoType type)
  * @return Offset that can be applied to Tetromino
  */
 template<RotationSystem TSys>
-Offset basicRotation(const Tetromino& mino, int rotation);
+Offset basicRotation(const Tetromino& mino, int rotation) noexcept;
 
 /**
  * @param tsys RotationSystem
  * @return basicRotation function pointer
  */
-Offset (*basicRotation(RotationSystem tsys))(const Tetromino& mino, int rotation);
+Offset (*basicRotation(RotationSystem tsys) noexcept)(const Tetromino& mino, int rotation) noexcept;
 
 /**
  * @tparam TSys WallKicks to use for kicks
@@ -108,19 +108,19 @@ Offset (*basicRotation(RotationSystem tsys))(const Tetromino& mino, int rotation
  * @warning assumes basic rotation failed
  */
 template<WallKicks TSys>
-Offset wallKick(const Grid& field, const Tetromino& tetromino, Offset offset);
+Offset wallKick(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept;
 
 /**
  * @param tsys WallKicks
  * @return wallKick function pointer
  */
-Offset (*wallKick(WallKicks tsys))(const Grid& field, const Tetromino& tetromino, Offset offset);
+Offset (*wallKick(WallKicks tsys) noexcept)(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept;
 
 /**
  * @param grid to query
  * @return Rect with offset inside grid & true size
  */
-Rect findTrueSize(const Grid& grid);
+Rect findTrueSize(const Grid& grid) noexcept;
 
 /**
  * @brief centered absolut position to place Tetromino (rounded left)
@@ -129,20 +129,20 @@ Rect findTrueSize(const Grid& grid);
  * @param totalWidth of playfield
  * @return XY spawn position
  */
-XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth);
+XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth) noexcept;
 
 /**
  * @param grid to modify
  * @return size_t number of lines erased
  */
-size_t eraseFullLines(Grid& grid);
+size_t eraseFullLines(Grid& grid) noexcept;
 
 /**
  * @param grid to check
  * @param tetromino to include when counting
  * @return size_t number of full lines
  */
-size_t countFullLines(const Grid& grid, const Tetromino& tetromino);
+size_t countFullLines(const Grid& grid, const Tetromino& tetromino) noexcept;
 
 /**
  * @brief amount of occupied front&back corners of a T in a playfield
@@ -162,7 +162,7 @@ struct TSpinCornerCountResult
  * @param tetromino to test against
  * @return TSpinCornerCountResult
  */
-TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino);
+TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino) noexcept;
 
 /**
  * @brief checks if tetromino cannot move in any direction
@@ -170,7 +170,7 @@ TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetr
  * @param tetromino to test against
  * @return true if immobile
  */
-bool isImmobile(const Grid& field, const Tetromino& tetromino);
+bool isImmobile(const Grid& field, const Tetromino& tetromino) noexcept;
 
 /**
  * @tparam TTSpin TSpin type
@@ -180,13 +180,13 @@ bool isImmobile(const Grid& field, const Tetromino& tetromino);
  * @return ScoreEvent LineClear, TSpinMini or TSpin
  */
 template<TSpin TTSpin>
-ScoreEvent tSpinCheck(const Grid& field, const Tetromino& tetromino, Offset lastMovement);
+ScoreEvent tSpinCheck(const Grid& field, const Tetromino& tetromino, Offset lastMovement) noexcept;
 
 /**
  * @param tspin TSpin
  * @return tSpinCheck function pointer
  */
-ScoreEvent (*tSpinCheck(TSpin tspin))(const Grid& field, const Tetromino& tetromino, Offset offset);
+ScoreEvent (*tSpinCheck(TSpin tspin) noexcept)(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept;
 
 /**
  * @brief potentially stateful ScoringSystem
@@ -201,7 +201,7 @@ struct IScoringSystem
 	 * @param level
 	 * @return int64_t score for event
 	 */
-	[[nodiscard]] virtual int64_t process(ScoreEvent event, int lines, int level) = 0;
+	[[nodiscard]] virtual int64_t process(ScoreEvent event, int lines, int level) noexcept = 0;
 };
 
 /**
@@ -215,7 +215,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem();
  * @param tsys ScoringSystem
  * @return makeScoringSystem function pointer
  */
-std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))();
+std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept)();
 
 /**
  * @tparam TType ShuffleType
@@ -230,16 +230,16 @@ std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std
  * @param ttype ShuffleType
  * @return shuffledIndices function pointer
  */
-std::vector<size_t> (*shuffledIndices(ShuffleType ttype))(
+std::vector<size_t> (*shuffledIndices(ShuffleType ttype) noexcept)(
     const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng);
 
 struct LevelState
 {
-	static LevelState make(LevelGoal ttype);
+	static LevelState make(LevelGoal ttype) noexcept;
 	int currentLevel;
 	int linesCleared;
 	int linesToClear;
-	bool operator==(const LevelState& rhs) const
+	bool operator==(const LevelState& rhs) const noexcept
 	{
 		return std::tie(currentLevel, linesCleared, linesToClear) ==
 		       std::tie(rhs.currentLevel, rhs.linesCleared, rhs.linesToClear);
@@ -254,11 +254,11 @@ struct LevelState
  * @return LevelState
  */
 template<LevelGoal TType>
-LevelState levelUp(ScoreEvent event, int lines, LevelState state);
+LevelState levelUp(ScoreEvent event, int lines, LevelState state) noexcept;
 
 /**
  * @param ttype LevelGoal
  * @return levelUp function pointer
  */
-LevelState (*levelUp(LevelGoal ttype))(ScoreEvent event, int lines, LevelState state);
+LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, int lines, LevelState state) noexcept;
 } // namespace raymino

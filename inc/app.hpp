@@ -75,8 +75,8 @@ public:
 		/**
 		 * @return copied chars without ending \0
 		 */
-		static size_t copyInto(const char* inPtr, NameT& outRef);
-		HighScoreEntry(const char* namePtr, int64_t score, const Settings& settings);
+		static size_t copyInto(const char* inPtr, NameT& outRef) noexcept;
+		HighScoreEntry(const char* namePtr, int64_t score, const Settings& settings) noexcept;
 		NameT name;
 		int64_t score;
 		Settings settings;
@@ -103,10 +103,12 @@ public:
 		{
 			NameT name;
 			TValue value;
-			Item(const NameT& name, const TValue& value) : name{name}, value{value}
+			Item(const NameT& name, const TValue& value) noexcept(std::is_nothrow_copy_constructible_v<TValue>) :
+			    name{name}, value{value}
 			{
 			}
-			Item(std::string_view name, const TValue& value) : name{}, value{value}
+			Item(std::string_view name, const TValue& value) noexcept(std::is_nothrow_copy_constructible_v<TValue>) :
+			    name{}, value{value}
 			{
 				std::copy_n(name.begin(), std::min(name.size(), this->name.size() - 1), this->name.begin());
 			}
@@ -143,7 +145,7 @@ public:
 		/**
 		 * @brief remove index if item is not fixed
 		 */
-		void remove(size_t index)
+		void remove(size_t index) noexcept
 		{
 			if(index >= fixed())
 			{
@@ -156,7 +158,7 @@ public:
 		 * @param value to find
 		 * @return index or size() if not found
 		 */
-		[[nodiscard]] size_t find(const TValue& value) const
+		[[nodiscard]] size_t find(const TValue& value) const noexcept
 		{
 			const auto itemIt = std::find_if(items.begin(), items.end(),
 			    [&](const Item& item)
@@ -171,7 +173,7 @@ public:
 		 * @param name to find
 		 * @return index or size() if not found
 		 */
-		[[nodiscard]] size_t find(std::string_view name) const
+		[[nodiscard]] size_t find(std::string_view name) const noexcept
 		{
 			const auto itemIt = std::find_if(items.begin(), items.end(),
 			    [&](const Item& item)
@@ -181,17 +183,17 @@ public:
 			return std::distance(items.begin(), itemIt);
 		}
 
-		[[nodiscard]] const std::vector<Item>& get() const
+		[[nodiscard]] const std::vector<Item>& get() const noexcept
 		{
 			return items;
 		}
 
-		[[nodiscard]] const Item& get(size_t index) const
+		[[nodiscard]] const Item& get(size_t index) const noexcept
 		{
 			return items[index];
 		}
 
-		[[nodiscard]] Item* tryGet(size_t index)
+		[[nodiscard]] Item* tryGet(size_t index) noexcept
 		{
 			return index >= fixed() ? &items[index] : nullptr;
 		}
@@ -199,7 +201,7 @@ public:
 		/**
 		 * @return total number of items
 		 */
-		[[nodiscard]] size_t size() const
+		[[nodiscard]] size_t size() const noexcept
 		{
 			return items.size();
 		}
@@ -207,7 +209,7 @@ public:
 		/**
 		 * @return number of immutable/fixed items
 		 */
-		[[nodiscard]] size_t fixed() const
+		[[nodiscard]] size_t fixed() const noexcept
 		{
 			return fixedItems;
 		}
@@ -253,12 +255,12 @@ public:
 	/**
 	 * @brief return active KeyBinds preset
 	 */
-	[[nodiscard]] const KeyBinds& keyBinds() const;
+	[[nodiscard]] const KeyBinds& keyBinds() const noexcept;
 
 	/**
 	 * @brief return active Settings preset
 	 */
-	[[nodiscard]] const Settings& settings() const;
+	[[nodiscard]] const Settings& settings() const noexcept;
 
 	static constexpr const char* FILE_PATH = "save.raymino";
 	static constexpr const char* IDB_PATH = "raymino";

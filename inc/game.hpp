@@ -27,7 +27,7 @@ struct Game : IScene
 	 * @return indices filled via shuffledIndicesFunc
 	 */
 	std::deque<size_t> fillIndices(std::deque<size_t> indices, int minIndices);
-	[[nodiscard]] int cellSizeExtended() const;
+	[[nodiscard]] int cellSizeExtended() const noexcept;
 	Tetromino getNextTetromino(int minIndices);
 
 	enum class State

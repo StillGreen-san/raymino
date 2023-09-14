@@ -2,7 +2,7 @@
 
 namespace raymino
 {
-size_t find_nth(const std::string& str, size_t nth, char chr)
+size_t find_nth(const std::string& str, size_t nth, char chr) noexcept
 {
 	size_t pos = nth == 0 ? 0 : -1;
 	for(; nth > 0; --nth)
@@ -27,7 +27,7 @@ void TextList::add(std::string_view items)
 		list.append(items);
 	}
 }
-void TextList::remove(size_t index)
+void TextList::remove(size_t index) noexcept
 {
 	const size_t delimPos = find_nth(list, index, delimiter);
 	if(delimPos == std::string::npos)
@@ -39,7 +39,7 @@ void TextList::remove(size_t index)
 	const size_t itemLen = (itemEnd == std::string::npos ? list.size() - itemPos : itemEnd - itemPos) + 1;
 	list.erase(list[delimPos] == delimiter ? delimPos : itemPos, itemLen);
 }
-std::string_view TextList::get(size_t index) const
+std::string_view TextList::get(size_t index) const noexcept
 {
 	const size_t delimPos = find_nth(list, index, delimiter);
 	if(delimPos == std::string::npos)
@@ -51,11 +51,11 @@ std::string_view TextList::get(size_t index) const
 	const size_t itemLen = itemEnd == std::string::npos ? list.size() - itemPos : itemEnd - itemPos;
 	return {&list[itemPos], itemLen};
 }
-std::string_view TextList::get() const
+std::string_view TextList::get() const noexcept
 {
 	return list;
 }
-size_t TextList::size() const
+size_t TextList::size() const noexcept
 {
 	if(list.empty())
 	{

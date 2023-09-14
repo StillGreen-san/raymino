@@ -11,21 +11,22 @@ bool constexpr operator<(Color lhs, Color rhs) noexcept
 
 namespace raymino
 {
-ColorMap::ColorMap(std::vector<Color> colors) : colors{std::move(colors)}
+ColorMap::ColorMap(std::vector<Color> colors) noexcept : colors{std::move(colors)}
 {
 	std::sort(this->colors.begin(), this->colors.end());
 }
-Color ColorMap::operator[](Grid::Cell idx) const
+Color ColorMap::operator[](Grid::Cell idx) const noexcept
 {
 	return colors[idx];
 }
-Grid::Cell ColorMap::operator[](Color color) const
+Grid::Cell ColorMap::operator[](Color color) const noexcept
 {
 	auto idxIt = std::lower_bound(colors.begin(), colors.end(), color);
 	return static_cast<Grid::Cell>(std::distance(begin(colors), idxIt));
 }
 
-void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors, uint8_t alpha)
+void drawCells(
+    const Grid& grid, XY at, int cellSize, int borderSize, const ColorMap& minoColors, uint8_t alpha) noexcept
 {
 	const Size gridSize = grid.getSize();
 
@@ -54,7 +55,7 @@ void drawCells(const Grid& grid, XY at, int cellSize, int borderSize, const Colo
 	}
 }
 
-void drawBackground(const Grid& grid, XY at, int cellSize, int borderSize, Color fill, Color lines)
+void drawBackground(const Grid& grid, XY at, int cellSize, int borderSize, Color fill, Color lines) noexcept
 {
 	const Size gridSize = grid.getSize();
 

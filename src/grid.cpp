@@ -8,7 +8,7 @@
 
 namespace raymino
 {
-size_t index1D(int xPos, int yPos, int width)
+size_t index1D(int xPos, int yPos, int width) noexcept
 {
 	return (static_cast<size_t>(yPos) * static_cast<size_t>(width)) + static_cast<size_t>(xPos);
 }
@@ -32,7 +32,7 @@ Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.s
 	std::transform(other.cells.begin(), other.cells.end(), std::back_insert_iterator(cells), std::move(func));
 }
 
-size_t Grid::overlapAt(XY topLeft, const Grid& other) const
+size_t Grid::overlapAt(XY topLeft, const Grid& other) const noexcept
 {
 	for(int yPos = 0; yPos < other.size.height; ++yPos)
 	{
@@ -49,17 +49,7 @@ size_t Grid::overlapAt(XY topLeft, const Grid& other) const
 	return 0;
 }
 
-bool Grid::isSquare() const
-{
-	return size.width == size.height;
-}
-
-Size Grid::getSize() const
-{
-	return size;
-}
-
-Grid::Cell Grid::getAt(XY topLeft, Grid::Cell oobValue) const
+Grid::Cell Grid::getAt(XY topLeft, Grid::Cell oobValue) const noexcept
 {
 	if(topLeft.x < 0 || topLeft.x >= size.width || topLeft.y >= size.height || topLeft.y < 0)
 	{
@@ -68,7 +58,7 @@ Grid::Cell Grid::getAt(XY topLeft, Grid::Cell oobValue) const
 	return cells[index1D(topLeft.x, topLeft.y, size.width)];
 }
 
-void Grid::setAt(XY topLeft, const Grid& other)
+void Grid::setAt(XY topLeft, const Grid& other) noexcept
 {
 	for(int yPos = 0; yPos < other.size.height; ++yPos)
 	{
@@ -92,7 +82,7 @@ void Grid::setAt(XY topLeft, const Grid& other)
 	}
 }
 
-void Grid::rotate(int steps)
+void Grid::rotate(int steps) noexcept
 {
 	steps %= 4;
 	while(steps != 0)
@@ -112,7 +102,7 @@ void Grid::rotate(int steps)
 	}
 }
 
-void Grid::transpose()
+void Grid::transpose() noexcept
 {
 	if(!isSquare())
 	{
@@ -129,7 +119,7 @@ void Grid::transpose()
 	}
 }
 
-void Grid::reverseRows()
+void Grid::reverseRows() noexcept
 {
 	for(ptrdiff_t row = 0; row < size.height; ++row)
 	{
@@ -137,7 +127,7 @@ void Grid::reverseRows()
 	}
 }
 
-void Grid::transformCells(std::function<TTransformFunc> func)
+void Grid::transformCells(std::function<TTransformFunc> func) noexcept
 {
 	std::transform(cells.begin(), cells.end(), cells.begin(), std::move(func));
 }

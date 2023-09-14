@@ -16,14 +16,14 @@ struct Menu : public IScene
 	void UpdateDraw(App& app) override;
 	void PreDestruct(App& app) override;
 
-	void readSettings(const App::Settings& settings);
-	void updateKeyBindBuffers(const App::KeyBinds& keyBinds);
-	void writeSettings(App::Settings& settings) const;
+	void readSettings(const App::Settings& settings) noexcept;
+	void updateKeyBindBuffers(const App::KeyBinds& keyBinds) noexcept;
+	void writeSettings(App::Settings& settings) const noexcept;
 
 	void UpdateDrawSettings(App& app);
-	void UpdateDrawHighscores(App& app);
+	void UpdateDrawHighscores(App& app) noexcept;
 	void UpdateDrawKeyBinds(App& app);
-	void UpdateDrawAbout(App& app);
+	void UpdateDrawAbout(App& app) noexcept;
 
 	enum class State
 	{

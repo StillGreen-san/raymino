@@ -22,7 +22,7 @@ struct KeyAction
 	};
 
 	KeyAction() = delete;
-	KeyAction(float repeatDelay, float repeatRate, int16_t rkey, int16_t lkey = 0) :
+	KeyAction(float repeatDelay, float repeatRate, int16_t rkey, int16_t lkey = 0) noexcept :
 	    repeatDelay{repeatDelay}, delayTimer{repeatRate}, rkey{rkey}, lkey{lkey}
 	{
 	}
@@ -32,7 +32,7 @@ struct KeyAction
 	 * @param delta seconds
 	 * @return key state & value
 	 */
-	Return tick(float delta);
+	Return tick(float delta) noexcept;
 
 	float repeatDelay;
 	Timer delayTimer;

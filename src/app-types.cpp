@@ -73,13 +73,13 @@ int App::KeyBinds::compare(const App::KeyBinds& rhs) const noexcept
 	return std::memcmp(this, &rhs, sizeof(App::KeyBinds));
 }
 
-App::HighScoreEntry::HighScoreEntry(const char* namePtr, int64_t score, const App::Settings& settings) :
+App::HighScoreEntry::HighScoreEntry(const char* namePtr, int64_t score, const App::Settings& settings) noexcept :
     name{}, score{score}, settings{settings}
 {
 	copyInto(namePtr, name);
 }
 
-size_t App::HighScoreEntry::copyInto(const char* inPtr, App::HighScoreEntry::NameT& outRef)
+size_t App::HighScoreEntry::copyInto(const char* inPtr, App::HighScoreEntry::NameT& outRef) noexcept
 {
 	if(!inPtr)
 	{
