@@ -114,9 +114,9 @@ void Menu::writeSettings(App::Settings& settings) const noexcept
 
 void Menu::UpdateDraw(App& app)
 {
-	BeginDrawing();
+	::BeginDrawing();
 
-	ClearBackground(GetColor(static_cast<unsigned>(GuiGetStyle(DEFAULT, BACKGROUND_COLOR))));
+	::ClearBackground(::GetColor(static_cast<unsigned>(::GuiGetStyle(DEFAULT, BACKGROUND_COLOR))));
 
 	if(DropdownBoxRotationSystemEditMode || DropdownBoxWallKicksEditMode || DropdownBoxLockDownEditMode ||
 	    DropdownBoxSoftDropEditMode || DropdownBoxInstantDropEditMode || DropdownBoxTSpinEditMode ||
@@ -124,26 +124,25 @@ void Menu::UpdateDraw(App& app)
 	    DropdownBoxGhostPieceEditMode || DropdownBoxLevelGoalEditMode || keyBindsPresets.inEditMode() ||
 	    settingsPresets.inEditMode() || AboutDialogShowing)
 	{
-		GuiLock();
+		::GuiLock();
 	}
 
-	GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
-	GuiLabel(LabelPlayerNameRect, "Player Name");
-	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, HeadingFontSize);
-	if(GuiButton(ButtonStartGameRect, ButtonStartGameText))
+	::GuiGroupBox(GroupBoxGameRect, GroupBoxGameText);
+	::GuiLabel(LabelPlayerNameRect, "Player Name");
+	::GuiSetStyle(::GuiControl::DEFAULT, ::GuiDefaultProperty::TEXT_SIZE, HeadingFontSize);
+	if(::GuiButton(ButtonStartGameRect, ButtonStartGameText))
 	{
 		app.QueueSceneSwitch(Scene::Game);
 	}
-	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer.data(),
-	       static_cast<int>(TextBoxPlayerNameBuffer.size()), TextBoxPlayerNameEditMode))
+	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer, TextBoxPlayerNameEditMode))
 	{
 		TextBoxPlayerNameEditMode = !TextBoxPlayerNameEditMode;
 	}
-	if(GuiButton(ButtonHighscoresRect, state == State::HighScores ? GroupBoxSettingsText : ButtonHighscoresText))
+	if(::GuiButton(ButtonHighscoresRect, state == State::HighScores ? GroupBoxSettingsText : ButtonHighscoresText))
 	{
 		state = state == State::HighScores ? State::Settings : State::HighScores;
 	}
-	GuiSetStyle(GuiControl::DEFAULT, GuiDefaultProperty::TEXT_SIZE, TextFontSize);
+	::GuiSetStyle(::GuiControl::DEFAULT, ::GuiDefaultProperty::TEXT_SIZE, TextFontSize);
 
 	switch(state)
 	{
@@ -167,29 +166,29 @@ void Menu::UpdateDraw(App& app)
 		UpdateDrawAbout(app);
 	}
 
-	GuiUnlock();
+	::GuiUnlock();
 
-	EndDrawing();
+	::EndDrawing();
 }
 
 void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 {
-	GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
-	GuiLabel(LabelA1Rect, LabelRotationSystemText);
-	GuiLabel(LabelA2Rect, LabelWallKicksText);
-	GuiLabel(LabelA3Rect, LabelLockDownText);
-	GuiLabel(LabelA4Rect, LabelSoftDropText);
-	GuiLabel(LabelA5Rect, LabelInstantDropText);
-	GuiLabel(LabelB1Rect, LabelTSpinText);
-	GuiLabel(LabelB2Rect, LabelShuffleTypeText);
-	GuiLabel(LabelB3Rect, LabelScoringSystemText);
-	GuiLabel(LabelA6Rect, LabelFieldWidthText);
-	GuiLabel(LabelA7Rect, LabelFieldHeightText);
-	GuiLabel(LabelA8Rect, LabelPreviewCountText);
-	GuiLabel(LabelB4Rect, LabelHoldPieceText);
-	GuiLabel(LabelB6Rect, LabelGhostPieceText);
-	GuiLabel(LabelPresetsRect, LabelPresetsText);
-	GuiLabel(LabelB5Rect, LabelLevelGoalText);
+	::GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
+	::GuiLabel(LabelA1Rect, LabelRotationSystemText);
+	::GuiLabel(LabelA2Rect, LabelWallKicksText);
+	::GuiLabel(LabelA3Rect, LabelLockDownText);
+	::GuiLabel(LabelA4Rect, LabelSoftDropText);
+	::GuiLabel(LabelA5Rect, LabelInstantDropText);
+	::GuiLabel(LabelB1Rect, LabelTSpinText);
+	::GuiLabel(LabelB2Rect, LabelShuffleTypeText);
+	::GuiLabel(LabelB3Rect, LabelScoringSystemText);
+	::GuiLabel(LabelA6Rect, LabelFieldWidthText);
+	::GuiLabel(LabelA7Rect, LabelFieldHeightText);
+	::GuiLabel(LabelA8Rect, LabelPreviewCountText);
+	::GuiLabel(LabelB4Rect, LabelHoldPieceText);
+	::GuiLabel(LabelB6Rect, LabelGhostPieceText);
+	::GuiLabel(LabelPresetsRect, LabelPresetsText);
+	::GuiLabel(LabelB5Rect, LabelLevelGoalText);
 	::GuiLabel(LabelB7Rect, LabelSeedText);
 	if(GuiButton(InputB8Rect, ButtonKeyBindsText))
 	{
@@ -236,8 +235,8 @@ void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry
 {
 	std::array<char, 16> buffer{};
 	std::to_chars(&buffer.front(), &buffer.back(), entry.score);
-	GuiLabel({bounds.x + 15, bounds.y + (25 * scoresIdx) + 5, 65, 24}, entry.name.data());
-	GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
+	::GuiLabel({bounds.x + 15, bounds.y + (25 * scoresIdx) + 5, 65, 24}, entry.name.data());
+	::GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
 }
 
 void genEntries(App& app, int entryCount, const char* namePtr, const App::Settings* setPtr)
@@ -286,7 +285,7 @@ void genEntries(App& app, int entryCount, const char* namePtr, const App::Settin
 void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unused]] const char* namePtr,
     [[maybe_unused]] const App::Settings* setPtr, std::function<bool(const App::HighScoreEntry&)> selector)
 {
-	GuiGroupBox(bounds, text);
+	::GuiGroupBox(bounds, text);
 	if(::GuiButton({bounds.x + bounds.width - 22, bounds.y - 6, 16, 16}, "X"))
 	{
 		app.highScores.entries.erase(
@@ -303,7 +302,7 @@ void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unus
 
 void Menu::UpdateDrawHighscores(App& app) noexcept
 {
-	GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
+	::GuiGroupBox(GroupBoxSettingsRect, ButtonHighscoresText);
 	drawClose(AllScoreRect, "All Scores", app, nullptr, nullptr,
 	    [&]([[maybe_unused]] const App::HighScoreEntry& entry)
 	    {
@@ -424,8 +423,8 @@ void Menu::UpdateDrawAbout([[maybe_unused]] App& app) noexcept
 		return;
 	}
 
-	const int prevTextColorProp = ::GuiGetStyle(GuiControl::LABEL, GuiControlProperty::TEXT_COLOR_NORMAL);
-	::GuiSetStyle(GuiControl::LABEL, GuiControlProperty::TEXT_COLOR_NORMAL, ColorToInt(BLUE));
+	const int prevTextColorProp = ::GuiGetStyle(::GuiControl::LABEL, ::GuiControlProperty::TEXT_COLOR_NORMAL);
+	::GuiSetStyle(::GuiControl::LABEL, ::GuiControlProperty::TEXT_COLOR_NORMAL, ColorToInt(BLUE));
 
 	if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.url.data()))
 	{
@@ -441,7 +440,7 @@ void Menu::UpdateDrawAbout([[maybe_unused]] App& app) noexcept
 		entryYOffset += entryHeight;
 	}
 
-	::GuiSetStyle(GuiControl::LABEL, GuiControlProperty::TEXT_COLOR_NORMAL, prevTextColorProp);
+	::GuiSetStyle(::GuiControl::LABEL, ::GuiControlProperty::TEXT_COLOR_NORMAL, prevTextColorProp);
 
 	::GuiLabel({aboutBounds.x + 20, aboutBounds.y + 54, 0, 20}, "build with:");
 

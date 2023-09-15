@@ -12,7 +12,7 @@
 #include <raylib-cpp.hpp>
 #include <rres-raylib.h>
 
-bool constexpr operator<(Color lhs, Color rhs) noexcept
+bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 {
 	return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
 }

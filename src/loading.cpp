@@ -20,7 +20,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Loading>(App& app)
 Loading::Loading(App& app)
 {
 #if defined(PLATFORM_WEB)
-	emscripten_idb_async_load(
+	::emscripten_idb_async_load(
 	    App::IDB_PATH, App::FILE_PATH, &app,
 	    [](void* user, void* data, int size)
 	    {

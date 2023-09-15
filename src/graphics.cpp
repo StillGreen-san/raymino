@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 
-bool constexpr operator<(Color lhs, Color rhs) noexcept
+bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 {
 	return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
 }
@@ -11,15 +11,15 @@ bool constexpr operator<(Color lhs, Color rhs) noexcept
 
 namespace raymino
 {
-ColorMap::ColorMap(std::vector<Color> colors) noexcept : colors{std::move(colors)}
+ColorMap::ColorMap(std::vector<::Color> colors) noexcept : colors{std::move(colors)}
 {
 	std::sort(this->colors.begin(), this->colors.end());
 }
-Color ColorMap::operator[](Grid::Cell idx) const noexcept
+::Color ColorMap::operator[](Grid::Cell idx) const noexcept
 {
 	return colors[idx];
 }
-Grid::Cell ColorMap::operator[](Color color) const noexcept
+Grid::Cell ColorMap::operator[](::Color color) const noexcept
 {
 	auto idxIt = std::lower_bound(colors.begin(), colors.end(), color);
 	return static_cast<Grid::Cell>(std::distance(begin(colors), idxIt));
@@ -42,7 +42,7 @@ void drawCells(
 	{
 		if(cell != 0)
 		{
-			Color color = minoColors[cell];
+			::Color color = minoColors[cell];
 			color.a = alpha;
 			::DrawRectangle(at.x, at.y, cellSize, cellSize, color);
 		}
@@ -55,7 +55,7 @@ void drawCells(
 	}
 }
 
-void drawBackground(const Grid& grid, XY at, int cellSize, int borderSize, Color fill, Color lines) noexcept
+void drawBackground(const Grid& grid, XY at, int cellSize, int borderSize, ::Color fill, ::Color lines) noexcept
 {
 	const Size gridSize = grid.getSize();
 
