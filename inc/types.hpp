@@ -105,56 +105,56 @@ enum class TetrominoType : uint8_t
 };
 enum class RotationSystem : uint8_t
 {
-	Original,
-	Super,
-	Arika,
-	Sega,
-	NintendoLeft,
-	NintendoRight,
+	Original = 0,
+	Super = 1,
+	Arika = 2,
+	Sega = 3,
+	NintendoLeft = 4,
+	NintendoRight = 5,
 };
 enum class WallKicks : uint8_t
 {
-	None,
-	Arika,
-	Super,
+	None = 0,
+	Arika = 1,
+	Super = 2,
 };
 enum class LockDown : uint8_t
 {
-	Infinit,
-	Extended,
-	Classic,
-	Entry,
+	Infinit = 0,
+	Extended = 1,
+	Classic = 2,
+	Entry = 3,
 };
 enum class SoftDrop : uint8_t
 {
-	Locking,
-	NonLocking,
+	Locking = 0,
+	NonLocking = 1,
 };
 enum class InstantDrop : uint8_t
 {
-	Hard,
-	Sonic,
-	None,
+	Hard = 0,
+	Sonic = 1,
+	None = 2,
 };
 enum class TSpin : uint8_t
 {
-	Immobile,
-	ThreeCorner,
-	Lenient,
+	Immobile = 0,
+	ThreeCorner = 1,
+	Lenient = 2,
 };
 enum class ShuffleType : uint8_t
 {
-	Random,
-	SingleBag,
-	DoubleBag,
-	TripleBag,
+	Random = 0,
+	SingleBag = 1,
+	DoubleBag = 2,
+	TripleBag = 3,
 };
 enum class ScoringSystem : uint8_t
 {
-	Guideline,
-	BPS,
-	Sega,
-	Nintendo,
+	Guideline = 0,
+	BPS = 1,
+	Sega = 2,
+	Nintendo = 3,
 };
 enum class ScoreEvent : uint8_t
 {
@@ -167,7 +167,7 @@ enum class ScoreEvent : uint8_t
 };
 enum class LevelGoal : uint8_t
 {
-	Fixed,
-	Dynamic,
+	Fixed = 0,
+	Dynamic = 1,
 };
 } // namespace raymino
