@@ -224,7 +224,10 @@ void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 		const ScopedGuiLock lock(false);
 		settingsPresets.handleSelectionBox(DropdownBoxPresetsRect);
 	}
-	settingsPresets.handleSaveButton(InputSaveRect, "+");
+	if(settingsPresets.getPresets().size() < MaxSavedPresets)
+	{
+		settingsPresets.handleSaveButton(InputSaveRect, "+");
+	}
 	settingsPresets.handleRemoveButton(InputRemoveRect, "x");
 	readSettings(settingsPresets.getValue());
 }
@@ -399,7 +402,10 @@ void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
 			updateKeyBindBuffers(keyBindsPresets.getValue());
 		}
 	}
-	keyBindsPresets.handleSaveButton(InputSaveRect, "+");
+	if(keyBindsPresets.getPresets().size() < MaxSavedPresets)
+	{
+		keyBindsPresets.handleSaveButton(InputSaveRect, "+");
+	}
 	keyBindsPresets.handleRemoveButton(InputRemoveRect, "x");
 }
 

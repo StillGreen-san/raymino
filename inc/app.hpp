@@ -268,6 +268,7 @@ public:
 	static constexpr size_t MAX_SCORES = 1300;
 #else
 	static constexpr size_t MAX_SCORES = 5000;
+	static constexpr size_t MAX_PRESETS = std::numeric_limits<uint16_t>::max();
 #endif
 
 	static_assert(sizeof(bool) == 1);

@@ -81,6 +81,7 @@ struct Menu : public IScene
 
 	static constexpr int TextFontSize = 10;
 	static constexpr int HeadingFontSize = 20;
+	static constexpr size_t MaxSavedPresets = std::min(App::MAX_PRESETS, 12ULL);
 
 	bool AboutDialogShowing = false;
 	bool DropdownBoxRotationSystemEditMode = false;
@@ -155,9 +156,9 @@ struct Menu : public IScene
 	static constexpr Rectangle ButtonHighscoresRect{AnchorGame.x + 366, AnchorGame.y + 16, 152, 40};
 	static constexpr Rectangle GroupBoxSettingsRect{AnchorSettings.x + 0, AnchorSettings.y + 0, 552, 456};
 	static constexpr Rectangle LabelPresetsRect{AnchorSettings.x + 24, AnchorSettings.y + 16, 96, 24};
-	static constexpr Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 32};
-	static constexpr ::Rectangle InputSaveRect{AnchorSettings.x + 404, AnchorSettings.y + 24, 20, 20};
-	static constexpr ::Rectangle InputRemoveRect{AnchorSettings.x + 432, AnchorSettings.y + 24, 20, 20};
+	static constexpr Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 31};
+	static constexpr ::Rectangle InputSaveRect{AnchorSettings.x + 404, AnchorSettings.y + 22, 20, 20};
+	static constexpr ::Rectangle InputRemoveRect{AnchorSettings.x + 432, AnchorSettings.y + 22, 20, 20};
 	static constexpr Rectangle LabelA1Rect{AnchorSettings.x + 24, AnchorSettings.y + 72, 96, 24};
 	static constexpr Rectangle LabelA2Rect{AnchorSettings.x + 24, AnchorSettings.y + 120, 96, 24};
 	static constexpr Rectangle LabelA3Rect{AnchorSettings.x + 24, AnchorSettings.y + 168, 96, 24};
