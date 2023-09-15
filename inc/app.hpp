@@ -264,11 +264,11 @@ public:
 
 	static constexpr const char* FILE_PATH = "save.raymino";
 	static constexpr const char* IDB_PATH = "raymino";
+	static constexpr size_t MAX_PRESETS = std::numeric_limits<uint16_t>::max();
 #if defined(PLATFORM_WEB)
 	static constexpr size_t MAX_SCORES = 1300;
 #else
 	static constexpr size_t MAX_SCORES = 5000;
-	static constexpr size_t MAX_PRESETS = std::numeric_limits<uint16_t>::max();
 #endif
 
 	static_assert(sizeof(bool) == 1);

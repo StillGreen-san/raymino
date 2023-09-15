@@ -81,7 +81,7 @@ struct Menu : public IScene
 
 	static constexpr int TextFontSize = 10;
 	static constexpr int HeadingFontSize = 20;
-	static constexpr size_t MaxSavedPresets = std::min(App::MAX_PRESETS, 12ULL);
+	static constexpr size_t MaxSavedPresets = std::min<size_t>(App::MAX_PRESETS, 12);
 
 	bool AboutDialogShowing = false;
 	bool DropdownBoxRotationSystemEditMode = false;
