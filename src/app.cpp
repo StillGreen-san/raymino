@@ -4,6 +4,8 @@
 #include <external/sinfl.h>
 #include <raylib-cpp.hpp>
 
+#include <magic_enum.hpp>
+
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
@@ -93,6 +95,7 @@ struct ChunkType
 		SettingsPresets = 15,
 		OtherItems = 16,
 	};
+	using type = decltype(PlayerName);
 };
 
 struct alignas(int64_t) OtherItems
@@ -195,54 +198,62 @@ void App::deserialize(const SaveFile& save)
 {
 	for(const SaveFile::Chunk::Header& chunkHeader : save)
 	{
-		switch(chunkHeader.type)
+		try
 		{
-		case ChunkType::PlayerName:
-			playerName = *SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
+			switch(chunkHeader.type)
+			{
+			case ChunkType::PlayerName:
+				playerName = *SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
+				break;
+			case ChunkType::Settings:
+			{
+				const Settings& settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
+				if(settingsPresets.find(settings) == settingsPresets.size())
+				{
+					settingsPresets.add({"Custom", settings});
+				}
+			}
 			break;
-		case ChunkType::Settings:
-		{
-			const Settings& settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
-			if(settingsPresets.find(settings) == settingsPresets.size())
+			case ChunkType::HighScores:
 			{
-				settingsPresets.add({"Custom", settings});
+				const SaveFile::Chunk::DataRange<const HighScoreEntry> range(chunkHeader);
+				highScores.entries.assign(range.begin(), range.end());
+			}
+			break;
+			case ChunkType::KeyBinds:
+			{
+				const KeyBinds& keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
+				if(keyBindsPresets.find(keyBinds) == keyBindsPresets.size())
+				{
+					keyBindsPresets.add({"Custom", keyBinds});
+				}
+			}
+			break;
+			case ChunkType::KeyBindsPresets:
+			{
+				const SaveFile::Chunk::DataRange<const Presets<KeyBinds>::Item> range(chunkHeader);
+				keyBindsPresets.add(Range{range});
+				activeKeyBindsPreset = chunkHeader.userProperty;
+			}
+			break;
+			case ChunkType::SettingsPresets:
+			{
+				const SaveFile::Chunk::DataRange<const Presets<Settings>::Item> range(chunkHeader);
+				settingsPresets.add(Range{range});
+				activeSettingsPreset = chunkHeader.userProperty;
+			}
+			break;
+			case ChunkType::OtherItems:
+			{
+				// const OtherItems& otherItems = *SaveFile::Chunk::DataRange<const OtherItems>(chunkHeader).begin();
+			}
+			break;
 			}
 		}
-		break;
-		case ChunkType::HighScores:
+		catch(const std::range_error& exception)
 		{
-			const SaveFile::Chunk::DataRange<const HighScoreEntry> range(chunkHeader);
-			highScores.entries.assign(range.begin(), range.end());
-		}
-		break;
-		case ChunkType::KeyBinds:
-		{
-			const KeyBinds& keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
-			if(keyBindsPresets.find(keyBinds) == keyBindsPresets.size())
-			{
-				keyBindsPresets.add({"Custom", keyBinds});
-			}
-		}
-		break;
-		case ChunkType::KeyBindsPresets:
-		{
-			const SaveFile::Chunk::DataRange<const Presets<KeyBinds>::Item> range(chunkHeader);
-			keyBindsPresets.add(Range{range});
-			activeKeyBindsPreset = chunkHeader.userProperty;
-		}
-		break;
-		case ChunkType::SettingsPresets:
-		{
-			const SaveFile::Chunk::DataRange<const Presets<Settings>::Item> range(chunkHeader);
-			settingsPresets.add(Range{range});
-			activeSettingsPreset = chunkHeader.userProperty;
-		}
-		break;
-		case ChunkType::OtherItems:
-		{
-			// const OtherItems& otherItems = *SaveFile::Chunk::DataRange<const OtherItems>(chunkHeader).begin();
-		}
-		break;
+			const auto chunkTypeName = magic_enum::enum_name<ChunkType::type>(ChunkType::type{chunkHeader.type});
+			::TraceLog(LOG_ERROR, "Deserialization: [%s] %s", chunkTypeName.data(), exception.what());
 		}
 	}
 }
