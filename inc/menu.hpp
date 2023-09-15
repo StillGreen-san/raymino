@@ -68,7 +68,7 @@ struct Menu : public IScene
 	static constexpr const char* DropdownBoxWallKicksText = "None;Arika;Super";
 	static constexpr const char* DropdownBoxLockDownText = "Infinit;Extended;Classic;Entry";
 	static constexpr const char* DropdownBoxSoftDropText = "Locking;None Locking";
-	static constexpr const char* DropdownBoxInstantDropText = "Hard;Sonic";
+	static constexpr const char* DropdownBoxInstantDropText = "Hard;Sonic;None";
 	static constexpr const char* DropdownBoxTSpinText = "Immobile;Three Corner;Lenient";
 	static constexpr const char* DropdownBoxShuffleTypeText = "Random;Single Bag;Double Bag;Triple Bag";
 	static constexpr const char* DropdownBoxScoringSystemText = "Guideline;BPS;Sega;Nintendo";

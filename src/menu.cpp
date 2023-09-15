@@ -266,7 +266,7 @@ void genEntries(App& app, int entryCount, const char* namePtr, const App::Settin
 			settings.wallKicks = static_cast<WallKicks>(settDist3(rng));
 			settings.lockDown = static_cast<LockDown>(settDist4(rng));
 			settings.softDrop = static_cast<SoftDrop>(settDist2(rng));
-			settings.instantDrop = static_cast<InstantDrop>(settDist2(rng));
+			settings.instantDrop = static_cast<InstantDrop>(settDist3(rng));
 			settings.tSpin = static_cast<TSpin>(settDist3(rng));
 			settings.shuffleType = static_cast<ShuffleType>(settDist4(rng));
 			settings.scoringSystem = static_cast<ScoringSystem>(settDist4(rng));

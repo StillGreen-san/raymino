@@ -134,6 +134,7 @@ enum class InstantDrop : uint8_t
 {
 	Hard,
 	Sonic,
+	None,
 };
 enum class TSpin : uint8_t
 {

@@ -260,7 +260,7 @@ void Game::update(App& app)
 			lockDelay.reset(lockDelay.delay);
 		}
 	}
-	if(::IsKeyPressed(keyBinds.hardDrop))
+	if(settings.instantDrop != InstantDrop::None && ::IsKeyPressed(keyBinds.hardDrop))
 	{
 		for(int yOffset = 1;; ++yOffset)
 		{
