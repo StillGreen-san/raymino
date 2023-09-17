@@ -130,6 +130,11 @@ public:
 	[[nodiscard]] std::string_view get() const noexcept;
 
 	/**
+	 * @return complete list
+	 */
+	operator const char*() const noexcept;
+
+	/**
 	 * @return number of items
 	 */
 	[[nodiscard]] size_t size() const noexcept;

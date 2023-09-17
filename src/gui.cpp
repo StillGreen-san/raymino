@@ -55,6 +55,10 @@ std::string_view TextList::get() const noexcept
 {
 	return list;
 }
+TextList::operator const char*() const noexcept
+{
+	return list.c_str();
+}
 size_t TextList::size() const noexcept
 {
 	if(list.empty())
