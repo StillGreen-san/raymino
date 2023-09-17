@@ -45,6 +45,13 @@ TextList enumToTextList()
 }
 
 Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
+    DropdownBoxRotationSystemTextList{enumToTextList<RotationSystem>()},
+    DropdownBoxWallKicksTextList{enumToTextList<WallKicks>()}, DropdownBoxLockDownTextList{enumToTextList<LockDown>()},
+    DropdownBoxSoftDropTextList{enumToTextList<SoftDrop>()},
+    DropdownBoxInstantDropTextList{enumToTextList<InstantDrop>()}, DropdownBoxTSpinTextList{enumToTextList<TSpin>()},
+    DropdownBoxShuffleTypeTextList{enumToTextList<ShuffleType>()},
+    DropdownBoxScoringSystemTextList{enumToTextList<ScoringSystem>()},
+    DropdownBoxLevelGoalTextList{enumToTextList<LevelGoal>()},
     keyBindsPresets{app.keyBindsPresets, app.activeKeyBindsPreset},
     settingsPresets{app.settingsPresets, app.activeSettingsPreset}, TextBoxPlayerNameBuffer{app.playerName},
     TextBoxSeedBuffer{app.seed}
@@ -215,20 +222,20 @@ void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 	    SpinnerFieldHeightEditMode);
 	GuiTextBox(InputB7Rect, TextBoxSeedBuffer, TextBoxSeedEditMode, 17);
 	GuiDropdownBox(InputB6Rect, DropdownBoxGhostPieceText, DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode);
-	GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalText, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
+	GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalTextList, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
 	GuiDropdownBox(InputB4Rect, DropdownBoxHoldPieceText, DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode);
+	GuiDropdownBox(InputB3Rect, DropdownBoxScoringSystemTextList, DropdownBoxScoringSystemActive,
+	    DropdownBoxScoringSystemEditMode);
 	GuiDropdownBox(
-	    InputB3Rect, DropdownBoxScoringSystemText, DropdownBoxScoringSystemActive, DropdownBoxScoringSystemEditMode);
+	    InputB2Rect, DropdownBoxShuffleTypeTextList, DropdownBoxShuffleTypeActive, DropdownBoxShuffleTypeEditMode);
+	GuiDropdownBox(InputB1Rect, DropdownBoxTSpinTextList, DropdownBoxTSpinActive, DropdownBoxTSpinEditMode);
 	GuiDropdownBox(
-	    InputB2Rect, DropdownBoxShuffleTypeText, DropdownBoxShuffleTypeActive, DropdownBoxShuffleTypeEditMode);
-	GuiDropdownBox(InputB1Rect, DropdownBoxTSpinText, DropdownBoxTSpinActive, DropdownBoxTSpinEditMode);
-	GuiDropdownBox(
-	    InputA5Rect, DropdownBoxInstantDropText, DropdownBoxInstantDropActive, DropdownBoxInstantDropEditMode);
-	GuiDropdownBox(InputA4Rect, DropdownBoxSoftDropText, DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode);
-	GuiDropdownBox(InputA3Rect, DropdownBoxLockDownText, DropdownBoxLockDownActive, DropdownBoxLockDownEditMode);
-	GuiDropdownBox(InputA2Rect, DropdownBoxWallKicksText, DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode);
-	GuiDropdownBox(
-	    InputA1Rect, DropdownBoxRotationSystemText, DropdownBoxRotationSystemActive, DropdownBoxRotationSystemEditMode);
+	    InputA5Rect, DropdownBoxInstantDropTextList, DropdownBoxInstantDropActive, DropdownBoxInstantDropEditMode);
+	GuiDropdownBox(InputA4Rect, DropdownBoxSoftDropTextList, DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode);
+	GuiDropdownBox(InputA3Rect, DropdownBoxLockDownTextList, DropdownBoxLockDownActive, DropdownBoxLockDownEditMode);
+	GuiDropdownBox(InputA2Rect, DropdownBoxWallKicksTextList, DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode);
+	GuiDropdownBox(InputA1Rect, DropdownBoxRotationSystemTextList, DropdownBoxRotationSystemActive,
+	    DropdownBoxRotationSystemEditMode);
 
 	writeSettings(settingsPresets.getValue());
 	settingsPresets.updateState();
@@ -271,18 +278,13 @@ TType randomValue(
 void genEntries(App& app, int entryCount, const char* namePtr, const App::Settings* setPtr)
 {
 	std::mt19937_64 rng(std::random_device{}());
-	std::uniform_int_distribution<int> charDist(' ', '~');
-	std::uniform_int_distribution<int> scoreDist(99, 999999);
-	std::uniform_int_distribution<int> settDist6(0, 5);
-	std::uniform_int_distribution<int> settDist4(0, 3);
-	std::uniform_int_distribution<int> settDist3(0, 2);
-	std::uniform_int_distribution<int> settDist2(0, 1);
 	App::Settings settings;
 	App::HighScoreEntry::NameT name{};
 	for(int i = 0; i < entryCount; ++i)
 	{
 		if(!namePtr)
 		{
+			std::uniform_int_distribution<int> charDist(' ', '~');
 			std::for_each(name.begin(), name.end(),
 			    [&](auto& chr)
 			    {
@@ -291,22 +293,23 @@ void genEntries(App& app, int entryCount, const char* namePtr, const App::Settin
 		}
 		if(!setPtr)
 		{
-			settings.rotationSystem = static_cast<RotationSystem>(settDist6(rng));
-			settings.wallKicks = static_cast<WallKicks>(settDist3(rng));
-			settings.lockDown = static_cast<LockDown>(settDist4(rng));
-			settings.softDrop = static_cast<SoftDrop>(settDist2(rng));
-			settings.instantDrop = static_cast<InstantDrop>(settDist3(rng));
-			settings.tSpin = static_cast<TSpin>(settDist3(rng));
-			settings.shuffleType = static_cast<ShuffleType>(settDist4(rng));
-			settings.scoringSystem = static_cast<ScoringSystem>(settDist4(rng));
-			settings.levelGoal = static_cast<LevelGoal>(settDist2(rng));
-			settings.holdPiece = static_cast<bool>(settDist2(rng));
-			settings.ghostPiece = static_cast<bool>(settDist2(rng));
-			settings.previewCount = static_cast<uint8_t>(settDist6(rng));
-			settings.fieldWidth = static_cast<uint8_t>(settDist6(rng) + 10);
-			settings.fieldHeight = static_cast<uint8_t>(settDist6(rng) + 10);
+			settings.rotationSystem = randomValue<RotationSystem>(rng);
+			settings.wallKicks = randomValue<WallKicks>(rng);
+			settings.lockDown = randomValue<LockDown>(rng);
+			settings.softDrop = randomValue<SoftDrop>(rng);
+			settings.instantDrop = randomValue<InstantDrop>(rng);
+			settings.tSpin = randomValue<TSpin>(rng);
+			settings.shuffleType = randomValue<ShuffleType>(rng);
+			settings.scoringSystem = randomValue<ScoringSystem>(rng);
+			settings.levelGoal = randomValue<LevelGoal>(rng);
+			settings.holdPiece = randomValue<bool>(rng);
+			settings.ghostPiece = randomValue<bool>(rng);
+			settings.previewCount = randomValue<uint8_t>(rng, 0, 5);
+			settings.fieldWidth = randomValue<uint8_t>(rng, 10, 15);
+			settings.fieldHeight = randomValue<uint8_t>(rng, 10, 15);
 		}
-		app.highScores.add(namePtr ? namePtr : name.data(), scoreDist(rng), setPtr ? *setPtr : settings);
+		app.highScores.add(
+		    namePtr ? namePtr : name.data(), randomValue<int>(rng, 99, 999999), setPtr ? *setPtr : settings);
 	}
 	App::storeFile(app.serialize());
 }
