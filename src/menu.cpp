@@ -31,6 +31,19 @@ void copyEnumName(int fromKey, TContainer& intoBuffer) noexcept
 	*last = '\0';
 }
 
+template<typename TEnum>
+TextList enumToTextList()
+{
+	TextList list;
+	const auto enumNames = magic_enum::enum_names<TEnum>();
+	for(const auto name : enumNames)
+	{
+		const std::string split = splitUpper(name);
+		list.add(split);
+	}
+	return list;
+}
+
 Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
     keyBindsPresets{app.keyBindsPresets, app.activeKeyBindsPreset},
     settingsPresets{app.settingsPresets, app.activeSettingsPreset}, TextBoxPlayerNameBuffer{app.playerName},
