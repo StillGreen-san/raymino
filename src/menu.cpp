@@ -252,6 +252,22 @@ void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry
 	::GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
 }
 
+template<typename TType, typename TRng, std::enable_if_t<std::is_enum_v<TType>, bool> = true>
+TType randomValue(TRng& rng)
+{
+	constexpr auto values = magic_enum::enum_values<TType>();
+	std::uniform_int_distribution<unsigned> dist(0, static_cast<unsigned>(values.size() - 1));
+	return static_cast<TType>(values[dist(rng)]);
+}
+template<typename TType, typename TRng, std::enable_if_t<!std::is_enum_v<TType>, bool> = true>
+TType randomValue(
+    TRng& rng, TType min = std::numeric_limits<TType>::min(), TType max = std::numeric_limits<TType>::max())
+{
+	using TDistType = std::conditional_t<std::is_signed_v<TType>, ptrdiff_t, size_t>;
+	std::uniform_int_distribution<TDistType> dist(min, max);
+	return static_cast<TType>(dist(rng));
+}
+
 void genEntries(App& app, int entryCount, const char* namePtr, const App::Settings* setPtr)
 {
 	std::mt19937_64 rng(std::random_device{}());
