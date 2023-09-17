@@ -144,6 +144,11 @@ private:
 };
 
 /**
+ * @brief inserts ' ' in front of upper case chars
+ */
+std::string splitUpper(std::string_view text);
+
+/**
  * @brief gui element to handle Presets collection
  * @tparam TValue type of Presets::Item value
  */

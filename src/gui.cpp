@@ -67,4 +67,25 @@ size_t TextList::size() const noexcept
 	}
 	return std::count(list.begin(), list.end(), delimiter) + 1;
 }
+
+std::string splitUpper(std::string_view text)
+{
+	if(text.empty())
+	{
+		return {};
+	}
+	std::string split;
+	split.reserve(text.size());
+	split.append(1, text.front());
+	text.remove_prefix(1);
+	for(const char chr : text)
+	{
+		if(std::isupper(chr) != 0)
+		{
+			split.append(1, ' ');
+		}
+		split.append(1, chr);
+	}
+	return split;
+}
 } // namespace raymino

@@ -4,7 +4,7 @@
 
 using namespace raymino;
 
-TEST_CASE("TextList", "[Menu]")
+TEST_CASE("TextList", "[GUI]")
 {
 	SECTION("TextList()")
 	{
@@ -61,5 +61,47 @@ TEST_CASE("TextList", "[Menu]")
 
 		list.remove(0);
 		REQUIRE(list.size() == 0);
+	}
+}
+
+TEST_CASE("splitUpper", "[GUI]")
+{
+	SECTION("small")
+	{
+		const std::string empty = splitUpper("");
+		REQUIRE(empty.empty());
+
+		const std::string one = splitUpper("A");
+		REQUIRE(one == "A");
+
+		const std::string six = splitUpper("AB");
+		REQUIRE(six == "A B");
+
+		const std::string ten = splitUpper("ABc");
+		REQUIRE(ten == "A Bc");
+	}
+	SECTION("camel")
+	{
+		const std::string one = splitUpper("someWords");
+		REQUIRE(one == "some Words");
+
+		const std::string two = splitUpper("someMoreDifferentWordsAB");
+		REQUIRE(two == "some More Different Words A B");
+	}
+	SECTION("pascal")
+	{
+		const std::string one = splitUpper("MyText");
+		REQUIRE(one == "My Text");
+
+		const std::string two = splitUpper("MyTextButDifferentXJ");
+		REQUIRE(two == "My Text But Different X J");
+	}
+	SECTION("other")
+	{
+		const std::string one = splitUpper("IMPORTANT_THING-HERE");
+		REQUIRE(one == "I M P O R T A N T_ T H I N G- H E R E");
+
+		const std::string two = splitUpper("Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.123");
+		REQUIRE(two == "Franz jagt im komplett verwahrlosten  Taxi quer durch  Bayern.123");
 	}
 }
