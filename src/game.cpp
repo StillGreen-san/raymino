@@ -469,9 +469,9 @@ Game::Game(App& app) :
 {
 }
 
-std::deque<size_t> Game::fillIndices(std::deque<size_t> indices, int minIndices)
+std::deque<size_t> Game::fillIndices(std::deque<size_t> indices, size_t minIndices)
 {
-	while(indices.size() < static_cast<size_t>(minIndices))
+	while(indices.size() < minIndices)
 	{
 		std::vector<size_t> newIndices = shuffledIndicesFunc(baseTetrominos, rng);
 		indices.insert(indices.end(), newIndices.begin(), newIndices.end());
@@ -484,7 +484,7 @@ int Game::cellSizeExtended() const noexcept
 	return std::min(previewElementHeightExtended / 5, PREVIEW_CELL_SIZE);
 }
 
-Tetromino Game::getNextTetromino(int minIndices)
+Tetromino Game::getNextTetromino(size_t minIndices)
 {
 	minIndices = minIndices == 0 ? 1 : minIndices;
 	const size_t nextIdx = nextTetrominoIndices.front();
