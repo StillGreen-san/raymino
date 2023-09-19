@@ -21,12 +21,7 @@ struct Game : IScene
 	void update(App& app);
 	void draw(App& app);
 
-	/**
-	 * @param indices to fill
-	 * @param minIndices to be in indices
-	 * @return indices filled via shuffledIndicesFunc
-	 */
-	std::deque<size_t> fillIndices(std::deque<size_t> indices, size_t minIndices);
+	std::deque<size_t> fillIndices(size_t minIndices);
 	[[nodiscard]] int cellSizeExtended() const noexcept;
 	Tetromino getNextTetromino(size_t minIndices);
 
@@ -43,7 +38,7 @@ struct Game : IScene
 	std::vector<XY> previewOffsetsMain;
 	size_t holdPieceIdx;
 	std::mt19937_64 rng;
-	decltype(shuffledIndices(ShuffleType{})) shuffledIndicesFunc;
+	std::unique_ptr<IShuffledIndices> shuffledIndicesFunc;
 	std::deque<size_t> nextTetrominoIndices;
 	int previewElementHeightExtended;
 	std::vector<XY> previewOffsetsExtended;
