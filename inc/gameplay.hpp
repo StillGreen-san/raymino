@@ -4,6 +4,7 @@
 #include "types.hpp"
 
 #include <algorithm>
+#include <deque>
 #include <memory>
 #include <random>
 #include <vector>
@@ -216,6 +217,36 @@ std::unique_ptr<IScoringSystem> makeScoringSystem();
  * @return makeScoringSystem function pointer
  */
 std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept)();
+
+/**
+ * @brief potentially stateful shuffledIndices
+ */
+struct IShuffledIndices
+{
+	virtual ~IShuffledIndices() = default;
+
+	/**
+	 * @brief add random indices to indices
+	 * @param indices index list
+	 * @param minIndices in indices
+	 * @param indexCount to shuffle from
+	 * @param rng random engine
+	 */
+	virtual void fill(std::deque<size_t>& indices, size_t minIndices, size_t indexCount, std::mt19937_64& rng) = 0;
+};
+
+/**
+ * @tparam TType ShuffleType
+ * @return std::unique_ptr<IShuffledIndices> of TType ShuffleType
+ */
+template<ShuffleType TType>
+std::unique_ptr<IShuffledIndices> makeShuffledIndices();
+
+/**
+ * @param ttype ShuffleType
+ * @return makeShuffledIndices function pointer
+ */
+std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)();
 
 /**
  * @tparam TType ShuffleType
