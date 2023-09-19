@@ -546,6 +546,12 @@ ScoreEvent tSpinCheck<TSpin::Lenient>(const Grid& field, const Tetromino& tetrom
 
 	return fullLines > 0 ? ScoreEvent::TSpin : ScoreEvent::MiniTSpin;
 }
+template<>
+ScoreEvent tSpinCheck<TSpin::None>([[maybe_unused]] const Grid& field, [[maybe_unused]] const Tetromino& tetromino,
+    [[maybe_unused]] Offset lastMovement) noexcept
+{
+	return ScoreEvent::LineClear;
+}
 ScoreEvent (*tSpinCheck(TSpin tspin) noexcept)(const Grid& field, const Tetromino& tetromino, Offset offset) noexcept
 {
 	switch(tspin)
@@ -557,6 +563,8 @@ ScoreEvent (*tSpinCheck(TSpin tspin) noexcept)(const Grid& field, const Tetromin
 		return tSpinCheck<TSpin::ThreeCorner>;
 	case TSpin::Lenient:
 		return tSpinCheck<TSpin::Lenient>;
+	case TSpin::None:
+		return tSpinCheck<TSpin::None>;
 	}
 }
 

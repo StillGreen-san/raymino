@@ -142,6 +142,7 @@ enum class TSpin : uint8_t
 	Immobile = 0,
 	ThreeCorner = 1,
 	Lenient = 2,
+	None = 3,
 };
 enum class ShuffleType : uint8_t
 {
