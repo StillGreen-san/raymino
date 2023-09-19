@@ -250,6 +250,7 @@ void Game::update(App& app)
 					lockDelay.reset(0);
 					break;
 				case LockDown::Entry:
+				case LockDown::Instant:
 					break;
 				}
 			}
@@ -458,8 +459,8 @@ Game::Game(App& app) :
     currentTetromino{getNextTetromino(app.settings().previewCount)},
     scoringSystem{makeScoringSystem(app.settings().scoringSystem)()}, score{0}, state{State::Running},
     levelUpFunc{levelUp(app.settings().levelGoal)}, levelState{LevelState::make(app.settings().levelGoal)},
-    lockDelay{App::Settings::LOCK_DELAY}, lockCounter{0}, isLocking{false}, holdPieceLocked{false}, isHighScore{false},
-    tSpinFunc{tSpinCheck(app.settings().tSpin)},
+    lockDelay{app.settings().lockDown == LockDown::Instant ? 0 : App::Settings::LOCK_DELAY}, lockCounter{0},
+    isLocking{false}, holdPieceLocked{false}, isHighScore{false}, tSpinFunc{tSpinCheck(app.settings().tSpin)},
     moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds().moveRight,
         app.keyBinds().moveLeft},
     basicRotationFunc{basicRotation(app.settings().rotationSystem)}, wallKickFunc{wallKick(app.settings().wallKicks)},

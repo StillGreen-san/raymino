@@ -124,6 +124,7 @@ enum class LockDown : uint8_t
 	Extended = 1,
 	Classic = 2,
 	Entry = 3,
+	Instant = 4,
 };
 enum class SoftDrop : uint8_t
 {
