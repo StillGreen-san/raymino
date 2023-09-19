@@ -248,22 +248,6 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices();
  */
 std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)();
 
-/**
- * @tparam TType ShuffleType
- * @param baseMinos to shuffle indices from
- * @param rng random_engine
- * @return std::vector<size_t> of indices into baseMinos
- */
-template<ShuffleType TType>
-std::vector<size_t> shuffledIndices(const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng);
-
-/**
- * @param ttype ShuffleType
- * @return shuffledIndices function pointer
- */
-std::vector<size_t> (*shuffledIndices(ShuffleType ttype) noexcept)(
-    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng);
-
 struct LevelState
 {
 	static LevelState make(LevelGoal ttype) noexcept;

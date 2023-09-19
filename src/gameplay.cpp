@@ -873,67 +873,6 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 	}
 }
 
-template<>
-std::vector<size_t> shuffledIndices<ShuffleType::Random>(const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
-{
-	std::vector<size_t> indices(baseMinos.size(), 0);
-	std::uniform_int_distribution<size_t> dist(0, indices.size() - 1);
-	std::generate(indices.begin(), indices.end(),
-	    [&]()
-	    {
-		    return dist(rng);
-	    });
-	return indices;
-}
-template<>
-std::vector<size_t> shuffledIndices<ShuffleType::SingleBag>(
-    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
-{
-	std::vector<size_t> indices(baseMinos.size(), 0);
-	std::iota(indices.begin(), indices.end(), 0);
-	std::shuffle(indices.begin(), indices.end(), rng);
-	return indices;
-}
-template<>
-std::vector<size_t> shuffledIndices<ShuffleType::DoubleBag>(
-    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
-{
-	std::vector<size_t> indices(baseMinos.size() * 2, 0);
-	const auto baseSize = static_cast<ptrdiff_t>(baseMinos.size());
-	std::iota(indices.begin(), std::next(indices.begin(), baseSize), 0);
-	std::iota(std::next(indices.begin(), baseSize), indices.end(), 0);
-	std::shuffle(indices.begin(), indices.end(), rng);
-	return indices;
-}
-template<>
-std::vector<size_t> shuffledIndices<ShuffleType::TripleBag>(
-    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
-{
-	std::vector<size_t> indices(baseMinos.size() * 3, 0);
-	const auto baseSize = static_cast<ptrdiff_t>(baseMinos.size());
-	std::iota(indices.begin(), std::next(indices.begin(), baseSize), 0);
-	std::iota(std::next(indices.begin(), baseSize), std::next(indices.begin(), baseSize * 2), 0);
-	std::iota(std::next(indices.begin(), baseSize * 2), indices.end(), 0);
-	std::shuffle(indices.begin(), indices.end(), rng);
-	return indices;
-}
-std::vector<size_t> (*shuffledIndices(ShuffleType ttype) noexcept)(
-    const std::vector<Tetromino>& baseMinos, std::mt19937_64& rng)
-{
-	switch(ttype)
-	{
-	case ShuffleType::Random:
-		return shuffledIndices<ShuffleType::Random>;
-	default:
-	case ShuffleType::SingleBag:
-		return shuffledIndices<ShuffleType::SingleBag>;
-	case ShuffleType::DoubleBag:
-		return shuffledIndices<ShuffleType::DoubleBag>;
-	case ShuffleType::TripleBag:
-		return shuffledIndices<ShuffleType::TripleBag>;
-	}
-}
-
 LevelState LevelState::make(LevelGoal ttype) noexcept
 {
 	return {1, 0, ttype == LevelGoal::Dynamic ? 5 : 10};
