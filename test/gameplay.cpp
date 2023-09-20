@@ -430,93 +430,93 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 
 TEST_CASE("IShuffledIndices<Random>", "[gameplay]")
 {
-	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
+	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Super>();
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::Random)();
 	for(const size_t indicesToAdd : {7, 1, 3, 12, 14})
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + indicesToAdd;
 
-		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+		iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 
 		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices, indexCount));
+		REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 	}
 }
 TEST_CASE("IShuffledIndices<SingleBag>", "[gameplay]")
 {
-	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
 	size_t targetMinSize = 0;
+	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Arika>();
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::SingleBag)();
 
 	targetMinSize = targetMinSize + 1;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	targetMinSize = targetMinSize + 6;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	targetMinSize = targetMinSize + 14;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 3);
 }
 TEST_CASE("IShuffledIndices<DoubleBag>", "[gameplay]")
 {
-	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
 	size_t targetMinSize = 0;
+	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Original>();
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::DoubleBag)();
 
 	targetMinSize = targetMinSize + 7;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	targetMinSize = targetMinSize + 20;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	targetMinSize = targetMinSize + 1;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 4);
 }
 TEST_CASE("IShuffledIndices<TripleBag>", "[gameplay]")
 {
-	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
 	size_t targetMinSize = 0;
+	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Sega>();
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::TripleBag)();
 
 	targetMinSize = targetMinSize + 16;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	targetMinSize = targetMinSize + 16;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	targetMinSize = targetMinSize + 10;
-	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	iShuffledIndices->fill(indices, targetMinSize, baseTetrominos, rng);
 	REQUIRE(indices.size() >= targetMinSize);
-	REQUIRE(allIndicesValid(indices, indexCount));
+	REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
 
 	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 6);
 }

@@ -472,7 +472,7 @@ Game::Game(App& app) :
 std::deque<size_t> Game::fillIndices(size_t minIndices)
 {
 	std::deque<size_t> indices;
-	shuffledIndicesFunc->fill(indices, minIndices, baseTetrominos.size(), rng);
+	shuffledIndicesFunc->fill(indices, minIndices, baseTetrominos, rng);
 	return indices;
 }
 
@@ -486,7 +486,7 @@ Tetromino Game::getNextTetromino(size_t minIndices)
 	minIndices = minIndices == 0 ? 1 : minIndices;
 	const size_t nextIdx = nextTetrominoIndices.front();
 	nextTetrominoIndices.pop_front();
-	shuffledIndicesFunc->fill(nextTetrominoIndices, minIndices, baseTetrominos.size(), rng);
+	shuffledIndicesFunc->fill(nextTetrominoIndices, minIndices, baseTetrominos, rng);
 	return baseTetrominos[nextIdx];
 }
 } // namespace raymino

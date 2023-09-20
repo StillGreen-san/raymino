@@ -804,9 +804,10 @@ std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept
 
 struct Random : IShuffledIndices
 {
-	void fill(std::deque<size_t>& indices, size_t minIndices, size_t indexCount, std::mt19937_64& rng) override
+	void fill(std::deque<size_t>& indices, size_t minIndices, const std::vector<Tetromino>& baseMinos,
+	    std::mt19937_64& rng) override
 	{
-		std::uniform_int_distribution<size_t> dist(0, indexCount - 1);
+		std::uniform_int_distribution<size_t> dist(0, baseMinos.size() - 1);
 		while(indices.size() < minIndices)
 		{
 			indices.push_back(dist(rng));
@@ -834,11 +835,12 @@ void MultiBag_fill(std::deque<size_t>& indices, size_t bagSize, size_t indexCoun
 template<size_t TBagSize>
 struct MultiBag : IShuffledIndices
 {
-	void fill(std::deque<size_t>& indices, size_t minIndices, size_t indexCount, std::mt19937_64& rng) override
+	void fill(std::deque<size_t>& indices, size_t minIndices, const std::vector<Tetromino>& baseMinos,
+	    std::mt19937_64& rng) override
 	{
 		while(indices.size() < minIndices)
 		{
-			MultiBag_fill(indices, TBagSize, indexCount, rng);
+			MultiBag_fill(indices, TBagSize, baseMinos.size(), rng);
 		}
 	}
 };

@@ -229,10 +229,11 @@ struct IShuffledIndices
 	 * @brief add random indices to indices
 	 * @param indices index list
 	 * @param minIndices in indices
-	 * @param indexCount to shuffle from
+	 * @param baseMinos to shuffle from
 	 * @param rng random engine
 	 */
-	virtual void fill(std::deque<size_t>& indices, size_t minIndices, size_t indexCount, std::mt19937_64& rng) = 0;
+	virtual void fill(std::deque<size_t>& indices, size_t minIndices, const std::vector<Tetromino>& baseMinos,
+	    std::mt19937_64& rng) = 0;
 };
 
 /**
