@@ -433,10 +433,11 @@ TEST_CASE("IShuffledIndices<Random>", "[gameplay]")
 	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
+	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::Random)();
+	for(const size_t indicesToAdd : {7, 1, 3, 12, 14})
 	{
 		const size_t prevSize = indices.size();
-		const size_t targetMinSize = prevSize + 7;
-		const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::Random)();
+		const size_t targetMinSize = prevSize + indicesToAdd;
 
 		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
 
@@ -449,51 +450,75 @@ TEST_CASE("IShuffledIndices<SingleBag>", "[gameplay]")
 	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
-	{
-		const size_t prevSize = indices.size();
-		const size_t targetMinSize = prevSize + 5;
-		const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::SingleBag)();
+	size_t targetMinSize = 0;
+	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::SingleBag)();
 
-		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	targetMinSize = targetMinSize + 1;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
 
-		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices, indexCount));
-		REQUIRE(std::count(std::next(indices.begin(), prevSize), indices.end(), indices.front()) == 1);
-	}
+	targetMinSize = targetMinSize + 6;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
+
+	targetMinSize = targetMinSize + 14;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
+
+	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 3);
 }
 TEST_CASE("IShuffledIndices<DoubleBag>", "[gameplay]")
 {
 	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
-	{
-		const size_t prevSize = indices.size();
-		const size_t targetMinSize = prevSize + 14;
-		const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::DoubleBag)();
+	size_t targetMinSize = 0;
+	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::DoubleBag)();
 
-		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	targetMinSize = targetMinSize + 7;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
 
-		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices, indexCount));
-		REQUIRE(std::count(std::next(indices.begin(), prevSize), indices.end(), indices.front()) == 2);
-	}
+	targetMinSize = targetMinSize + 20;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
+
+	targetMinSize = targetMinSize + 1;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
+
+	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 4);
 }
 TEST_CASE("IShuffledIndices<TripleBag>", "[gameplay]")
 {
 	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
 	std::deque<size_t> indices;
-	{
-		const size_t prevSize = indices.size();
-		const size_t targetMinSize = prevSize + 2;
-		const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::TripleBag)();
+	size_t targetMinSize = 0;
+	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::TripleBag)();
 
-		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	targetMinSize = targetMinSize + 16;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
 
-		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices, indexCount));
-		REQUIRE(std::count(std::next(indices.begin(), prevSize), indices.end(), indices.front()) == 3);
-	}
+	targetMinSize = targetMinSize + 16;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
+
+	targetMinSize = targetMinSize + 10;
+	iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
+	REQUIRE(indices.size() >= targetMinSize);
+	REQUIRE(allIndicesValid(indices, indexCount));
+
+	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 6);
 }
 
 TEST_CASE("levelUp", "[gameplay]")
