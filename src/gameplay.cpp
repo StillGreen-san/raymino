@@ -804,10 +804,13 @@ std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept
 
 struct Random : IShuffledIndices
 {
-	void fill(std::deque<size_t>& indices, size_t minIndices, const std::vector<Tetromino>& baseMinos,
-	    std::mt19937_64& rng) override
+	size_t indexCount;
+	explicit Random(size_t indexCount) : indexCount{indexCount}
 	{
-		std::uniform_int_distribution<size_t> dist(0, baseMinos.size() - 1);
+	}
+	void fill(std::deque<size_t>& indices, size_t minIndices, std::mt19937_64& rng) override
+	{
+		std::uniform_int_distribution<size_t> dist(0, indexCount - 1);
 		while(indices.size() < minIndices)
 		{
 			indices.push_back(dist(rng));
@@ -815,9 +818,9 @@ struct Random : IShuffledIndices
 	}
 };
 template<>
-std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::Random>()
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::Random>(const std::vector<Tetromino>& baseMinos)
 {
-	return std::make_unique<Random>();
+	return std::make_unique<Random>(baseMinos.size());
 }
 
 void MultiBag_fill(std::deque<size_t>& indices, size_t bagSize, size_t indexCount, std::mt19937_64& rng)
@@ -835,31 +838,35 @@ void MultiBag_fill(std::deque<size_t>& indices, size_t bagSize, size_t indexCoun
 template<size_t TBagSize>
 struct MultiBag : IShuffledIndices
 {
-	void fill(std::deque<size_t>& indices, size_t minIndices, const std::vector<Tetromino>& baseMinos,
-	    std::mt19937_64& rng) override
+	size_t indexCount;
+	explicit MultiBag(size_t indexCount) : indexCount{indexCount}
+	{
+	}
+	void fill(std::deque<size_t>& indices, size_t minIndices, std::mt19937_64& rng) override
 	{
 		while(indices.size() < minIndices)
 		{
-			MultiBag_fill(indices, TBagSize, baseMinos.size(), rng);
+			MultiBag_fill(indices, TBagSize, indexCount, rng);
 		}
 	}
 };
 template<>
-std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::SingleBag>()
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::SingleBag>(const std::vector<Tetromino>& baseMinos)
 {
-	return std::make_unique<MultiBag<1>>();
+	return std::make_unique<MultiBag<1>>(baseMinos.size());
 }
 template<>
-std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::DoubleBag>()
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::DoubleBag>(const std::vector<Tetromino>& baseMinos)
 {
-	return std::make_unique<MultiBag<2>>();
+	return std::make_unique<MultiBag<2>>(baseMinos.size());
 }
 template<>
-std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TripleBag>()
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TripleBag>(const std::vector<Tetromino>& baseMinos)
 {
-	return std::make_unique<MultiBag<3>>();
+	return std::make_unique<MultiBag<3>>(baseMinos.size());
 }
-std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)()
+std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
+    const std::vector<Tetromino>& baseMinos)
 {
 	switch(ttype)
 	{

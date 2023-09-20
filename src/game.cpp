@@ -448,7 +448,7 @@ Game::Game(App& app) :
     baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings().rotationSystem)(), playfield.getSize().width)},
     previewOffsetsMain{calcCenterOffsets(baseTetrominos, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE)},
     holdPieceIdx{static_cast<size_t>(-1)}, rng{hashSeedString(app.seed)},
-    shuffledIndicesFunc{makeShuffledIndices(app.settings().shuffleType)()},
+    shuffledIndicesFunc{makeShuffledIndices(app.settings().shuffleType)(baseTetrominos)},
     nextTetrominoIndices{fillIndices(app.settings().previewCount)},
     previewElementHeightExtended{
         app.settings().previewCount < 2
@@ -472,7 +472,7 @@ Game::Game(App& app) :
 std::deque<size_t> Game::fillIndices(size_t minIndices)
 {
 	std::deque<size_t> indices;
-	shuffledIndicesFunc->fill(indices, minIndices, baseTetrominos, rng);
+	shuffledIndicesFunc->fill(indices, minIndices, rng);
 	return indices;
 }
 
@@ -486,7 +486,7 @@ Tetromino Game::getNextTetromino(size_t minIndices)
 	minIndices = minIndices == 0 ? 1 : minIndices;
 	const size_t nextIdx = nextTetrominoIndices.front();
 	nextTetrominoIndices.pop_front();
-	shuffledIndicesFunc->fill(nextTetrominoIndices, minIndices, baseTetrominos, rng);
+	shuffledIndicesFunc->fill(nextTetrominoIndices, minIndices, rng);
 	return baseTetrominos[nextIdx];
 }
 } // namespace raymino

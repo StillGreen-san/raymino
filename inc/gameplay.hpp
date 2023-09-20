@@ -229,25 +229,25 @@ struct IShuffledIndices
 	 * @brief add random indices to indices
 	 * @param indices index list
 	 * @param minIndices in indices
-	 * @param baseMinos to shuffle from
 	 * @param rng random engine
 	 */
-	virtual void fill(std::deque<size_t>& indices, size_t minIndices, const std::vector<Tetromino>& baseMinos,
-	    std::mt19937_64& rng) = 0;
+	virtual void fill(std::deque<size_t>& indices, size_t minIndices, std::mt19937_64& rng) = 0;
 };
 
 /**
  * @tparam TType ShuffleType
+ * @param baseMinos to shuffle from
  * @return std::unique_ptr<IShuffledIndices> of TType ShuffleType
  */
 template<ShuffleType TType>
-std::unique_ptr<IShuffledIndices> makeShuffledIndices();
+std::unique_ptr<IShuffledIndices> makeShuffledIndices(const std::vector<Tetromino>& baseMinos);
 
 /**
  * @param ttype ShuffleType
  * @return makeShuffledIndices function pointer
  */
-std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)();
+std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
+    const std::vector<Tetromino>& baseMinos);
 
 struct LevelState
 {
