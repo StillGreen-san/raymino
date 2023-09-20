@@ -6,12 +6,13 @@
 
 using namespace raymino; // NOLINT(google-build-using-namespace)
 
-#ifdef WIN32
-int WinMain()
-#else
-int main()
-#endif
+int main(int argc, const char* const argv[])
 {
+	if(argc == 2 && std::strcmp(argv[1], "SGS_EXIT") == 0)
+	{
+		return 0;
+	}
+
 	std::cout << PROJECT_INFO.url << " [" << PROJECT_INFO.lic << "]\n";
 	std::cout << "  build with:\n";
 	for(const LibraryInfo& depInfo : DEPENDENCY_INFOS)
@@ -27,3 +28,12 @@ int main()
 
 	return 0;
 }
+
+#ifdef WIN32
+#include "windows.hpp"
+int WinMain()
+{
+	const WinMainArgs mainArgs;
+	return main(mainArgs.argc(), mainArgs.argv());
+}
+#endif
