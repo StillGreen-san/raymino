@@ -1,5 +1,6 @@
 #include "ostream.hpp" //! needs to be included before catch
 
+#include <catch2/catch_get_random_seed.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include "gameplay.hpp"
@@ -430,7 +431,7 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 
 TEST_CASE("IShuffledIndices<Random>", "[gameplay]")
 {
-	std::mt19937_64 rng(std::random_device{}());
+	std::mt19937_64 rng(Catch::getSeed());
 	std::deque<size_t> indices;
 	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Super>();
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::Random)();
@@ -447,7 +448,7 @@ TEST_CASE("IShuffledIndices<Random>", "[gameplay]")
 }
 TEST_CASE("IShuffledIndices<SingleBag>", "[gameplay]")
 {
-	std::mt19937_64 rng(std::random_device{}());
+	std::mt19937_64 rng(Catch::getSeed());
 	std::deque<size_t> indices;
 	size_t targetMinSize = 0;
 	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Arika>();
@@ -472,7 +473,7 @@ TEST_CASE("IShuffledIndices<SingleBag>", "[gameplay]")
 }
 TEST_CASE("IShuffledIndices<DoubleBag>", "[gameplay]")
 {
-	std::mt19937_64 rng(std::random_device{}());
+	std::mt19937_64 rng(Catch::getSeed());
 	std::deque<size_t> indices;
 	size_t targetMinSize = 0;
 	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Original>();
@@ -497,7 +498,7 @@ TEST_CASE("IShuffledIndices<DoubleBag>", "[gameplay]")
 }
 TEST_CASE("IShuffledIndices<TripleBag>", "[gameplay]")
 {
-	std::mt19937_64 rng(std::random_device{}());
+	std::mt19937_64 rng(Catch::getSeed());
 	std::deque<size_t> indices;
 	size_t targetMinSize = 0;
 	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Sega>();
