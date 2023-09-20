@@ -24,7 +24,8 @@ target_include_directories(${PROJECT_NAME}-lib PUBLIC inc)
 target_compile_features(${PROJECT_NAME}-lib PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res)
 
-add_executable(${PROJECT_NAME} WIN32 src/main.cpp src/graphics.cpp src/app.cpp src/loading.cpp src/menu.cpp src/game.cpp)
+add_executable(${PROJECT_NAME} WIN32 src/main.cpp src/graphics.cpp src/app.cpp src/loading.cpp
+		src/menu.cpp src/game.cpp src/windows.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib magic_enum::magic_enum)
 
 enable_testing()
