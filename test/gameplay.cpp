@@ -6,6 +6,15 @@
 
 using namespace raymino;
 
+bool allIndicesValid(const std::deque<size_t>& indices, size_t size)
+{
+	return std::all_of(indices.begin(), indices.end(),
+	    [size](size_t idx)
+	    {
+		    return idx < size;
+	    });
+}
+
 TEST_CASE("findTrueSize", "[gameplay]")
 {
 	{
@@ -419,18 +428,10 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 	}
 }
 
-TEST_CASE("IShuffledIndices", "[gameplay]")
+TEST_CASE("IShuffledIndices<Random>", "[gameplay]")
 {
 	constexpr size_t indexCount = 7;
 	std::mt19937_64 rng(std::random_device{}());
-	auto allIndicesValid = [size = indexCount](const std::deque<size_t>& indices)
-	{
-		return std::all_of(indices.begin(), indices.end(),
-		    [size](size_t idx)
-		    {
-			    return idx < size;
-		    });
-	};
 	std::deque<size_t> indices;
 	{
 		const size_t prevSize = indices.size();
@@ -439,9 +440,15 @@ TEST_CASE("IShuffledIndices", "[gameplay]")
 
 		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
 
-		REQUIRE(indices.size() >= 5);
-		REQUIRE(allIndicesValid(indices));
+		REQUIRE(indices.size() >= targetMinSize);
+		REQUIRE(allIndicesValid(indices, indexCount));
 	}
+}
+TEST_CASE("IShuffledIndices<SingleBag>", "[gameplay]")
+{
+	constexpr size_t indexCount = 7;
+	std::mt19937_64 rng(std::random_device{}());
+	std::deque<size_t> indices;
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + 5;
@@ -450,9 +457,15 @@ TEST_CASE("IShuffledIndices", "[gameplay]")
 		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
 
 		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices));
+		REQUIRE(allIndicesValid(indices, indexCount));
 		REQUIRE(std::count(std::next(indices.begin(), prevSize), indices.end(), indices.front()) == 1);
 	}
+}
+TEST_CASE("IShuffledIndices<DoubleBag>", "[gameplay]")
+{
+	constexpr size_t indexCount = 7;
+	std::mt19937_64 rng(std::random_device{}());
+	std::deque<size_t> indices;
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + 14;
@@ -461,9 +474,15 @@ TEST_CASE("IShuffledIndices", "[gameplay]")
 		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
 
 		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices));
+		REQUIRE(allIndicesValid(indices, indexCount));
 		REQUIRE(std::count(std::next(indices.begin(), prevSize), indices.end(), indices.front()) == 2);
 	}
+}
+TEST_CASE("IShuffledIndices<TripleBag>", "[gameplay]")
+{
+	constexpr size_t indexCount = 7;
+	std::mt19937_64 rng(std::random_device{}());
+	std::deque<size_t> indices;
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + 2;
@@ -472,7 +491,7 @@ TEST_CASE("IShuffledIndices", "[gameplay]")
 		iShuffledIndices->fill(indices, targetMinSize, indexCount, rng);
 
 		REQUIRE(indices.size() >= targetMinSize);
-		REQUIRE(allIndicesValid(indices));
+		REQUIRE(allIndicesValid(indices, indexCount));
 		REQUIRE(std::count(std::next(indices.begin(), prevSize), indices.end(), indices.front()) == 3);
 	}
 }
