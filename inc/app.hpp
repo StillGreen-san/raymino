@@ -178,7 +178,7 @@ public:
 			const auto itemIt = std::find_if(items.begin(), items.end(),
 			    [&](const Item& item)
 			    {
-				    return std::equal(item.name.begin(), item.name.end(), name.begin(), name.end());
+				    return std::string_view{item.name.data()} == name;
 			    });
 			return std::distance(items.begin(), itemIt);
 		}
