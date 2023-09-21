@@ -610,6 +610,25 @@ TEST_CASE("IShuffledIndices<TGM35>", "[gameplay]")
 		REQUIRE(historyFound == historyEnd);
 	}
 }
+TEST_CASE("IShuffledIndices<NES>", "[gameplay]")
+{
+	std::mt19937_64 rng(Catch::getSeed());
+	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::NintendoRight>();
+
+	std::deque<size_t> indices;
+	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::NES)(baseTetrominos);
+
+	for(const size_t indicesToAdd : {5, 8, 2, 1, 15})
+	{
+		const size_t prevSize = indices.size();
+		const size_t targetMinSize = prevSize + indicesToAdd;
+
+		iShuffledIndices->fill(indices, targetMinSize, rng);
+
+		REQUIRE(indices.size() >= targetMinSize);
+		REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
+	}
+}
 
 TEST_CASE("levelUp", "[gameplay]")
 {

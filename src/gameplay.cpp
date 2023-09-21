@@ -962,7 +962,33 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TGM35>(const 
 {
 	return std::make_unique<TGM35>(baseMinos);
 }
-
+struct NES : IShuffledIndices
+{
+	size_t previous = -1;
+	std::uniform_int_distribution<size_t> firstDist;
+	std::uniform_int_distribution<size_t> secondDist;
+	explicit NES(size_t indexCount) : firstDist{0, indexCount}, secondDist{0, indexCount - 1}
+	{
+	}
+	void fill(std::deque<size_t>& indices, size_t minIndices, std::mt19937_64& rng) override
+	{
+		while(indices.size() < minIndices)
+		{
+			size_t roll = firstDist(rng);
+			if(roll == previous || roll == firstDist.max())
+			{
+				roll = secondDist(rng);
+			}
+			previous = roll;
+			indices.push_back(roll);
+		}
+	}
+};
+template<>
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::NES>(const std::vector<Tetromino>& baseMinos)
+{
+	return std::make_unique<NES>(baseMinos.size());
+}
 std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
     const std::vector<Tetromino>& baseMinos)
 {
@@ -981,6 +1007,8 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 		return makeShuffledIndices<ShuffleType::TGMH4>;
 	case ShuffleType::TGM35:
 		return makeShuffledIndices<ShuffleType::TGM35>;
+	case ShuffleType::NES:
+		return makeShuffledIndices<ShuffleType::NES>;
 	}
 }
 
