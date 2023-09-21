@@ -12,9 +12,56 @@
 
 namespace raymino
 {
+namespace presets
+{
+App::Presets<App::Settings>::Item SettingsNES()
+{
+	App::Settings settings{};
+	settings.rotationSystem = RotationSystem::NintendoRight;
+	settings.wallKicks = WallKicks::None;
+	settings.lockDown = LockDown::Instant;
+	settings.softDrop = SoftDrop::Locking;
+	settings.instantDrop = InstantDrop::None;
+	settings.tSpin = TSpin::None;
+	settings.shuffleType = ShuffleType::NES;
+	settings.scoringSystem = ScoringSystem::Nintendo;
+	settings.levelGoal = LevelGoal::Fixed;
+	settings.holdPiece = false;
+	settings.ghostPiece = false;
+	settings.fieldWidth = 10;
+	settings.fieldHeight = 20;
+	settings.previewCount = 1;
+	return {"Nintendo NES", settings};
+}
+App::Presets<App::Settings>::Item SettingsTGMLike()
+{
+	App::Settings settings{};
+	settings.rotationSystem = RotationSystem::Arika;
+	settings.wallKicks = WallKicks::Arika;
+	settings.lockDown = LockDown::Classic;
+	settings.softDrop = SoftDrop::Locking;
+	settings.instantDrop = InstantDrop::Sonic;
+	settings.tSpin = TSpin::Lenient;
+	settings.shuffleType = ShuffleType::TGM35;
+	settings.scoringSystem = ScoringSystem::Guideline;
+	settings.levelGoal = LevelGoal::Fixed;
+	settings.holdPiece = false;
+	settings.ghostPiece = true;
+	settings.fieldWidth = 10;
+	settings.fieldHeight = 20;
+	settings.previewCount = 1;
+	return {"TGM Like", settings};
+}
+App::Presets<App::Settings>::Item SettingsGuideline()
+{
+	return {"Guideline", {}};
+}
+} // namespace presets
+
 App::App() :
-    playerName{"Mino"}, keyBindsPresets{{"Default", {}}}, settingsPresets{{"Guideline", {}}}, activeKeyBindsPreset{0},
-    activeSettingsPreset{0}, seed{}
+    playerName{"Mino"}, keyBindsPresets{{"Default", {}}},
+    settingsPresets{{presets::SettingsGuideline(), presets::SettingsNES(), presets::SettingsTGMLike()}},
+    activeKeyBindsPreset{0}, activeSettingsPreset{0}, seed{}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
