@@ -872,7 +872,10 @@ struct TGMH4 : IShuffledIndices
 	uint8_t historyIdx : 2;
 	std::uniform_int_distribution<size_t> dist;
 	std::array<size_t, 4> history{FILL, FILL, FILL, FILL};
-	explicit TGMH4(const std::vector<Tetromino>& baseTetrominos) : historyIdx{0}, dist{0, baseTetrominos.size() - 1}
+	explicit TGMH4(const std::vector<Tetromino>& baseTetrominos) : TGMH4(baseTetrominos, baseTetrominos.size() - 1)
+	{
+	}
+	explicit TGMH4(const std::vector<Tetromino>& baseTetrominos, size_t distMax) : historyIdx{0}, dist{0, distMax}
 	{
 		for(size_t i = 0; i < baseTetrominos.size(); ++i)
 		{
@@ -915,6 +918,51 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TGMH4>(const 
 	return std::make_unique<TGMH4>(baseMinos);
 }
 
+struct TGM35 : TGMH4
+{
+	std::vector<size_t> lru;
+	std::vector<size_t> bag;
+	explicit TGM35(const std::vector<Tetromino>& baseTetrominos) :
+	    TGMH4(baseTetrominos, (baseTetrominos.size() * 5) - 1), lru(baseTetrominos.size(), 0),
+	    bag(baseTetrominos.size() * 5, 0)
+	{
+		const auto baseSize = static_cast<ptrdiff_t>(baseTetrominos.size());
+		auto windowBegin = bag.begin();
+		auto windowEnd = windowBegin;
+		while(windowBegin != bag.end())
+		{
+			std::advance(windowEnd, baseSize);
+			std::iota(windowBegin, windowEnd, 0);
+			std::advance(windowBegin, baseSize);
+		}
+	}
+	void updateBag(size_t bagIdx)
+	{
+		lru[bag[bagIdx]] += 1;
+		const auto starved = std::min_element(lru.begin(), lru.end());
+		bag[bagIdx] = static_cast<size_t>(std::distance(lru.begin(), starved));
+	}
+	void fill(std::deque<size_t>& indices, size_t minIndices, std::mt19937_64& rng) override
+	{
+		while(indices.size() < minIndices)
+		{
+			size_t nextBagIdx = dist(rng);
+			while(isInHistory(bag[nextBagIdx]))
+			{
+				nextBagIdx = dist(rng);
+			}
+			indices.push_back(bag[nextBagIdx]);
+			pushHistory(bag[nextBagIdx]);
+			updateBag(nextBagIdx);
+		}
+	}
+};
+template<>
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TGM35>(const std::vector<Tetromino>& baseMinos)
+{
+	return std::make_unique<TGM35>(baseMinos);
+}
+
 std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
     const std::vector<Tetromino>& baseMinos)
 {
@@ -931,6 +979,8 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 		return makeShuffledIndices<ShuffleType::TripleBag>;
 	case ShuffleType::TGMH4:
 		return makeShuffledIndices<ShuffleType::TGMH4>;
+	case ShuffleType::TGM35:
+		return makeShuffledIndices<ShuffleType::TGM35>;
 	}
 }
 
