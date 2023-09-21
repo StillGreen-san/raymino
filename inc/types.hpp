@@ -150,6 +150,7 @@ enum class ShuffleType : uint8_t
 	SingleBag = 1,
 	DoubleBag = 2,
 	TripleBag = 3,
+	TGMH4 = 4,
 };
 enum class ScoringSystem : uint8_t
 {

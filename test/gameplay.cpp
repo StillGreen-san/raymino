@@ -524,6 +524,49 @@ TEST_CASE("IShuffledIndices<TripleBag>", "[gameplay]")
 
 	REQUIRE(std::count(indices.begin(), indices.end(), indices.front()) == 6);
 }
+TEST_CASE("IShuffledIndices<TGMH4>", "[gameplay]")
+{
+	std::mt19937_64 rng(Catch::getSeed());
+	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Arika>();
+
+	for(size_t i = 0; i < 9; ++i)
+	{
+		std::deque<size_t> indices;
+		const std::unique_ptr<IShuffledIndices> iShuffledIndices =
+		    makeShuffledIndices(ShuffleType::TGMH4)(baseTetrominos);
+
+		iShuffledIndices->fill(indices, 1, rng);
+
+		REQUIRE(!indices.empty());
+		REQUIRE(indices.front() < baseTetrominos.size());
+		const TetrominoType firstType = baseTetrominos[indices.front()].type;
+		REQUIRE(firstType != TetrominoType::Z);
+		REQUIRE(firstType != TetrominoType::O);
+		REQUIRE(firstType != TetrominoType::S);
+	}
+
+	std::deque<size_t> indices;
+	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::TGMH4)(baseTetrominos);
+
+	for(const size_t indicesToAdd : {9, 2, 3, 1, 8, 4})
+	{
+		const size_t prevSize = indices.size();
+		const size_t targetMinSize = prevSize + indicesToAdd;
+
+		iShuffledIndices->fill(indices, targetMinSize, rng);
+
+		REQUIRE(indices.size() >= targetMinSize);
+		REQUIRE(allIndicesValid(indices, baseTetrominos.size()));
+	}
+
+	auto historyBegin = indices.begin();
+	auto historyEnd = std::next(historyBegin, 4);
+	for(; historyEnd != indices.end(); ++historyBegin, ++historyEnd)
+	{
+		const auto historyFound = std::find(historyBegin, historyEnd, *historyEnd);
+		REQUIRE(historyFound == historyEnd);
+	}
+}
 
 TEST_CASE("levelUp", "[gameplay]")
 {

@@ -865,6 +865,56 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TripleBag>(co
 {
 	return std::make_unique<MultiBag<3>>(baseMinos.size());
 }
+
+struct TGMH4 : IShuffledIndices
+{
+	static constexpr size_t FILL = -1;
+	uint8_t historyIdx : 2;
+	std::uniform_int_distribution<size_t> dist;
+	std::array<size_t, 4> history{FILL, FILL, FILL, FILL};
+	explicit TGMH4(const std::vector<Tetromino>& baseTetrominos) : historyIdx{0}, dist{0, baseTetrominos.size() - 1}
+	{
+		for(size_t i = 0; i < baseTetrominos.size(); ++i)
+		{
+			if(baseTetrominos[i].type == TetrominoType::O || baseTetrominos[i].type == TetrominoType::Z ||
+			    baseTetrominos[i].type == TetrominoType::S)
+			{
+				pushHistory(i);
+			}
+		}
+		std::mt19937_64 rng(std::random_device{}());
+		std::shuffle(history.begin(), history.end(), rng);
+	}
+	void pushHistory(size_t value)
+	{
+		history[historyIdx] = value;
+		++historyIdx;
+	}
+	bool isInHistory(size_t idx)
+	{
+		const auto foundIt = std::find(history.begin(), history.end(), idx);
+		return foundIt != history.end();
+	}
+	void fill(std::deque<size_t>& indices, size_t minIndices, std::mt19937_64& rng) override
+	{
+		while(indices.size() < minIndices)
+		{
+			size_t nextIdx = dist(rng);
+			while(isInHistory(nextIdx))
+			{
+				nextIdx = dist(rng);
+			}
+			indices.push_back(nextIdx);
+			pushHistory(nextIdx);
+		}
+	}
+};
+template<>
+std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TGMH4>(const std::vector<Tetromino>& baseMinos)
+{
+	return std::make_unique<TGMH4>(baseMinos);
+}
+
 std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
     const std::vector<Tetromino>& baseMinos)
 {
@@ -879,6 +929,8 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 		return makeShuffledIndices<ShuffleType::DoubleBag>;
 	case ShuffleType::TripleBag:
 		return makeShuffledIndices<ShuffleType::TripleBag>;
+	case ShuffleType::TGMH4:
+		return makeShuffledIndices<ShuffleType::TGMH4>;
 	}
 }
 
