@@ -38,7 +38,7 @@ TextList enumToTextList()
 	const auto enumNames = magic_enum::enum_names<TEnum>();
 	for(const auto name : enumNames)
 	{
-		const std::string split = splitUpper(name);
+		const std::string split = splitCamel(name);
 		list.add(split);
 	}
 	return list;

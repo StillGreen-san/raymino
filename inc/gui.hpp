@@ -144,9 +144,9 @@ private:
 };
 
 /**
- * @brief inserts ' ' in front of upper case chars
+ * @brief splits like: "Hello2WorldFX4" -> "Hello 2 World FX4"
  */
-std::string splitUpper(std::string_view text);
+std::string splitCamel(std::string_view text);
 
 /**
  * @brief gui element to handle Presets collection

@@ -64,44 +64,50 @@ TEST_CASE("TextList", "[GUI]")
 	}
 }
 
-TEST_CASE("splitUpper", "[GUI]")
+TEST_CASE("splitCamel", "[GUI]")
 {
 	SECTION("small")
 	{
-		const std::string empty = splitUpper("");
+		const std::string empty = splitCamel("");
 		REQUIRE(empty.empty());
 
-		const std::string one = splitUpper("A");
+		const std::string one = splitCamel("A");
 		REQUIRE(one == "A");
 
-		const std::string six = splitUpper("AB");
-		REQUIRE(six == "A B");
+		const std::string six = splitCamel("AB");
+		REQUIRE(six == "AB");
 
-		const std::string ten = splitUpper("ABc");
-		REQUIRE(ten == "A Bc");
+		const std::string ten = splitCamel("ABc");
+		REQUIRE(ten == "ABc");
 	}
 	SECTION("camel")
 	{
-		const std::string one = splitUpper("someWords");
+		const std::string one = splitCamel("someWords");
 		REQUIRE(one == "some Words");
 
-		const std::string two = splitUpper("someMoreDifferentWordsAB");
-		REQUIRE(two == "some More Different Words A B");
+		const std::string two = splitCamel("someMoreDifferentWordsAB");
+		REQUIRE(two == "some More Different Words AB");
 	}
 	SECTION("pascal")
 	{
-		const std::string one = splitUpper("MyText");
+		const std::string one = splitCamel("MyText");
 		REQUIRE(one == "My Text");
 
-		const std::string two = splitUpper("MyTextButDifferentXJ");
-		REQUIRE(two == "My Text But Different X J");
+		const std::string two = splitCamel("MyText2ButDifferentXJ");
+		REQUIRE(two == "My Text 2 But Different XJ");
+
+		const std::string six = splitCamel("AB3");
+		REQUIRE(six == "AB3");
 	}
 	SECTION("other")
 	{
-		const std::string one = splitUpper("IMPORTANT_THING-HERE");
-		REQUIRE(one == "I M P O R T A N T_ T H I N G- H E R E");
+		const std::string one = splitCamel("IMPORTANT_THING-HERE7");
+		REQUIRE(one == "IMPORTANT_THING-HERE7");
 
-		const std::string two = splitUpper("Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.123");
-		REQUIRE(two == "Franz jagt im komplett verwahrlosten  Taxi quer durch  Bayern.123");
+		const std::string two = splitCamel("Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.123");
+		REQUIRE(two == "Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.123");
+
+		const std::string six = splitCamel("AppleBoots64");
+		REQUIRE(six == "Apple Boots 64");
 	}
 }

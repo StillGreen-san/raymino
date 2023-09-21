@@ -68,23 +68,38 @@ size_t TextList::size() const noexcept
 	return std::count(list.begin(), list.end(), delimiter) + 1;
 }
 
-std::string splitUpper(std::string_view text)
+std::string splitCamel(std::string_view text)
 {
 	if(text.empty())
 	{
 		return {};
 	}
+
+	struct CharType
+	{
+		explicit CharType(char chr) noexcept :
+		    isUpper{std::isupper(chr) != 0}, isLower{std::islower(chr) != 0}, isDigit{std::isdigit(chr) != 0}
+		{
+		}
+		bool isUpper;
+		bool isLower;
+		bool isDigit;
+	};
+
 	std::string split;
+	CharType lastType(text.front());
 	split.reserve(text.size());
 	split.append(1, text.front());
 	text.remove_prefix(1);
 	for(const char chr : text)
 	{
-		if(std::isupper(chr) != 0)
+		const CharType type(chr);
+		if((lastType.isLower && (type.isUpper || type.isDigit)) || (!type.isDigit && lastType.isDigit))
 		{
 			split.append(1, ' ');
 		}
 		split.append(1, chr);
+		lastType = type;
 	}
 	return split;
 }
