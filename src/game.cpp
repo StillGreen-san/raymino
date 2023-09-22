@@ -207,15 +207,15 @@ void Game::update(App& app)
 	}
 	if(const KeyAction::Return rotateAction = rotateRight.tick(::GetFrameTime()); isKeyPress(rotateAction))
 	{
-		const Offset rotation = basicRotationFunc(currentTetromino, rotateAction.value);
+		Offset rotation = basicRotationFunc(currentTetromino, rotateAction.value);
 		currentTetromino += rotation;
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
 			currentTetromino -= rotation;
-			const Offset kicks = wallKickFunc(playfield, currentTetromino, rotation);
-			currentTetromino += kicks;
+			rotation = wallKickFunc(playfield, currentTetromino, rotation);
+			currentTetromino += rotation;
 		}
-		if(isLocking && settings.lockDown <= LockDown::Extended)
+		if(isLocking && settings.lockDown <= LockDown::Extended && rotation != Offset{})
 		{
 			if(settings.lockDown == LockDown::Infinit || lockCounter < LOCKDOWN_MAX_RESET)
 			{
