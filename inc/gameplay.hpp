@@ -39,6 +39,10 @@ struct Offset
 	{
 		return std::tie(position, rotation) == std::tie(other.position, other.rotation);
 	}
+	constexpr bool operator!=(Offset other) const noexcept
+	{
+		return !operator==(other);
+	}
 };
 struct Tetromino : public Offset
 {
