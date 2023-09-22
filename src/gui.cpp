@@ -103,4 +103,24 @@ std::string splitCamel(std::string_view text)
 	}
 	return split;
 }
+
+NumberBuffer::NumberBuffer(TIntType init, char separator) noexcept : number{init}, separator{separator}, startIdx{0}
+{
+}
+NumberBuffer& NumberBuffer::operator+=(NumberBuffer::TIntType rhs) noexcept
+{
+	return *this;
+}
+const char* NumberBuffer::c_str() const noexcept
+{
+	return &*buffer.begin();
+}
+NumberBuffer::TIntType NumberBuffer::value() const noexcept
+{
+	return number;
+}
+unsigned char NumberBuffer::backFillSeparated(TBufferType& buffer, TIntType value, char separator)
+{
+	return 0;
+}
 } // namespace raymino

@@ -282,4 +282,37 @@ private:
 	State state = State::Normal;
 	static constexpr std::string_view customName = "Custom";
 };
+
+/**
+ * @brief synced integer & text buffer
+ */
+class NumberBuffer
+{
+public:
+	using TIntType = ptrdiff_t;
+	static constexpr size_t Digits10 = std::numeric_limits<TIntType>::digits10 + 1;
+	static constexpr size_t Separators = (Digits10 - 1) / 3;
+	static constexpr size_t SignChars = static_cast<const size_t>(std::numeric_limits<TIntType>::is_signed);
+	static constexpr size_t TermintorChars = 1;
+	static constexpr size_t TotalBufferSize = Digits10 + Separators + SignChars + TermintorChars;
+	using TBufferType = std::array<char, TotalBufferSize>;
+
+	NumberBuffer() = delete;
+	NumberBuffer(TIntType init, char separator = '.') noexcept;
+	NumberBuffer& operator+=(TIntType rhs) noexcept;
+	[[nodiscard]] const char* c_str() const noexcept;
+	[[nodiscard]] TIntType value() const noexcept;
+
+	/**
+	 * @brief parses values into buffer with 1000 separators, puts value at end of buffer
+	 * @return start index into buffer
+	 */
+	static unsigned char backFillSeparated(TBufferType& buffer, TIntType value, char separator);
+
+private:
+	TIntType number;
+	TBufferType buffer{};
+	char separator;
+	unsigned char startIdx;
+};
 } // namespace raymino

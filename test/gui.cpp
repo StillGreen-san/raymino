@@ -2,6 +2,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <string_view>
+using namespace std::string_view_literals;
+
 using namespace raymino;
 
 TEST_CASE("TextList", "[GUI]")
@@ -109,5 +112,69 @@ TEST_CASE("splitCamel", "[GUI]")
 
 		const std::string six = splitCamel("AppleBoots64");
 		REQUIRE(six == "Apple Boots 64");
+	}
+}
+
+TEST_CASE("NumberBuffer", "[GUI]")
+{
+	SECTION("Constructor")
+	{
+		{
+			NumberBuffer nb(0);
+			REQUIRE(nb.value() == 0);
+			REQUIRE(nb.c_str() == "0"sv);
+		}
+		{
+			NumberBuffer nb(1234567, '#');
+			REQUIRE(nb.value() == 1234567);
+			REQUIRE(nb.c_str() == "1#234#567"sv);
+		}
+		{
+			NumberBuffer nb(-9999);
+			REQUIRE(nb.value() == -9999);
+			REQUIRE(nb.c_str() == "-9.999"sv);
+		}
+	}
+	SECTION("operator+=")
+	{
+		{
+			NumberBuffer nb(0);
+			nb += 512;
+			REQUIRE(nb.value() == 512);
+			REQUIRE(nb.c_str() == "512"sv);
+		}
+		{
+			NumberBuffer nb(1234567, ',');
+			nb += -234568;
+			REQUIRE(nb.value() == 999999);
+			REQUIRE(nb.c_str() == "999,999"sv);
+		}
+		{
+			NumberBuffer nb(999);
+			nb += 1000;
+			REQUIRE(nb.value() == 1999);
+			REQUIRE(nb.c_str() == "1.999"sv);
+		}
+	}
+	SECTION("backFillSeparated")
+	{
+		{
+			NumberBuffer::TBufferType buffer{};
+			NumberBuffer::backFillSeparated(buffer, 123, '.');
+			REQUIRE(std::search_n(buffer.begin(), buffer.end(), 23, '\0') == buffer.begin());
+			REQUIRE(&buffer[23] == "123"sv);
+		}
+		{
+			NumberBuffer::TBufferType buffer{};
+			NumberBuffer::backFillSeparated(buffer, -1234, '.');
+			REQUIRE(std::search_n(buffer.begin(), buffer.end(), 20, '\0') == buffer.begin());
+			REQUIRE(&buffer[20] == "-1.234"sv);
+		}
+		{
+			NumberBuffer::TBufferType buffer{};
+			NumberBuffer::backFillSeparated(buffer, 123456, '!');
+			REQUIRE(std::search_n(buffer.begin(), buffer.end(), 19, '\0') == buffer.begin());
+			REQUIRE(&buffer[19] == "123!456"sv);
+		}
 	}
 }
