@@ -104,16 +104,22 @@ std::string splitCamel(std::string_view text)
 	return split;
 }
 
-NumberBuffer::NumberBuffer(TIntType init, char separator) noexcept : number{init}, separator{separator}, startIdx{0}
+NumberBuffer::NumberBuffer(TIntType init, char separator) noexcept :
+    number{init}, separator{separator}, startIdx{backFillSeparated(buffer, number, separator)}
 {
 }
 NumberBuffer& NumberBuffer::operator+=(NumberBuffer::TIntType rhs) noexcept
 {
+	if(rhs != 0)
+	{
+		number += rhs;
+		startIdx = backFillSeparated(buffer, number, separator);
+	}
 	return *this;
 }
 const char* NumberBuffer::c_str() const noexcept
 {
-	return &*buffer.begin();
+	return &*std::next(buffer.begin(), startIdx);
 }
 NumberBuffer::TIntType NumberBuffer::value() const noexcept
 {
@@ -121,6 +127,33 @@ NumberBuffer::TIntType NumberBuffer::value() const noexcept
 }
 unsigned char NumberBuffer::backFillSeparated(TBufferType& buffer, TIntType value, char separator)
 {
-	return 0;
+	auto bufferCursor = buffer.begin() + static_cast<ptrdiff_t>(buffer.size() - 2);
+	const bool isNegative = value < 0;
+	ptrdiff_t parseNumber = std::abs(value);
+	size_t parsedDigits = 0;
+	while(true)
+	{
+		const ptrdiff_t digit = parseNumber % 10;
+		*bufferCursor = static_cast<char>(digit + '0');
+		parsedDigits += 1;
+		parseNumber /= 10;
+		if(parseNumber == 0)
+		{
+			if(isNegative)
+			{
+				bufferCursor -= 1;
+				*bufferCursor = '-';
+			}
+			break;
+		}
+		if(parsedDigits == 3)
+		{
+			parsedDigits = 0;
+			bufferCursor -= 1;
+			*bufferCursor = separator;
+		}
+		bufferCursor -= 1;
+	};
+	return static_cast<unsigned char>(std::distance(buffer.begin(), bufferCursor));
 }
 } // namespace raymino
