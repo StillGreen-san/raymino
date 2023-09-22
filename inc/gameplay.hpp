@@ -146,6 +146,11 @@ size_t eraseFullLines(Grid& grid) noexcept;
 size_t countFullLines(const Grid& grid, const Tetromino& tetromino) noexcept;
 
 /**
+ * @return true if all cells 0
+ */
+bool isEmpty(const Grid& grid) noexcept;
+
+/**
  * @brief amount of occupied front&back corners of a T in a playfield
  */
 struct TSpinCornerCountResult

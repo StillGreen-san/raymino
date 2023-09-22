@@ -457,6 +457,15 @@ size_t countFullLines(const Grid& grid, const Tetromino& tetromino) noexcept
 	return fullLines;
 }
 
+bool isEmpty(const Grid& grid) noexcept
+{
+	return std::all_of(grid.begin(), grid.end(),
+	    [](Grid::Cell cell)
+	    {
+		    return cell == 0;
+	    });
+}
+
 TSpinCornerCountResult tSpinCornerCount(const Grid& field, const Tetromino& tetromino) noexcept
 {
 	static constexpr std::array<XY, 4> checkOffsets{{{0, 0}, {2, 0}, {0, 2}, {2, 2}}};

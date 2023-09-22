@@ -231,6 +231,22 @@ TEST_CASE("countFullLines", "[gameplay]")
 	}
 }
 
+TEST_CASE("isEmpty")
+{
+	{
+		const Grid grid{{3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+		REQUIRE(isEmpty(grid));
+	}
+	{
+		const Grid grid{{2, 4}, {0, 1, 0, 0, 0, 0, 0, 0}};
+		REQUIRE_FALSE(isEmpty(grid));
+	}
+	{
+		const Grid grid{{3, 3}, {0, 0, 0, 0, 0, 0, 0, 0, 1}};
+		REQUIRE_FALSE(isEmpty(grid));
+	}
+}
+
 TEST_CASE("tSpinCornerCount", "[gameplay]")
 {
 	std::vector<Tetromino> tetrominos = makeBaseMinos<RotationSystem::Super>();
