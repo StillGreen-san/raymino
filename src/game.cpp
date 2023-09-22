@@ -4,6 +4,7 @@
 #include "gameplay.hpp"
 #include "graphics.hpp"
 #include "grid.hpp"
+#include "gui.hpp"
 #include "scenes.hpp"
 #include "timer.hpp"
 #include "types.hpp"
@@ -308,7 +309,7 @@ void Game::update(App& app)
 		if(playfield.overlapAt(currentTetromino.position, currentTetromino.collision) != 0)
 		{
 			state = State::GameOver;
-			isHighScore = app.addHighScore(score);
+			isHighScore = app.addHighScore(score.value());
 		}
 	}
 }
@@ -373,31 +374,10 @@ void Game::draw(App& app)
 	}
 
 	{
-		std::array<char, 32> scoreBuffer{};
-		char* scoreBufferBegin = scoreBuffer.data();
-		char* scoreBufferEnd = scoreBuffer.data() + scoreBuffer.size();
-		char* scoreBufferParsedEnd = std::to_chars(scoreBufferBegin, scoreBufferEnd, score).ptr;
-		const ptrdiff_t length = std::distance(scoreBufferBegin, scoreBufferParsedEnd);
-		const ptrdiff_t separators = (length - 1) / 3;
-		char* scoreBufferWrite = scoreBufferParsedEnd + (separators - 1);
-		char* scoreBufferRead = scoreBufferParsedEnd - 1;
-		ptrdiff_t separatorsWritten = 0;
-		while(separatorsWritten < separators)
-		{
-			for(int digitsRead = 0; digitsRead < 3; ++digitsRead)
-			{
-				*scoreBufferWrite = *scoreBufferRead;
-				--scoreBufferWrite;
-				--scoreBufferRead;
-			}
-			*scoreBufferWrite = '.';
-			++separatorsWritten;
-			--scoreBufferWrite;
-		}
-		const int scoreTextWidth = ::MeasureText(scoreBufferBegin, SCORE_FONT_SIZE);
+		const int scoreTextWidth = ::MeasureText(score.c_str(), SCORE_FONT_SIZE);
 		const int scoreTextXOffset = (SIDEBAR_WIDTH - scoreTextWidth) / 2;
 		::DrawText(
-		    scoreBufferBegin, scoreTextXOffset, PREVIEW_ELEMENT_HEIGHT + SCORE_FONT_SIZE, SCORE_FONT_SIZE, DARKGRAY);
+		    score.c_str(), scoreTextXOffset, PREVIEW_ELEMENT_HEIGHT + SCORE_FONT_SIZE, SCORE_FONT_SIZE, DARKGRAY);
 	}
 
 	if(state != State::Running)

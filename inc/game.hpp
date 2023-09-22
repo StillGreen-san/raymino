@@ -1,6 +1,7 @@
 #include "app.hpp"
 #include "gameplay.hpp"
 #include "grid.hpp"
+#include "gui.hpp"
 #include "input.hpp"
 #include "scenes.hpp"
 #include "timer.hpp"
@@ -44,7 +45,7 @@ struct Game : IScene
 	std::vector<XY> previewOffsetsExtended;
 	Tetromino currentTetromino;
 	std::unique_ptr<IScoringSystem> scoringSystem;
-	int64_t score;
+	NumberBuffer score;
 	State state;
 	decltype(levelUp(LevelGoal{})) levelUpFunc;
 	LevelState levelState;
