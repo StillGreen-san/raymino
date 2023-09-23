@@ -882,7 +882,7 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TripleBag>(co
 
 struct TGMH4 : IShuffledIndices
 {
-	static constexpr size_t FILL = -1;
+	static constexpr size_t FILL = std::numeric_limits<size_t>::max();
 	uint8_t historyIdx : 2;
 	std::uniform_int_distribution<size_t> dist;
 	std::array<size_t, 4> history{FILL, FILL, FILL, FILL};
@@ -978,7 +978,7 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::TGM35>(const 
 }
 struct NES : IShuffledIndices
 {
-	size_t previous = -1;
+	size_t previous = std::numeric_limits<size_t>::max();
 	std::uniform_int_distribution<size_t> firstDist;
 	std::uniform_int_distribution<size_t> secondDist;
 	explicit NES(size_t indexCount) : firstDist{0, indexCount}, secondDist{0, indexCount - 1}

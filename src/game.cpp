@@ -46,6 +46,7 @@ constexpr int SCORE_FONT_SIZE = 30;
 constexpr int STATUS_FONT_SIZE = 50;
 constexpr ::Color STATUS_BACKGROUND{77, 77, 77, 222};
 constexpr int LOCKDOWN_MAX_RESET = 15;
+constexpr size_t NO_HOLD_PIECE = std::numeric_limits<size_t>::max();
 
 const ColorMap minoColors{
     {LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE,
@@ -169,7 +170,7 @@ void Game::update(App& app)
 
 	if(settings.holdPiece && !holdPieceLocked && ::IsKeyPressed(keyBinds.hold))
 	{
-		if(holdPieceIdx == static_cast<size_t>(-1))
+		if(holdPieceIdx == NO_HOLD_PIECE)
 		{
 			holdPieceIdx = static_cast<size_t>(currentTetromino.type);
 			currentTetromino = getNextTetromino(settings.previewCount);
@@ -357,7 +358,7 @@ void Game::draw(App& app)
 	::DrawRectangle(playfieldBounds.x, 0, playfieldBounds.width, static_cast<int>(playfieldBorderBounds.y), LIGHTGRAY);
 	::DrawRectangleLinesEx(playfieldBorderBounds, FIELD_BORDER_WIDTH, DARKGRAY);
 
-	if(holdPieceIdx != static_cast<size_t>(-1))
+	if(holdPieceIdx != NO_HOLD_PIECE)
 	{
 		drawCells(
 		    baseTetrominos[holdPieceIdx].collision, previewOffsetsMain[holdPieceIdx], PREVIEW_CELL_SIZE, 1, minoColors);
@@ -432,7 +433,7 @@ Game::Game(App& app) :
     playfieldBounds{calculatePlayfieldBounds({app.settings().fieldWidth, app.settings().fieldHeight})},
     baseTetrominos{prepareTetrominos(makeBaseMinos(app.settings().rotationSystem)(), playfield.getSize().width)},
     previewOffsetsMain{calcCenterOffsets(baseTetrominos, {SIDEBAR_WIDTH, PREVIEW_ELEMENT_HEIGHT}, PREVIEW_CELL_SIZE)},
-    holdPieceIdx{static_cast<size_t>(-1)}, rng{hashSeedString(app.seed)},
+    holdPieceIdx{NO_HOLD_PIECE}, rng{hashSeedString(app.seed)},
     shuffledIndicesFunc{makeShuffledIndices(app.settings().shuffleType)(baseTetrominos)},
     nextTetrominoIndices{fillIndices(app.settings().previewCount)},
     previewElementHeightExtended{
