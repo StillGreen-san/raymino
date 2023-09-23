@@ -211,7 +211,7 @@ struct IScoringSystem
 	 * @param level
 	 * @return int64_t score for event
 	 */
-	[[nodiscard]] virtual int64_t process(ScoreEvent event, int lines, int level) noexcept = 0;
+	[[nodiscard]] virtual int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept = 0;
 };
 
 /**

@@ -5,6 +5,12 @@
 
 namespace raymino
 {
+template<typename TInt, typename TIntB>
+TInt clampMax(TInt in, TIntB max)
+{
+	return in > max ? max : in;
+}
+
 template<>
 std::vector<Tetromino> makeBaseMinos<RotationSystem::Super>()
 {
@@ -579,7 +585,7 @@ ScoreEvent (*tSpinCheck(TSpin tspin) noexcept)(const Grid& field, const Tetromin
 
 struct BPS : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, int lines, [[maybe_unused]] int level) noexcept override
+	int64_t process(ScoreEvent event, size_t lines, [[maybe_unused]] size_t level) noexcept override
 	{
 		switch(event)
 		{
@@ -587,7 +593,7 @@ struct BPS : public IScoringSystem
 		case ScoreEvent::MiniTSpin:
 		case ScoreEvent::TSpin:
 		{
-			lines = std::clamp(lines, 0, 4);
+			lines = clampMax(lines, 4);
 			static constexpr std::array<int64_t, 5> scores{0, 40, 100, 300, 1200};
 			return scores[lines];
 		}
@@ -607,17 +613,16 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::BPS>()
 
 struct Sega : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, int lines, int level) noexcept override
+	int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept override
 	{
-		lines = std::clamp(lines, 0, std::numeric_limits<int>::max());
-		level = std::clamp((level + 1) / 2, 1, 5);
+		level = std::clamp<size_t>((level + 1) / 2, 1, 5);
 		switch(event)
 		{
 		case ScoreEvent::LineClear:
 		case ScoreEvent::MiniTSpin:
 		case ScoreEvent::TSpin:
 		{
-			lines = std::clamp(lines, 0, 4);
+			lines = clampMax(lines, 4);
 			static constexpr std::array<int64_t, 5> scores{0, 100, 400, 900, 2000};
 			return scores[lines] * level;
 		}
@@ -640,7 +645,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Sega>()
 
 struct Nintendo : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, int lines, int level) noexcept override
+	int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept override
 	{
 		switch(event)
 		{
@@ -648,7 +653,7 @@ struct Nintendo : public IScoringSystem
 		case ScoreEvent::MiniTSpin:
 		case ScoreEvent::TSpin:
 		{
-			lines = std::clamp(lines, 0, 4);
+			lines = clampMax(lines, 4);
 			static constexpr std::array<int64_t, 5> scores{0, 40, 100, 300, 1200};
 			return scores[lines] * level;
 		}
@@ -721,10 +726,10 @@ struct Guideline : public IScoringSystem
 	    /*PerfectTetris*/ {2000, false},
 	    /*PerfectTetrisChain*/ {3200, false}}};
 	bool wasLastEventDifficult = false;
-	int lastPerfectClearLines = 0;
+	size_t lastPerfectClearLines = 0;
 	int clearCounter = 0;
 	int combo = -1;
-	int64_t process(ScoreEvent event, int lines, int level) noexcept override
+	int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept override
 	{
 		int64_t score = 0;
 		bool isThisEventDifficult = false;
@@ -732,28 +737,28 @@ struct Guideline : public IScoringSystem
 		{
 		case ScoreEvent::LineClear:
 		{
-			lines = std::clamp(lines, 0, 4);
+			lines = clampMax(lines, 4);
 			score = actions[Action::NoLines + lines].points * level;
 			isThisEventDifficult = actions[Action::NoLines + lines].isDifficult;
 			break;
 		}
 		case ScoreEvent::MiniTSpin:
 		{
-			lines = std::clamp(lines, 0, 2);
+			lines = clampMax(lines, 2);
 			score = actions[Action::MiniNoLines + lines].points * level;
 			isThisEventDifficult = actions[Action::MiniNoLines + lines].isDifficult;
 			break;
 		}
 		case ScoreEvent::TSpin:
 		{
-			lines = std::clamp(lines, 0, 3);
+			lines = clampMax(lines, 3);
 			score = actions[Action::SpinNoLines + lines].points * level;
 			isThisEventDifficult = true;
 			break;
 		}
 		case ScoreEvent::PerfectClear:
 		{
-			lines = std::clamp(lines, 0, 4);
+			lines = clampMax(lines, 4);
 			if(lines == 4 && lastPerfectClearLines == 4 && clearCounter < 2)
 			{
 				return actions[Action::PerfectTetrisChain].points * level;
