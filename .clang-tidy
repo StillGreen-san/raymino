@@ -3,6 +3,7 @@ Checks: >
   -altera-id-dependent-backward-branch,
   -altera-struct-pack-align,
   -altera-unroll-loops,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
   -fuchsia-default-arguments-calls,
   -fuchsia-default-arguments-declarations,
   -fuchsia-overloaded-operator,
