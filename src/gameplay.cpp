@@ -1028,10 +1028,10 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 
 LevelState LevelState::make(LevelGoal ttype) noexcept
 {
-	return {1, 0, ttype == LevelGoal::Dynamic ? 5 : 10};
+	return {1, 0, static_cast<size_t>(ttype == LevelGoal::Dynamic ? 5 : 10)};
 }
 template<>
-LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, int lines, LevelState state) noexcept
+LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, size_t lines, LevelState state) noexcept
 {
 	switch(event)
 	{
@@ -1054,7 +1054,7 @@ LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, int lines, LevelState sta
 	}
 }
 template<>
-LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState state) noexcept
+LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, size_t lines, LevelState state) noexcept
 {
 	switch(event)
 	{
@@ -1063,8 +1063,8 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState s
 	case ScoreEvent::MiniTSpin:
 	case ScoreEvent::TSpin:
 	{
-		static constexpr std::array<int, 5> points{0, 1, 3, 5, 8};
-		lines = std::clamp(lines, 0, 4);
+		static constexpr std::array<size_t, 5> points{0, 1, 3, 5, 8};
+		lines = clampMax(lines, 4);
 		state.linesCleared += points[lines];
 		if(state.linesCleared >= state.linesToClear)
 		{
@@ -1079,7 +1079,7 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, int lines, LevelState s
 		return state;
 	}
 }
-LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, int lines, LevelState state) noexcept
+LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, size_t lines, LevelState state) noexcept
 {
 	switch(ttype)
 	{

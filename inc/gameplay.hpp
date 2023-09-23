@@ -261,9 +261,9 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 struct LevelState
 {
 	static LevelState make(LevelGoal ttype) noexcept;
-	int currentLevel;
-	int linesCleared;
-	int linesToClear;
+	size_t currentLevel;
+	size_t linesCleared;
+	size_t linesToClear;
 	bool operator==(const LevelState& rhs) const noexcept
 	{
 		return std::tie(currentLevel, linesCleared, linesToClear) ==
@@ -279,11 +279,11 @@ struct LevelState
  * @return LevelState
  */
 template<LevelGoal TType>
-LevelState levelUp(ScoreEvent event, int lines, LevelState state) noexcept;
+LevelState levelUp(ScoreEvent event, size_t lines, LevelState state) noexcept;
 
 /**
  * @param ttype LevelGoal
  * @return levelUp function pointer
  */
-LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, int lines, LevelState state) noexcept;
+LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, size_t lines, LevelState state) noexcept;
 } // namespace raymino
