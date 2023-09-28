@@ -315,4 +315,26 @@ private:
 	char separator;
 	unsigned char startIdx;
 };
+
+struct Box
+{
+	constexpr Box(float top, float right, float bottom, float left) : top{top}, right{right}, bottom{bottom}, left{left}
+	{
+	}
+	constexpr Box(float top, float rightLeft, float bottom) :
+	    top{top}, right{rightLeft}, bottom{bottom}, left{rightLeft}
+	{
+	}
+	constexpr Box(float topBottom, float rightLeft) :
+	    top{topBottom}, right{rightLeft}, bottom{topBottom}, left{rightLeft}
+	{
+	}
+	constexpr Box(float all) : top{all}, right{all}, bottom{all}, left{all}
+	{
+	}
+	float top;
+	float right;
+	float bottom;
+	float left;
+};
 } // namespace raymino
