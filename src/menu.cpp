@@ -194,47 +194,53 @@ void Menu::UpdateDraw(App& app)
 void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 {
 	::GuiGroupBox(GroupBoxSettingsRect, GroupBoxSettingsText);
-	::GuiLabel(LabelA1Rect, LabelRotationSystemText);
-	::GuiLabel(LabelA2Rect, LabelWallKicksText);
-	::GuiLabel(LabelA3Rect, LabelLockDownText);
-	::GuiLabel(LabelA4Rect, LabelSoftDropText);
-	::GuiLabel(LabelA5Rect, LabelInstantDropText);
-	::GuiLabel(LabelB1Rect, LabelTSpinText);
-	::GuiLabel(LabelB2Rect, LabelShuffleTypeText);
-	::GuiLabel(LabelB3Rect, LabelScoringSystemText);
-	::GuiLabel(LabelA6Rect, LabelFieldWidthText);
-	::GuiLabel(LabelA7Rect, LabelFieldHeightText);
-	::GuiLabel(LabelA8Rect, LabelPreviewCountText);
-	::GuiLabel(LabelB4Rect, LabelHoldPieceText);
-	::GuiLabel(LabelB6Rect, LabelGhostPieceText);
+	::GuiLabel(SettingsRects[0][0][0], LabelRotationSystemText);
+	::GuiLabel(SettingsRects[0][1][0], LabelWallKicksText);
+	::GuiLabel(SettingsRects[0][2][0], LabelLockDownText);
+	::GuiLabel(SettingsRects[0][3][0], LabelSoftDropText);
+	::GuiLabel(SettingsRects[0][4][0], LabelInstantDropText);
+	::GuiLabel(SettingsRects[1][0][0], LabelTSpinText);
+	::GuiLabel(SettingsRects[1][1][0], LabelShuffleTypeText);
+	::GuiLabel(SettingsRects[1][2][0], LabelScoringSystemText);
+	::GuiLabel(SettingsRects[0][5][0], LabelFieldWidthText);
+	::GuiLabel(SettingsRects[0][6][0], LabelFieldHeightText);
+	::GuiLabel(SettingsRects[0][7][0], LabelPreviewCountText);
+	::GuiLabel(SettingsRects[1][3][0], LabelHoldPieceText);
+	::GuiLabel(SettingsRects[1][5][0], LabelGhostPieceText);
 	::GuiLabel(LabelPresetsRect, LabelPresetsText);
-	::GuiLabel(LabelB5Rect, LabelLevelGoalText);
-	::GuiLabel(LabelB7Rect, LabelSeedText);
-	if(GuiButton(InputB8Rect, ButtonKeyBindsText))
+	::GuiLabel(SettingsRects[1][4][0], LabelLevelGoalText);
+	::GuiLabel(SettingsRects[1][6][0], LabelSeedText);
+	if(GuiButton(SettingsRects[1][7][1], ButtonKeyBindsText))
 	{
 		state = State::KeyBinds;
 	}
-	GuiSpinner(InputA8Rect, "", SpinnerPreviewCountValue, SpinnerPreviewCountMin, SpinnerPreviewCountMax,
+	GuiSpinner(SettingsRects[0][7][1], "", SpinnerPreviewCountValue, SpinnerPreviewCountMin, SpinnerPreviewCountMax,
 	    SpinnerPreviewCountEditMode);
-	GuiSpinner(
-	    InputA6Rect, "", SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax, SpinnerFieldWidthEditMode);
-	GuiSpinner(InputA7Rect, "", SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
+	GuiSpinner(SettingsRects[0][5][1], "", SpinnerFieldWidthValue, SpinnerFieldWidthMin, SpinnerFieldWidthMax,
+	    SpinnerFieldWidthEditMode);
+	GuiSpinner(SettingsRects[0][6][1], "", SpinnerFieldHeightValue, SpinnerFieldHeightMin, SpinnerFieldHeightMax,
 	    SpinnerFieldHeightEditMode);
-	GuiTextBox(InputB7Rect, TextBoxSeedBuffer, TextBoxSeedEditMode, 17);
-	GuiDropdownBox(InputB6Rect, DropdownBoxGhostPieceText, DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode);
-	GuiDropdownBox(InputB5Rect, DropdownBoxLevelGoalTextList, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
-	GuiDropdownBox(InputB4Rect, DropdownBoxHoldPieceText, DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode);
-	GuiDropdownBox(InputB3Rect, DropdownBoxScoringSystemTextList, DropdownBoxScoringSystemActive,
+	GuiTextBox(SettingsRects[1][6][1], TextBoxSeedBuffer, TextBoxSeedEditMode, 17);
+	GuiDropdownBox(
+	    SettingsRects[1][5][1], DropdownBoxGhostPieceText, DropdownBoxGhostPieceActive, DropdownBoxGhostPieceEditMode);
+	GuiDropdownBox(
+	    SettingsRects[1][4][1], DropdownBoxLevelGoalTextList, DropdownBoxLevelGoalActive, DropdownBoxLevelGoalEditMode);
+	GuiDropdownBox(
+	    SettingsRects[1][3][1], DropdownBoxHoldPieceText, DropdownBoxHoldPieceActive, DropdownBoxHoldPieceEditMode);
+	GuiDropdownBox(SettingsRects[1][2][1], DropdownBoxScoringSystemTextList, DropdownBoxScoringSystemActive,
 	    DropdownBoxScoringSystemEditMode);
+	GuiDropdownBox(SettingsRects[1][1][1], DropdownBoxShuffleTypeTextList, DropdownBoxShuffleTypeActive,
+	    DropdownBoxShuffleTypeEditMode);
+	GuiDropdownBox(SettingsRects[1][0][1], DropdownBoxTSpinTextList, DropdownBoxTSpinActive, DropdownBoxTSpinEditMode);
+	GuiDropdownBox(SettingsRects[0][4][1], DropdownBoxInstantDropTextList, DropdownBoxInstantDropActive,
+	    DropdownBoxInstantDropEditMode);
 	GuiDropdownBox(
-	    InputB2Rect, DropdownBoxShuffleTypeTextList, DropdownBoxShuffleTypeActive, DropdownBoxShuffleTypeEditMode);
-	GuiDropdownBox(InputB1Rect, DropdownBoxTSpinTextList, DropdownBoxTSpinActive, DropdownBoxTSpinEditMode);
+	    SettingsRects[0][3][1], DropdownBoxSoftDropTextList, DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode);
 	GuiDropdownBox(
-	    InputA5Rect, DropdownBoxInstantDropTextList, DropdownBoxInstantDropActive, DropdownBoxInstantDropEditMode);
-	GuiDropdownBox(InputA4Rect, DropdownBoxSoftDropTextList, DropdownBoxSoftDropActive, DropdownBoxSoftDropEditMode);
-	GuiDropdownBox(InputA3Rect, DropdownBoxLockDownTextList, DropdownBoxLockDownActive, DropdownBoxLockDownEditMode);
-	GuiDropdownBox(InputA2Rect, DropdownBoxWallKicksTextList, DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode);
-	GuiDropdownBox(InputA1Rect, DropdownBoxRotationSystemTextList, DropdownBoxRotationSystemActive,
+	    SettingsRects[0][2][1], DropdownBoxLockDownTextList, DropdownBoxLockDownActive, DropdownBoxLockDownEditMode);
+	GuiDropdownBox(
+	    SettingsRects[0][1][1], DropdownBoxWallKicksTextList, DropdownBoxWallKicksActive, DropdownBoxWallKicksEditMode);
+	GuiDropdownBox(SettingsRects[0][0][1], DropdownBoxRotationSystemTextList, DropdownBoxRotationSystemActive,
 	    DropdownBoxRotationSystemEditMode);
 
 	writeSettings(settingsPresets.getValue());
@@ -399,29 +405,29 @@ void guiKeyBind(const ::Rectangle& rectLabel, const char* textLabel, const ::Rec
 void Menu::UpdateDrawKeyBinds([[maybe_unused]] App& app)
 {
 	::GuiGroupBox(GroupBoxSettingsRect, ButtonKeyBindsText);
-	if(::GuiButton(InputB8Rect, GroupBoxSettingsText))
+	if(::GuiButton(SettingsRects[1][7][1], GroupBoxSettingsText))
 	{
 		state = State::Settings;
 	}
-	guiKeyBind(LabelB1Rect, LabelMoveRightText, InputB1Rect, TextBoxMoveRightBuffer, TextBoxMoveRightEditMode,
-	    keyBindsPresets.getValue().moveRight);
-	guiKeyBind(LabelA1Rect, LabelMoveLeftText, InputA1Rect, TextBoxMoveLeftBuffer, TextBoxMoveLeftEditMode,
-	    keyBindsPresets.getValue().moveLeft);
-	guiKeyBind(LabelB2Rect, LabelRotateRightText, InputB2Rect, TextBoxRotateRightBuffer, TextBoxRotateRightEditMode,
-	    keyBindsPresets.getValue().rotateRight);
-	guiKeyBind(LabelA2Rect, LabelRotateLeftText, InputA2Rect, TextBoxRotateLeftBuffer, TextBoxRotateLeftEditMode,
-	    keyBindsPresets.getValue().rotateLeft);
-	guiKeyBind(LabelA3Rect, LabelSoftDropText, InputA3Rect, TextBoxSoftDropBuffer, TextBoxSoftDropEditMode,
-	    keyBindsPresets.getValue().softDrop);
-	guiKeyBind(LabelB3Rect, LabelHardDropText, InputB3Rect, TextBoxHardDropBuffer, TextBoxHardDropEditMode,
-	    keyBindsPresets.getValue().hardDrop);
-	guiKeyBind(LabelA4Rect, LabelHoldText, InputA4Rect, TextBoxHoldBuffer, TextBoxHoldEditMode,
+	guiKeyBind(SettingsRects[1][0][0], LabelMoveRightText, SettingsRects[1][0][1], TextBoxMoveRightBuffer,
+	    TextBoxMoveRightEditMode, keyBindsPresets.getValue().moveRight);
+	guiKeyBind(SettingsRects[0][0][0], LabelMoveLeftText, SettingsRects[0][0][1], TextBoxMoveLeftBuffer,
+	    TextBoxMoveLeftEditMode, keyBindsPresets.getValue().moveLeft);
+	guiKeyBind(SettingsRects[1][1][0], LabelRotateRightText, SettingsRects[1][1][1], TextBoxRotateRightBuffer,
+	    TextBoxRotateRightEditMode, keyBindsPresets.getValue().rotateRight);
+	guiKeyBind(SettingsRects[0][1][0], LabelRotateLeftText, SettingsRects[0][1][1], TextBoxRotateLeftBuffer,
+	    TextBoxRotateLeftEditMode, keyBindsPresets.getValue().rotateLeft);
+	guiKeyBind(SettingsRects[0][2][0], LabelSoftDropText, SettingsRects[0][2][1], TextBoxSoftDropBuffer,
+	    TextBoxSoftDropEditMode, keyBindsPresets.getValue().softDrop);
+	guiKeyBind(SettingsRects[1][2][0], LabelHardDropText, SettingsRects[1][2][1], TextBoxHardDropBuffer,
+	    TextBoxHardDropEditMode, keyBindsPresets.getValue().hardDrop);
+	guiKeyBind(SettingsRects[0][3][0], LabelHoldText, SettingsRects[0][3][1], TextBoxHoldBuffer, TextBoxHoldEditMode,
 	    keyBindsPresets.getValue().hold);
-	guiKeyBind(LabelA5Rect, LabelPauseText, InputA5Rect, TextBoxPauseBuffer, TextBoxPauseEditMode,
+	guiKeyBind(SettingsRects[0][4][0], LabelPauseText, SettingsRects[0][4][1], TextBoxPauseBuffer, TextBoxPauseEditMode,
 	    keyBindsPresets.getValue().pause);
-	guiKeyBind(LabelB5Rect, LabelRestartText, InputB5Rect, TextBoxRestartBuffer, TextBoxRestartEditMode,
-	    keyBindsPresets.getValue().restart);
-	guiKeyBind(LabelB4Rect, LabelMenuText, InputB4Rect, TextBoxMenuBuffer, TextBoxMenuEditMode,
+	guiKeyBind(SettingsRects[1][4][0], LabelRestartText, SettingsRects[1][4][1], TextBoxRestartBuffer,
+	    TextBoxRestartEditMode, keyBindsPresets.getValue().restart);
+	guiKeyBind(SettingsRects[1][3][0], LabelMenuText, SettingsRects[1][3][1], TextBoxMenuBuffer, TextBoxMenuEditMode,
 	    keyBindsPresets.getValue().menu);
 
 	keyBindsPresets.updateState();

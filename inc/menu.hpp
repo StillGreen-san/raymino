@@ -188,37 +188,8 @@ struct Menu : public IScene
 	static constexpr ::Rectangle DropdownBoxPresetsRect{AnchorSettings.x + 120, AnchorSettings.y + 16, 272, 31};
 	static constexpr ::Rectangle InputSaveRect{AnchorSettings.x + 404, AnchorSettings.y + 22, 20, 20};
 	static constexpr ::Rectangle InputRemoveRect{AnchorSettings.x + 432, AnchorSettings.y + 22, 20, 20};
-	static constexpr ::Rectangle LabelA1Rect{AnchorSettings.x + 24, AnchorSettings.y + 72, 96, 24};
-	static constexpr ::Rectangle LabelA2Rect{AnchorSettings.x + 24, AnchorSettings.y + 120, 96, 24};
-	static constexpr ::Rectangle LabelA3Rect{AnchorSettings.x + 24, AnchorSettings.y + 168, 96, 24};
-	static constexpr ::Rectangle LabelA4Rect{AnchorSettings.x + 24, AnchorSettings.y + 216, 96, 24};
-	static constexpr ::Rectangle LabelA5Rect{AnchorSettings.x + 24, AnchorSettings.y + 264, 96, 24};
-	static constexpr ::Rectangle LabelA6Rect{AnchorSettings.x + 24, AnchorSettings.y + 312, 96, 24};
-	static constexpr ::Rectangle LabelA7Rect{AnchorSettings.x + 24, AnchorSettings.y + 360, 96, 24};
-	static constexpr ::Rectangle LabelA8Rect{AnchorSettings.x + 24, AnchorSettings.y + 408, 96, 24};
-	static constexpr ::Rectangle LabelB1Rect{AnchorSettings.x + 296, AnchorSettings.y + 72, 96, 24};
-	static constexpr ::Rectangle LabelB2Rect{AnchorSettings.x + 296, AnchorSettings.y + 120, 96, 24};
-	static constexpr ::Rectangle LabelB3Rect{AnchorSettings.x + 296, AnchorSettings.y + 168, 96, 24};
-	static constexpr ::Rectangle LabelB4Rect{AnchorSettings.x + 296, AnchorSettings.y + 216, 96, 24};
-	static constexpr ::Rectangle LabelB5Rect{AnchorSettings.x + 296, AnchorSettings.y + 264, 96, 24};
-	static constexpr ::Rectangle LabelB6Rect{AnchorSettings.x + 296, AnchorSettings.y + 312, 96, 24};
-	static constexpr ::Rectangle LabelB7Rect{AnchorSettings.x + 296, AnchorSettings.y + 360, 96, 24};
-	static constexpr ::Rectangle InputA1Rect{AnchorSettings.x + 120, AnchorSettings.y + 72, 136, 24};
-	static constexpr ::Rectangle InputA2Rect{AnchorSettings.x + 120, AnchorSettings.y + 120, 136, 24};
-	static constexpr ::Rectangle InputA3Rect{AnchorSettings.x + 120, AnchorSettings.y + 168, 136, 24};
-	static constexpr ::Rectangle InputA4Rect{AnchorSettings.x + 120, AnchorSettings.y + 216, 136, 24};
-	static constexpr ::Rectangle InputA5Rect{AnchorSettings.x + 120, AnchorSettings.y + 264, 136, 24};
-	static constexpr ::Rectangle InputA6Rect{AnchorSettings.x + 120, AnchorSettings.y + 312, 136, 24};
-	static constexpr ::Rectangle InputA7Rect{AnchorSettings.x + 120, AnchorSettings.y + 360, 136, 24};
-	static constexpr ::Rectangle InputA8Rect{AnchorSettings.x + 120, AnchorSettings.y + 408, 136, 24};
-	static constexpr ::Rectangle InputB1Rect{AnchorSettings.x + 392, AnchorSettings.y + 72, 136, 24};
-	static constexpr ::Rectangle InputB2Rect{AnchorSettings.x + 392, AnchorSettings.y + 120, 136, 24};
-	static constexpr ::Rectangle InputB3Rect{AnchorSettings.x + 392, AnchorSettings.y + 168, 136, 24};
-	static constexpr ::Rectangle InputB4Rect{AnchorSettings.x + 392, AnchorSettings.y + 216, 136, 24};
-	static constexpr ::Rectangle InputB5Rect{AnchorSettings.x + 392, AnchorSettings.y + 264, 136, 24};
-	static constexpr ::Rectangle InputB6Rect{AnchorSettings.x + 392, AnchorSettings.y + 312, 136, 24};
-	static constexpr ::Rectangle InputB7Rect{AnchorSettings.x + 392, AnchorSettings.y + 360, 136, 24};
-	static constexpr ::Rectangle InputB8Rect{AnchorSettings.x + 392, AnchorSettings.y + 408, 136, 24};
+	static constexpr decltype(auto) SettingsRects =
+	    makeSettingsRectArr<8, 2>(GroupBoxSettingsRect, Box{72, 24, 24}, 24, 96, 40);
 
 	static constexpr float ScoreListWidth = (GroupBoxSettingsRect.width - 40) / 3;
 	static constexpr ::Rectangle AllScoreRect{
