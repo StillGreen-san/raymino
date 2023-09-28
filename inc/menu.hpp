@@ -9,6 +9,36 @@
 
 namespace raymino
 {
+template<size_t TRows, size_t TCols>
+using RectArr = std::array<std::array<std::array<::Rectangle, 2>, TRows>, TCols>;
+template<size_t TRows, size_t TCols>
+constexpr RectArr<TRows, TCols> makeSettingsRectArr(const ::Rectangle area, const Box padding, const float itemHeight,
+    const float labelWidth, const float columnSpacing) noexcept
+{
+	const ::Rectangle contentArea{area.x + padding.left, area.y + padding.top,
+	    area.width - (padding.left + padding.right), area.height - (padding.top + padding.bottom)};
+	const float columnWidth = (contentArea.width - (columnSpacing * (TCols - 1))) / TCols;
+	const float inputWidth = columnWidth - labelWidth;
+	const float rowSpacing = (contentArea.height - (TRows * itemHeight)) / (TRows - 1);
+
+	RectArr<TRows, TCols> rects{};
+
+	float colX = contentArea.x;
+	for(size_t col = 0; col < TCols; ++col)
+	{
+		float rowY = contentArea.y;
+		for(size_t row = 0; row < TRows; ++row)
+		{
+			rects[col][row][0] = ::Rectangle{colX, rowY, labelWidth, itemHeight};
+			rects[col][row][1] = ::Rectangle{colX + labelWidth, rowY, inputWidth, itemHeight};
+			rowY += itemHeight + rowSpacing;
+		}
+		colX += columnSpacing + columnWidth;
+	}
+
+	return rects;
+}
+
 struct Menu : public IScene
 {
 	explicit Menu(App& app);
