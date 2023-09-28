@@ -51,6 +51,10 @@ struct Size
 	{
 		return std::tie(width, height) == std::tie(other.width, other.height);
 	}
+	Size operator*(int val) const noexcept
+	{
+		return {width * val, height * val};
+	}
 };
 struct Rect : XY, Size
 {
@@ -61,7 +65,7 @@ struct Rect : XY, Size
 	}
 	Rect operator*(int val) const noexcept
 	{
-		return {{x * val, y * val}, {width * val, height * val}};
+		return {XY::operator*(val), Size::operator*(val)};
 	}
 };
 template<typename TIterator>
