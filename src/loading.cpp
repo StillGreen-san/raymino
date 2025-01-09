@@ -36,7 +36,7 @@ Loading::Loading(App& app)
 		    ::TraceLog(LOG_INFO, "FILEIO: [%s] Failed to load file", App::FILE_PATH);
 	    });
 #else
-	unsigned bytes{};
+	int bytes{};
 	unsigned char* fileData = ::LoadFileData(App::FILE_PATH, &bytes);
 	if(fileData)
 	{
