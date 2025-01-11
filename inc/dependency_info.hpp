@@ -23,5 +23,5 @@ constexpr size_t DEPENDENCY_INFOS_MAX_URL_LEN = std::max_element(DEPENDENCY_INFO
     [](const auto& lhs, const auto& rhs)
     {
 	    return lhs.url.size() < rhs.url.size();
-    }) -> url.size();
+    })->url.size();
 } // namespace raymino
