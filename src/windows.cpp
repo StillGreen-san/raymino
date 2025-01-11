@@ -1,40 +1,38 @@
 #include "windows.hpp"
 
+// NOLINTBEGIN(*-pointer-arithmetic, *-include-cleaner)
 #define UNICODE
 #include <Windows.h>
 
+#include <cstddef>
+
 WinMainArgs::WinMainArgs()
 {
-	LPWSTR wCmdLine = GetCommandLineW();
-	int wArgc = 0;
-	LPWSTR* wArgv = CommandLineToArgvW(wCmdLine, &wArgc);
+	LPWSTR* wArgv = CommandLineToArgvW(GetCommandLineW(), &mArgc);
 	if(!wArgv)
 	{
 		return;
 	}
 
-	mArgc = wArgc;
-	mArgv = new char*[wArgc + 1];
-	for(size_t wIdx = 0, aIdx = 0; wIdx < wArgc; ++wIdx)
+	mArgv = new char*[mArgc + 1];
+	mArgv[mArgc] = nullptr;
+	for(size_t argIdx = 0; argIdx < mArgc; ++argIdx)
 	{
-		const int outLen = WideCharToMultiByte(CP_ACP, 0, wArgv[wIdx], -1, nullptr, 0, nullptr, nullptr);
+		const int outLen = WideCharToMultiByte(CP_UTF8, 0, wArgv[argIdx], -1, nullptr, 0, nullptr, nullptr);
 		if(outLen == 0)
 		{
-			mArgc -= 1;
+			mArgv[argIdx] = nullptr;
 			continue;
 		}
-		mArgv[aIdx] = new char[outLen];
-		const int result = WideCharToMultiByte(CP_ACP, 0, wArgv[wIdx], -1, mArgv[aIdx], outLen, nullptr, nullptr);
-		if(result == 0)
+		mArgv[argIdx] = new char[outLen];
+		if(0 == WideCharToMultiByte(CP_UTF8, 0, wArgv[argIdx], -1, mArgv[argIdx], outLen, nullptr, nullptr))
 		{
-			delete[] mArgv[aIdx];
-			mArgc -= 1;
-			continue;
+			mArgv[argIdx][0] = '\0';
 		}
-		++aIdx;
 	}
-	LocalFree(wArgv);
+	LocalFree(wArgv); // NOLINT(*-multi-level-implicit-pointer-conversion)
 }
+
 WinMainArgs::~WinMainArgs()
 {
 	for(int i = 0; i < mArgc; i++)
@@ -43,3 +41,4 @@ WinMainArgs::~WinMainArgs()
 	}
 	delete[] mArgv;
 }
+// NOLINTEND(*-pointer-arithmetic, *-include-cleaner)
