@@ -1,4 +1,10 @@
-add_subdirectory(raylib)
+CPMAddPackage(
+		NAME raylib
+		GITHUB_REPOSITORY raysan5/raylib
+		GIT_TAG 5.5
+		SYSTEM YES
+		GIT_SHALLOW YES
+)
 add_library(raylib::lib ALIAS raylib)
 
 add_subdirectory(raylib-cpp)
