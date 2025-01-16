@@ -17,7 +17,13 @@ target_include_directories(rres PUBLIC rres/src)
 target_link_libraries(rres PUBLIC raylib)
 add_library(raylib::res ALIAS rres)
 
-add_subdirectory(magic_enum)
+CPMAddPackage(
+		NAME magic_enum
+		GITHUB_REPOSITORY Neargye/magic_enum
+		VERSION 0.9.7
+		SYSTEM YES
+		GIT_SHALLOW YES
+)
 
 add_subdirectory(Catch2)
 target_compile_features(Catch2 PUBLIC cxx_std_17)
