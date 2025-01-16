@@ -7,7 +7,13 @@ CPMAddPackage(
 )
 add_library(raylib::lib ALIAS raylib)
 
-add_subdirectory(raylib-cpp)
+CPMAddPackage(
+		NAME raylib-cpp
+		GITHUB_REPOSITORY RobLoach/raylib-cpp
+		VERSION 5.5.0
+		SYSTEM YES
+		GIT_SHALLOW YES
+)
 add_library(raylib::cpp ALIAS raylib_cpp)
 target_link_libraries(raylib_cpp INTERFACE raylib)
 
