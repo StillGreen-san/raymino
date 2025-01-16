@@ -31,9 +31,17 @@ target_include_directories(raygui PUBLIC ${raygui_SOURCE_DIR}/src)
 target_link_libraries(raygui PUBLIC raylib)
 add_library(raylib::gui ALIAS raygui)
 
+CPMAddPackage(
+		NAME rres
+		GITHUB_REPOSITORY raysan5/rres
+		GIT_TAG a5aeda67a06bfddeab97add7a05cad2aaf40e400 # 2025.01.01
+		SYSTEM YES
+		GIT_SHALLOW YES
+		DOWNLOAD_ONLY YES
+)
 add_library(rres)
 target_sources(rres PRIVATE rres.c)
-target_include_directories(rres PUBLIC rres/src)
+target_include_directories(rres PUBLIC ${rres_SOURCE_DIR}/src)
 target_link_libraries(rres PUBLIC raylib)
 add_library(raylib::res ALIAS rres)
 

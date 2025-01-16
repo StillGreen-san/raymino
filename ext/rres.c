@@ -5,4 +5,4 @@
 #define RRES_SUPPORT_COMPRESSION_LZ4
 #define RRES_SUPPORT_ENCRYPTION_AES
 #define RRES_SUPPORT_ENCRYPTION_XCHACHA20
-#include "rres/src/rres-raylib.h"
+#include "rres-raylib.h"
