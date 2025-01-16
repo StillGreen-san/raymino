@@ -17,9 +17,17 @@ CPMAddPackage(
 add_library(raylib::cpp ALIAS raylib_cpp)
 target_link_libraries(raylib_cpp INTERFACE raylib)
 
+CPMAddPackage(
+		NAME raygui
+		GITHUB_REPOSITORY raysan5/raygui
+		GIT_TAG 4.0
+		SYSTEM YES
+		GIT_SHALLOW YES
+		DOWNLOAD_ONLY YES
+)
 add_library(raygui)
 target_sources(raygui PRIVATE raygui.c)
-target_include_directories(raygui PUBLIC raygui/src)
+target_include_directories(raygui PUBLIC ${raygui_SOURCE_DIR}/src)
 target_link_libraries(raygui PUBLIC raylib)
 add_library(raylib::gui ALIAS raygui)
 
