@@ -25,6 +25,13 @@ CPMAddPackage(
 		GIT_SHALLOW YES
 )
 
-add_subdirectory(Catch2)
+CPMAddPackage(
+		NAME Catch2
+		GITHUB_REPOSITORY catchorg/Catch2
+		VERSION 3.8.0
+		SYSTEM YES
+		GIT_SHALLOW YES
+)
 target_compile_features(Catch2 PUBLIC cxx_std_17)
+list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
