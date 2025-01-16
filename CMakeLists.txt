@@ -8,6 +8,7 @@ if (EMSCRIPTEN)
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
 endif ()
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPM.cmake)
 add_subdirectory(ext SYSTEM)
 
 option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
