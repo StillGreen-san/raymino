@@ -1,6 +1,3 @@
-[submodule "ext/raygui"]
-	path = ext/raygui
-	url = https://github.com/raysan5/raygui
 [submodule "ext/rres"]
 	path = ext/rres
 	url = https://github.com/raysan5/rres
