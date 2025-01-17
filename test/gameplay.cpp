@@ -418,8 +418,8 @@ TEST_CASE("IScoringSystem<Guideline>", "[gameplay][IScoringSystem]")
 	{
 		const std::unique_ptr<IScoringSystem> scoreSys = makeScoringSystem<ScoringSystem::Guideline>();
 		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 1) == 800);
-		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 2, 2) == (2400 + 100) * 1.5);
-		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 0, 3) == 1200 * 1.5);
+		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 2, 2) == (2400 + 100) + (1200 + 50));
+		REQUIRE(scoreSys->process(ScoreEvent::TSpin, 0, 3) == 1200 + 600);
 		REQUIRE(scoreSys->process(ScoreEvent::MiniTSpin, 0, 4) == 400);
 		REQUIRE(scoreSys->process(ScoreEvent::LineClear, 4, 5) == 4000);
 	}
@@ -451,7 +451,7 @@ TEST_CASE("IShuffledIndices<Random>", "[gameplay]")
 	std::deque<size_t> indices;
 	const std::vector<Tetromino> baseTetrominos = makeBaseMinos<RotationSystem::Super>();
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::Random)(baseTetrominos);
-	for(const size_t indicesToAdd : {7, 1, 3, 12, 14})
+	for(const size_t indicesToAdd : std::initializer_list<size_t>{7, 1, 3, 12, 14})
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + indicesToAdd;
@@ -564,7 +564,7 @@ TEST_CASE("IShuffledIndices<TGMH4>", "[gameplay]")
 	std::deque<size_t> indices;
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::TGMH4)(baseTetrominos);
 
-	for(const size_t indicesToAdd : {9, 2, 3, 1, 8, 4})
+	for(const size_t indicesToAdd : std::initializer_list<size_t>{9, 2, 3, 1, 8, 4})
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + indicesToAdd;
@@ -607,7 +607,7 @@ TEST_CASE("IShuffledIndices<TGM35>", "[gameplay]")
 	std::deque<size_t> indices;
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::TGM35)(baseTetrominos);
 
-	for(const size_t indicesToAdd : {1, 6, 9, 11, 8, 4})
+	for(const size_t indicesToAdd : std::initializer_list<size_t>{1, 6, 9, 11, 8, 4})
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + indicesToAdd;
@@ -634,7 +634,7 @@ TEST_CASE("IShuffledIndices<NES>", "[gameplay]")
 	std::deque<size_t> indices;
 	const std::unique_ptr<IShuffledIndices> iShuffledIndices = makeShuffledIndices(ShuffleType::NES)(baseTetrominos);
 
-	for(const size_t indicesToAdd : {5, 8, 2, 1, 15})
+	for(const size_t indicesToAdd : std::initializer_list<size_t>{5, 8, 2, 1, 15})
 	{
 		const size_t prevSize = indices.size();
 		const size_t targetMinSize = prevSize + indicesToAdd;

@@ -4,7 +4,7 @@ namespace raymino
 {
 size_t find_nth(const std::string& str, size_t nth, char chr) noexcept
 {
-	size_t pos = nth == 0 ? 0 : -1;
+	size_t pos = nth == 0 ? 0 : std::numeric_limits<size_t>::max();
 	for(; nth > 0; --nth)
 	{
 		pos = str.find(chr, pos + 1);
@@ -65,7 +65,7 @@ size_t TextList::size() const noexcept
 	{
 		return 0;
 	}
-	return std::count(list.begin(), list.end(), delimiter) + 1;
+	return static_cast<size_t>(std::count(list.begin(), list.end(), delimiter) + 1);
 }
 
 std::string splitCamel(std::string_view text)

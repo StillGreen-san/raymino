@@ -41,7 +41,7 @@ CPMAddPackage(
 )
 add_library(rres)
 target_sources(rres PRIVATE rres.c)
-target_include_directories(rres PUBLIC ${rres_SOURCE_DIR}/src)
+target_include_directories(rres SYSTEM PUBLIC ${rres_SOURCE_DIR}/src)
 target_link_libraries(rres PUBLIC raylib)
 add_library(raylib::res ALIAS rres)
 

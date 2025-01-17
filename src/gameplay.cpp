@@ -5,8 +5,7 @@
 
 namespace raymino
 {
-template<typename TInt, typename TIntB>
-TInt clampMax(TInt in, TIntB max)
+size_t clampMax(size_t in, size_t max)
 {
 	return in > max ? max : in;
 }
@@ -256,7 +255,9 @@ Offset wallKick<WallKicks::Arika>(const Grid& field, const Tetromino& tetromino,
 		{
 			return {{offset.position + up}, offset.rotation};
 		}
+		[[fallthrough]];
 	case TetrominoType::L:
+		[[fallthrough]];
 	case TetrominoType::J:
 		if(desiredPosition.rotation % 2 == 0)
 		{
@@ -266,7 +267,9 @@ Offset wallKick<WallKicks::Arika>(const Grid& field, const Tetromino& tetromino,
 				return {};
 			}
 		}
+		[[fallthrough]];
 	case TetrominoType::Z:
+		[[fallthrough]];
 	case TetrominoType::S:
 		if(field.overlapAt(desiredPosition.position + right, desiredPosition.collision) == 0)
 		{
@@ -839,14 +842,14 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::Random>(const
 
 void MultiBag_fill(std::deque<size_t>& indices, size_t bagSize, size_t indexCount, std::mt19937_64& rng)
 {
-	const size_t prevSize = indices.size();
+	const auto prevSize = static_cast<ptrdiff_t>(indices.size());
 	std::vector<size_t> baseIndices(indexCount);
 	std::iota(baseIndices.begin(), baseIndices.end(), 0);
 	for(size_t i = 0; i < bagSize; ++i)
 	{
 		indices.insert(indices.end(), baseIndices.begin(), baseIndices.end());
 	}
-	auto newBegin = std::next(indices.begin(), prevSize);
+	const auto newBegin = std::next(indices.begin(), prevSize);
 	std::shuffle(newBegin, indices.end(), rng);
 }
 template<size_t TBagSize>
