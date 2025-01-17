@@ -4,8 +4,14 @@
 #include "types.hpp"
 
 #include <raygui.h>
+#include <raylib.h>
 
-#include <optional>
+#include <algorithm>
+#include <array>
+#include <climits>
+#include <cstddef>
+#include <cstdint>
+#include <limits>
 #include <random>
 #include <string>
 #include <string_view>

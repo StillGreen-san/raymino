@@ -4,9 +4,12 @@
 #include "types.hpp"
 
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <deque>
 #include <memory>
 #include <random>
+#include <tuple>
 #include <vector>
 
 namespace raymino

@@ -9,9 +9,11 @@
 #include "timer.hpp"
 #include "types.hpp"
 
-#include <raygui.h>
-#include <raylib-cpp.hpp>
-#include <rres-raylib.h>
+#include <Rectangle.hpp>
+#include <Vector2.hpp>
+#include <raylib.h>
+
+#include <tuple>
 
 bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 {
@@ -19,7 +21,13 @@ bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 }
 
 #include <algorithm>
-#include <charconv>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <deque>
+#include <functional>
+#include <limits>
+#include <memory>
 #include <random>
 #include <string_view>
 #include <vector>

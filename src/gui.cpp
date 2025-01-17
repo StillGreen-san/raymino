@@ -1,5 +1,14 @@
 #include "gui.hpp"
 
+#include <algorithm>
+#include <cctype>
+#include <cstddef>
+#include <cstdlib>
+#include <iterator>
+#include <limits>
+#include <string>
+#include <string_view>
+
 namespace raymino
 {
 size_t find_nth(const std::string& str, size_t nth, char chr) noexcept

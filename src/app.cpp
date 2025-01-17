@@ -1,14 +1,27 @@
 #include "app.hpp"
 
+#include "savefile.hpp"
+#include "scenes.hpp"
+#include "types.hpp"
+
 #include <external/sdefl.h>
 #include <external/sinfl.h>
-#include <raylib-cpp.hpp>
-
 #include <magic_enum/magic_enum.hpp>
+#include <raylib.h>
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
 #endif
+
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <stdexcept>
+#include <utility>
+#include <vector>
 
 namespace raymino
 {

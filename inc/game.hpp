@@ -1,3 +1,5 @@
+#pragma once
+
 #include "app.hpp"
 #include "gameplay.hpp"
 #include "grid.hpp"
@@ -7,7 +9,9 @@
 #include "timer.hpp"
 #include "types.hpp"
 
+#include <cstddef>
 #include <deque>
+#include <memory>
 #include <random>
 #include <vector>
 

@@ -3,8 +3,13 @@
 #include "types.hpp"
 
 #include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <functional>
 #include <iterator>
 #include <stdexcept>
+#include <utility>
+#include <vector>
 
 namespace raymino
 {

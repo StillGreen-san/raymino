@@ -5,6 +5,7 @@
 
 #include <raylib.h>
 
+#include <cstdint>
 #include <vector>
 
 namespace raymino

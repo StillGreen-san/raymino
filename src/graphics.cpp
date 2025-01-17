@@ -1,6 +1,11 @@
 #include "graphics.hpp"
 
+#include "grid.hpp"
+#include "types.hpp"
+
 #include <raylib.h>
+
+#include <tuple>
 
 bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 {
@@ -8,6 +13,8 @@ bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 }
 
 #include <algorithm>
+#include <utility>
+#include <vector>
 
 namespace raymino
 {

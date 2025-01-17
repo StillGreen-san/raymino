@@ -1,6 +1,8 @@
 #include "app.hpp"
 
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 
 namespace raymino
