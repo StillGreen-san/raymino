@@ -31,6 +31,13 @@ inline bool GuiDropdownBox(::Rectangle bounds, const char* text, int& active, bo
 	}
 	return false;
 }
+inline bool GuiDropdownBox(::Rectangle bounds, const char* text, size_t& active, bool& editMode) noexcept
+{
+	int tmpActive = static_cast<int>(active);
+	const bool result = GuiDropdownBox(bounds, text, tmpActive, editMode);
+	active = static_cast<size_t>(tmpActive);
+	return result;
+}
 template<typename TContainer>
 bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX) noexcept
 {
@@ -168,8 +175,7 @@ public:
 	 * @pre presets was managed by PresetSelect
 	 */
 	PresetSelect(const App::Presets<TValue>& presets, size_t active) :
-	    presets{presets}, valueBuffer{presets.get(active).value}, textList{Range{presets.get()}},
-	    activeItem(static_cast<int>(active)),
+	    presets{presets}, valueBuffer{presets.get(active).value}, textList{Range{presets.get()}}, activeItem(active),
 	    state{presets.size() != 0 && presets.find(customName) == presets.size() - 1 ? State::Custom : State::Normal}
 	{
 	}
@@ -183,7 +189,7 @@ public:
 	}
 	[[nodiscard]] size_t active() const noexcept
 	{
-		return static_cast<size_t>(activeItem);
+		return activeItem;
 	}
 	[[nodiscard]] bool inEditMode() const noexcept
 	{
@@ -193,7 +199,7 @@ public:
 	{
 		if(const size_t index = presets.find(valueBuffer); index != activeItem)
 		{
-			activeItem = static_cast<int>(index);
+			activeItem = index;
 			if(index == presets.size())
 			{
 				if(state == State::Custom)
@@ -256,7 +262,7 @@ public:
 			}
 			presets.remove(activeItem);
 			textList.remove(activeItem);
-			activeItem = std::min<int>(static_cast<int>(presets.size() - 1), activeItem);
+			activeItem = std::min(presets.size() - 1, activeItem);
 			valueBuffer = presets.get(activeItem).value;
 		}
 	}
@@ -269,7 +275,7 @@ private:
 		textList.remove(activeItem);
 		presets.add(item);
 		textList.add(item);
-		activeItem = static_cast<int>(presets.size() - 1);
+		activeItem = presets.size() - 1;
 		state = State::Normal;
 	}
 
@@ -277,7 +283,7 @@ private:
 	TValue valueBuffer;
 	App::Presets<>::NameT textBuffer{};
 	TextList textList;
-	int activeItem;
+	size_t activeItem;
 	bool editMode = false;
 	State state = State::Normal;
 	static constexpr std::string_view customName = "Custom";

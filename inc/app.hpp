@@ -149,7 +149,7 @@ public:
 		{
 			if(index >= fixed())
 			{
-				items.erase(items.begin() + index);
+				items.erase(items.begin() + static_cast<ptrdiff_t>(index));
 			}
 		}
 
@@ -165,7 +165,7 @@ public:
 			    {
 				    return item.value == value;
 			    });
-			return std::distance(items.begin(), itemIt);
+			return static_cast<size_t>(std::distance(items.begin(), itemIt));
 		}
 
 		/**
@@ -180,7 +180,7 @@ public:
 			    {
 				    return std::string_view{item.name.data()} == name;
 			    });
-			return std::distance(items.begin(), itemIt);
+			return static_cast<size_t>(std::distance(items.begin(), itemIt));
 		}
 
 		[[nodiscard]] const std::vector<Item>& get() const noexcept

@@ -300,12 +300,11 @@ void Game::update(App& app)
 		playfield.setAt(currentTetromino.position, currentTetromino.collision);
 
 		const size_t linesCleared = eraseFullLines(playfield);
-		score += scoringSystem->process(scoreEvent, static_cast<int>(linesCleared), levelState.currentLevel);
-		levelState = levelUpFunc(scoreEvent, static_cast<int>(linesCleared), levelState);
+		score += scoringSystem->process(scoreEvent, linesCleared, levelState.currentLevel);
+		levelState = levelUpFunc(scoreEvent, linesCleared, levelState);
 		if(isEmpty(playfield))
 		{
-			score += scoringSystem->process(
-			    ScoreEvent::PerfectClear, static_cast<int>(linesCleared), levelState.currentLevel);
+			score += scoringSystem->process(ScoreEvent::PerfectClear, linesCleared, levelState.currentLevel);
 		}
 
 		isLocking = false;
