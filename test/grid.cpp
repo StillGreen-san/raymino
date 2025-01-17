@@ -15,7 +15,7 @@ TEST_CASE("Grid(Size,Grid::Cell)", "[Grid]")
 
 	REQUIRE(grid.isSquare() == true);
 	REQUIRE(grid.getSize() == size);
-	REQUIRE(std::count(grid.begin(), grid.end(), fill) == size.area());
+	REQUIRE(std::count(grid.begin(), grid.end(), fill) == static_cast<ptrdiff_t>(size.area()));
 }
 
 TEST_CASE("Grid(Size,vector<Grid::Cell>)", "[Grid]")
@@ -47,7 +47,7 @@ TEST_CASE("Grid(Grid,function)", "[Grid]")
 
 	REQUIRE(grid.isSquare() == true);
 	REQUIRE(grid.getSize() == size);
-	REQUIRE(std::count(grid.begin(), grid.end(), fill * 2) == size.area());
+	REQUIRE(std::count(grid.begin(), grid.end(), fill * 2) == static_cast<ptrdiff_t>(size.area()));
 	REQUIRE(grid.getAt({1, 0}) == fill * 2);
 	REQUIRE(grid.getAt({1, 2}) == Grid::oobVal);
 	REQUIRE(grid.getAt({0, -1}) == Grid::oobVal);

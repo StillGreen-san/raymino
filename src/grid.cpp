@@ -13,20 +13,21 @@ size_t index1D(int xPos, int yPos, int width) noexcept
 	return (static_cast<size_t>(yPos) * static_cast<size_t>(width)) + static_cast<size_t>(xPos);
 }
 
-Grid::Grid(Size size, Grid::Cell fill) : cells(static_cast<size_t>(size.area()), fill), size{size}
+Grid::Grid(Size size, Grid::Cell fill) : cells(size.area(), fill), size{std::abs(size.width), std::abs(size.height)}
 {
 }
 
-Grid::Grid(Size size, const std::vector<Grid::Cell>& grid) : size{size}
+Grid::Grid(Size size, const std::vector<Grid::Cell>& grid) : size{std::abs(size.width), std::abs(size.height)}
 {
-	if(grid.size() != static_cast<size_t>(size.area()))
+	if(grid.size() != size.area())
 	{
 		throw std::logic_error("size mismatch");
 	}
 	cells = grid;
 }
 
-Grid::Grid(const Grid& other, std::function<TTransformFunc> func) : size{other.size}
+Grid::Grid(const Grid& other, std::function<TTransformFunc> func) :
+    size{std::abs(other.size.width), std::abs(other.size.height)}
 {
 	cells.reserve(other.cells.size());
 	std::transform(other.cells.begin(), other.cells.end(), std::back_insert_iterator(cells), std::move(func));
@@ -108,12 +109,15 @@ void Grid::transpose() noexcept
 	{
 		std::swap(size.width, size.height);
 	}
-	for(int i = 0; i < size.area(); ++i)
+	const size_t area = size.area();
+	const auto width = static_cast<size_t>(size.width);
+	const auto height = static_cast<size_t>(size.height);
+	for(size_t i = 0; i < area; ++i)
 	{
-		auto dest = (size.height * (i % size.width)) + (i / size.width);
+		auto dest = (height * (i % width)) + (i / width);
 		while(dest < i)
 		{
-			dest = (size.height * (dest % size.width)) + (dest / size.width);
+			dest = (height * (dest % width)) + (dest / width);
 		}
 		std::swap(cells[i], cells[dest]);
 	}

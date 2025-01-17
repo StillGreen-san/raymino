@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <tuple>
 
 namespace raymino
@@ -43,9 +44,9 @@ struct Size
 {
 	int width;
 	int height;
-	[[nodiscard]] ptrdiff_t area() const noexcept
+	[[nodiscard]] size_t area() const noexcept
 	{
-		return static_cast<ptrdiff_t>(width) * height;
+		return static_cast<size_t>(std::abs(width)) * static_cast<size_t>(std::abs(height));
 	}
 	constexpr bool operator==(Size other) const noexcept
 	{

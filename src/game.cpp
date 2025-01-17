@@ -271,7 +271,8 @@ void Game::update(App& app)
 			{
 				currentTetromino.position += XY{0, yOffset - 1};
 				prevTetrominoOffset = currentTetromino;
-				score += scoringSystem->process(ScoreEvent::HardDrop, yOffset - 1, levelState.currentLevel);
+				score += scoringSystem->process(
+				    ScoreEvent::HardDrop, static_cast<size_t>(yOffset - 1), levelState.currentLevel);
 				if(settings.instantDrop == InstantDrop::Hard)
 				{
 					isLocking = true;
@@ -369,7 +370,7 @@ void Game::draw(App& app)
 		    previewOffsetsMain[nextTetrominoIndices[0]] + XY{App::Settings::SCREEN_WIDTH - SIDEBAR_WIDTH, 0},
 		    PREVIEW_CELL_SIZE, 1, minoColors);
 
-		for(int i = 1; i < settings.previewCount; ++i)
+		for(uint8_t i = 1; i < settings.previewCount; ++i)
 		{
 			drawCells(baseTetrominos[nextTetrominoIndices[i]].collision,
 			    previewOffsetsExtended[nextTetrominoIndices[i]] +
