@@ -295,10 +295,10 @@ private:
 class NumberBuffer
 {
 public:
-	using TIntType = ptrdiff_t;
+	using TIntType = int64_t;
 	static constexpr size_t Digits10 = std::numeric_limits<TIntType>::digits10 + 1;
 	static constexpr size_t Separators = (Digits10 - 1) / 3;
-	static constexpr size_t SignChars = static_cast<const size_t>(std::numeric_limits<TIntType>::is_signed);
+	static constexpr size_t SignChars = std::numeric_limits<TIntType>::is_signed;
 	static constexpr size_t TermintorChars = 1;
 	static constexpr size_t TotalBufferSize = Digits10 + Separators + SignChars + TermintorChars;
 	using TBufferType = std::array<char, TotalBufferSize>;

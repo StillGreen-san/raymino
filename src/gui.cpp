@@ -129,7 +129,7 @@ unsigned char NumberBuffer::backFillSeparated(TBufferType& buffer, TIntType valu
 {
 	auto bufferCursor = buffer.begin() + static_cast<ptrdiff_t>(buffer.size() - 2);
 	const bool isNegative = value < 0;
-	ptrdiff_t parseNumber = std::abs(value);
+	TIntType parseNumber = std::abs(value);
 	size_t parsedDigits = 0;
 	while(true)
 	{
