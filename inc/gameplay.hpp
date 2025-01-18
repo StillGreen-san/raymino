@@ -141,9 +141,9 @@ XY spawnPosition(const Tetromino& tetromino, int highestUsedRow, int totalWidth)
 
 /**
  * @param grid to modify
- * @return size_t number of lines erased
+ * @return uint32_t number of lines erased
  */
-size_t eraseFullLines(Grid& grid) noexcept;
+uint32_t eraseFullLines(Grid& grid) noexcept;
 
 /**
  * @param grid to check
@@ -214,7 +214,7 @@ struct IScoringSystem
 	 * @param level
 	 * @return int64_t score for event
 	 */
-	[[nodiscard]] virtual int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept = 0;
+	[[nodiscard]] virtual int64_t process(ScoreEvent event, uint32_t lines, uint32_t level) noexcept = 0;
 };
 
 /**
@@ -264,9 +264,9 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 struct LevelState
 {
 	static LevelState make(LevelGoal ttype) noexcept;
-	size_t currentLevel;
-	size_t linesCleared;
-	size_t linesToClear;
+	uint32_t currentLevel;
+	uint32_t linesCleared;
+	uint32_t linesToClear;
 	bool operator==(const LevelState& rhs) const noexcept
 	{
 		return std::tie(currentLevel, linesCleared, linesToClear) ==
@@ -282,11 +282,11 @@ struct LevelState
  * @return LevelState
  */
 template<LevelGoal TType>
-LevelState levelUp(ScoreEvent event, size_t lines, LevelState state) noexcept;
+LevelState levelUp(ScoreEvent event, uint32_t lines, LevelState state) noexcept;
 
 /**
  * @param ttype LevelGoal
  * @return levelUp function pointer
  */
-LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, size_t lines, LevelState state) noexcept;
+LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, uint32_t lines, LevelState state) noexcept;
 } // namespace raymino

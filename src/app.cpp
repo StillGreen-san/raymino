@@ -244,7 +244,7 @@ SaveFile App::serialize() const
 {
 	const size_t scoreCount = std::min<size_t>(highScores.entries.size(), std::numeric_limits<uint32_t>::max());
 	const auto scoreSize = static_cast<uint32_t>(scoreCount * sizeof(HighScoreEntry));
-	const uint32_t appStateSize = sizeof(HighScoreEntry::NameT) + sizeof(Settings);
+	constexpr uint32_t appStateSize = sizeof(HighScoreEntry::NameT) + sizeof(Settings);
 	const auto keyBindPresetsSize = static_cast<uint32_t>(keyBindsPresets.size() * sizeof(Presets<KeyBinds>::Item));
 	const auto settingsPresetsSize = static_cast<uint32_t>(settingsPresets.size() * sizeof(Presets<Settings>::Item));
 

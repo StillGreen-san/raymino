@@ -16,7 +16,7 @@
 
 namespace raymino
 {
-size_t clampMax(size_t in, size_t max)
+uint32_t clampMax(uint32_t in, uint32_t max)
 {
 	return in > max ? max : in;
 }
@@ -398,7 +398,7 @@ Offset (*wallKick(WallKicks tsys) noexcept)(const Grid& field, const Tetromino& 
 	}
 }
 
-size_t eraseFullLines(Grid& grid) noexcept
+uint32_t eraseFullLines(Grid& grid) noexcept
 {
 	const auto gridWidth = grid.getSize().width;
 	const auto isFullLine = [](auto begin, auto end)
@@ -410,7 +410,7 @@ size_t eraseFullLines(Grid& grid) noexcept
 		    });
 	};
 
-	size_t erasedLines = 0;
+	uint32_t erasedLines = 0;
 
 	if(grid.getSize().area() == 0)
 	{
@@ -599,7 +599,7 @@ ScoreEvent (*tSpinCheck(TSpin tspin) noexcept)(const Grid& field, const Tetromin
 
 struct BPS : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, size_t lines, [[maybe_unused]] size_t level) noexcept override
+	int64_t process(ScoreEvent event, uint32_t lines, [[maybe_unused]] uint32_t level) noexcept override
 	{
 		switch(event)
 		{
@@ -627,9 +627,9 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::BPS>()
 
 struct Sega : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept override
+	int64_t process(ScoreEvent event, uint32_t lines, uint32_t level) noexcept override
 	{
-		level = std::clamp<size_t>((level + 1) / 2, 1, 5);
+		level = std::clamp<uint32_t>((level + 1) / 2, 1, 5);
 		switch(event)
 		{
 		case ScoreEvent::LineClear:
@@ -659,7 +659,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Sega>()
 
 struct Nintendo : public IScoringSystem
 {
-	int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept override
+	int64_t process(ScoreEvent event, uint32_t lines, uint32_t level) noexcept override
 	{
 		switch(event)
 		{
@@ -689,7 +689,7 @@ struct Guideline : public IScoringSystem
 {
 	struct Action
 	{
-		enum
+		enum : uint8_t
 		{
 			NoLines = 0,
 			Single,
@@ -718,7 +718,8 @@ struct Guideline : public IScoringSystem
 		int64_t points;
 		bool isDifficult;
 	};
-	static constexpr std::array<Action, Action::COUNT> actions{{/*NoLines*/ {0, false},
+	static constexpr std::array<Action, Action::COUNT> actions{{//
+	    /*NoLines*/ {0, false},
 	    /*Single*/ {100, false},
 	    /*Double*/ {300, false},
 	    /*Triple*/ {500, false},
@@ -740,10 +741,10 @@ struct Guideline : public IScoringSystem
 	    /*PerfectTetris*/ {2000, false},
 	    /*PerfectTetrisChain*/ {3200, false}}};
 	bool wasLastEventDifficult = false;
-	size_t lastPerfectClearLines = 0;
+	uint32_t lastPerfectClearLines = 0;
 	int clearCounter = 0;
 	int combo = -1;
-	int64_t process(ScoreEvent event, size_t lines, size_t level) noexcept override
+	int64_t process(ScoreEvent event, uint32_t lines, uint32_t level) noexcept override
 	{
 		int64_t score = 0;
 		bool isThisEventDifficult = false;
@@ -1042,10 +1043,10 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 
 LevelState LevelState::make(LevelGoal ttype) noexcept
 {
-	return {1, 0, static_cast<size_t>(ttype == LevelGoal::Dynamic ? 5 : 10)};
+	return {1, 0, ttype == LevelGoal::Dynamic ? 5U : 10U};
 }
 template<>
-LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, size_t lines, LevelState state) noexcept
+LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, uint32_t lines, LevelState state) noexcept
 {
 	switch(event)
 	{
@@ -1068,7 +1069,7 @@ LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, size_t lines, LevelState 
 	}
 }
 template<>
-LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, size_t lines, LevelState state) noexcept
+LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, uint32_t lines, LevelState state) noexcept
 {
 	switch(event)
 	{
@@ -1077,7 +1078,7 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, size_t lines, LevelStat
 	case ScoreEvent::MiniTSpin:
 	case ScoreEvent::TSpin:
 	{
-		static constexpr std::array<size_t, 5> points{0, 1, 3, 5, 8};
+		static constexpr std::array<uint32_t, 5> points{0, 1, 3, 5, 8};
 		lines = clampMax(lines, 4);
 		state.linesCleared += points[lines];
 		if(state.linesCleared >= state.linesToClear)
@@ -1093,7 +1094,7 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, size_t lines, LevelStat
 		return state;
 	}
 }
-LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, size_t lines, LevelState state) noexcept
+LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, uint32_t lines, LevelState state) noexcept
 {
 	switch(ttype)
 	{

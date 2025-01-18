@@ -281,7 +281,7 @@ void Game::update(App& app)
 				currentTetromino.position += XY{0, yOffset - 1};
 				prevTetrominoOffset = currentTetromino;
 				score += scoringSystem->process(
-				    ScoreEvent::HardDrop, static_cast<size_t>(yOffset - 1), levelState.currentLevel);
+				    ScoreEvent::HardDrop, static_cast<uint32_t>(yOffset - 1), levelState.currentLevel);
 				if(settings.instantDrop == InstantDrop::Hard)
 				{
 					isLocking = true;
@@ -309,7 +309,7 @@ void Game::update(App& app)
 
 		playfield.setAt(currentTetromino.position, currentTetromino.collision);
 
-		const size_t linesCleared = eraseFullLines(playfield);
+		const uint32_t linesCleared = eraseFullLines(playfield);
 		score += scoringSystem->process(scoreEvent, linesCleared, levelState.currentLevel);
 		levelState = levelUpFunc(scoreEvent, linesCleared, levelState);
 		if(isEmpty(playfield))

@@ -270,8 +270,9 @@ void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry
 {
 	std::array<char, 16> buffer{};
 	std::to_chars(&buffer.front(), &buffer.back(), entry.score);
-	::GuiLabel({bounds.x + 15, bounds.y + (25 * scoresIdx) + 5, 65, 24}, entry.name.data());
-	::GuiLabel({bounds.x + 15 + 70, bounds.y + (25 * scoresIdx) + 5, 65, 24}, buffer.data());
+	const auto scoreOffset = static_cast<float>(25 * scoresIdx);
+	::GuiLabel({bounds.x + 15, bounds.y + scoreOffset + 5, 65, 24}, entry.name.data());
+	::GuiLabel({bounds.x + 15 + 70, bounds.y + scoreOffset + 5, 65, 24}, buffer.data());
 }
 
 template<typename TType, typename TRng, std::enable_if_t<std::is_enum_v<TType>, bool> = true>
