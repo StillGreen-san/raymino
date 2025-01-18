@@ -5,16 +5,17 @@
 
 #include <raylib.h>
 
+#include <algorithm>
+#include <cstdint>
+#include <iterator>
 #include <tuple>
+#include <utility>
+#include <vector>
 
 bool constexpr operator<(::Color lhs, ::Color rhs) noexcept
 {
 	return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
 }
-
-#include <algorithm>
-#include <utility>
-#include <vector>
 
 namespace raymino
 {

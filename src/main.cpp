@@ -1,6 +1,7 @@
 #include "app.hpp"
 #include "dependency_info.hpp"
 
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 

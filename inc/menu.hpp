@@ -4,8 +4,11 @@
 #include "gui.hpp"
 #include "scenes.hpp"
 
-#include <array>
 #include <raylib.h>
+
+#include <algorithm>
+#include <array>
+#include <cstddef>
 
 namespace raymino
 {

@@ -1,11 +1,11 @@
 #include "windows.hpp"
 
-// NOLINTBEGIN(*-pointer-arithmetic, *-include-cleaner)
+#include <cstddef>
+
 #define UNICODE
 #include <Windows.h>
 
-#include <cstddef>
-
+// NOLINTBEGIN(*-pointer-arithmetic)
 WinMainArgs::WinMainArgs()
 {
 	LPWSTR* wArgv = CommandLineToArgvW(GetCommandLineW(), &mArgc);
@@ -41,4 +41,4 @@ WinMainArgs::~WinMainArgs()
 	}
 	delete[] mArgv;
 }
-// NOLINTEND(*-pointer-arithmetic, *-include-cleaner)
+// NOLINTEND(*-pointer-arithmetic)

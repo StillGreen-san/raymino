@@ -1,6 +1,8 @@
 #include "input.hpp"
 
-#include <raylib-cpp.hpp>
+#include <raylib.h>
+
+#include <cstdint>
 
 namespace raymino
 {

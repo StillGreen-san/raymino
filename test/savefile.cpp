@@ -2,6 +2,12 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <iterator>
+#include <vector>
+
 using namespace raymino;
 
 TEST_CASE("SaveFile::Chunk::DataRange", "[SaveFile]")

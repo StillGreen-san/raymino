@@ -5,13 +5,14 @@
 #include "graphics.hpp"
 #include "grid.hpp"
 #include "gui.hpp"
+#include "input.hpp"
 #include "scenes.hpp"
 #include "timer.hpp"
 #include "types.hpp"
 
+#include <raylib.h>
 #include <Rectangle.hpp>
 #include <Vector2.hpp>
-#include <raylib.h>
 
 #include <tuple>
 

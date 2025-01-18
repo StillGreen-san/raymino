@@ -1,5 +1,9 @@
 #include "savefile.hpp"
 
+#include <cstdint>
+#include <utility>
+#include <vector>
+
 namespace raymino
 {
 const SaveFile::Header& SaveFile::header() const noexcept

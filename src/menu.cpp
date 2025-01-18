@@ -2,18 +2,28 @@
 
 #include "app.hpp"
 #include "dependency_info.hpp"
+#include "gui.hpp"
+#include "scenes.hpp"
+#include "types.hpp"
 
 #include <raygui.h>
-#include <raylib-cpp.hpp>
+#include <raylib.h>
+
+#include <algorithm>
+#include <array>
+#include <charconv>
+#include <cstddef>
+#include <cstdint>
+#include <functional>
+#include <limits>
+#include <memory>
+#include <random>
+#include <string>
+#include <type_traits>
 
 #define MAGIC_ENUM_RANGE_MIN 0   // NOLINT(cppcoreguidelines-macro-usage)
 #define MAGIC_ENUM_RANGE_MAX 350 // NOLINT(cppcoreguidelines-macro-usage)
 #include <magic_enum/magic_enum.hpp>
-
-#include <array>
-#include <charconv>
-#include <functional>
-#include <random>
 
 namespace raymino
 {

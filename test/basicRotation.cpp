@@ -1,6 +1,10 @@
+#include "gameplay.hpp"
+#include "grid.hpp"
+#include "types.hpp"
+
 #include <catch2/catch_test_macros.hpp>
 
-#include "gameplay.hpp"
+#include <vector>
 
 using namespace raymino;
 

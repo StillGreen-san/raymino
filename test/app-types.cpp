@@ -1,9 +1,9 @@
+#include "app.hpp"
 #include "ostream.hpp" //! needs to be included before catch
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "app.hpp"
-
+#include <cstring>
 #include <string_view>
 
 using namespace raymino;

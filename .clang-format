@@ -13,7 +13,19 @@ BraceWrapping:
   AfterUnion: true
   BeforeLambdaBody: true
   SplitEmptyNamespace: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^".+"'
+    Priority: 1
+    CaseSensitive: false
+  - Regex: '^<.+\..+>'
+    Priority: 2
+    CaseSensitive: false
+  - Regex: '^<[^.]+>'
+    Priority: 3
+    CaseSensitive: false
 PointerAlignment: Left
+SortIncludes: CaseInsensitive
 SpaceAfterTemplateKeyword: false
 SpaceBeforeParens: Never
 UseCRLF: true

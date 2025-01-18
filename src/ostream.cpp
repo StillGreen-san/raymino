@@ -1,5 +1,11 @@
 #include "ostream.hpp"
 
+#include "gameplay.hpp"
+#include "grid.hpp"
+#include "types.hpp"
+
+#include <ostream>
+
 namespace raymino
 {
 std::ostream& operator<<(std::ostream& ostream, const XY& value)

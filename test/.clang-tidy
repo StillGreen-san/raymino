@@ -6,3 +6,6 @@ Checks: >
   -misc-use-anonymous-namespace,
   -readability-function-cognitive-complexity,
   -readability-magic-numbers,
+CheckOptions:
+  - key: misc-include-cleaner.IgnoreHeaders
+    value: 'ostream\.hpp;__msvc_string_view\.hpp'

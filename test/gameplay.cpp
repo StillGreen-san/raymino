@@ -1,9 +1,20 @@
+#include "gameplay.hpp"
+
+#include "grid.hpp"
 #include "ostream.hpp" //! needs to be included before catch
+#include "types.hpp"
 
 #include <catch2/catch_get_random_seed.hpp>
 #include <catch2/catch_test_macros.hpp>
 
-#include "gameplay.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <deque>
+#include <initializer_list>
+#include <iterator>
+#include <memory>
+#include <random>
+#include <vector>
 
 using namespace raymino;
 

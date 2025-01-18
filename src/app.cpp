@@ -9,10 +9,6 @@
 #include <magic_enum/magic_enum.hpp>
 #include <raylib.h>
 
-#if defined(PLATFORM_WEB)
-#include <emscripten/emscripten.h>
-#endif
-
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
@@ -22,6 +18,10 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
+
+#if defined(PLATFORM_WEB)
+#include <emscripten/emscripten.h>
+#endif
 
 namespace raymino
 {

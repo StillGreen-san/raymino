@@ -28,3 +28,5 @@ CheckOptions:
     value: 30
   - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
     value: 'true'
+  - key: misc-include-cleaner.IgnoreHeaders
+    value: '__msvc_string_view\.hpp;Windows\.h;processenv\.h;shellapi\.h;stringapiset\.h;[Ww]in[Bb]ase\.h;[Ww]in[Nn]ls\.h;winnt\.h'

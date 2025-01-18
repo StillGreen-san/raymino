@@ -1,9 +1,12 @@
 #include "loading.hpp"
 
 #include "app.hpp"
+#include "scenes.hpp"
 
 #include <raygui.h>
-#include <raylib-cpp.hpp>
+#include <raylib.h>
+
+#include <memory>
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
