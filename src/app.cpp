@@ -15,6 +15,7 @@
 #include <iterator>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -147,7 +148,7 @@ bool App::addHighScore(int64_t score)
 
 struct ChunkType
 {
-	enum : uint16_t
+	enum : decltype(SaveFile::Chunk::Header::type) // NOLINT(*-enum-size)
 	{
 		PlayerName = 10,
 		Settings = 11,
@@ -265,17 +266,23 @@ void App::deserialize(const SaveFile& save)
 {
 	for(const SaveFile::Chunk::Header& chunkHeader : save)
 	{
+		const auto maybeType = magic_enum::enum_cast<ChunkType::type>(chunkHeader.type);
+		if(!maybeType.has_value())
+		{
+			::TraceLog(LOG_ERROR, "Deserialization: [???] unknown chunk type {%d}", chunkHeader.type);
+			continue;
+		}
 		try
 		{
-			switch(chunkHeader.type)
+			switch(maybeType.value())
 			{
 			case ChunkType::PlayerName:
 				playerName = *SaveFile::Chunk::DataRange<const HighScoreEntry::NameT>(chunkHeader).begin();
 				break;
 			case ChunkType::Settings:
 			{
-				const Settings& settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
-				if(settingsPresets.find(settings) == settingsPresets.size())
+				if(const Settings& settings = *SaveFile::Chunk::DataRange<const Settings>(chunkHeader).begin();
+				    settingsPresets.find(settings) == settingsPresets.size())
 				{
 					settingsPresets.add({"Custom", settings});
 				}
@@ -289,8 +296,8 @@ void App::deserialize(const SaveFile& save)
 			break;
 			case ChunkType::KeyBinds:
 			{
-				const KeyBinds& keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
-				if(keyBindsPresets.find(keyBinds) == keyBindsPresets.size())
+				if(const KeyBinds& keyBinds = *SaveFile::Chunk::DataRange<const KeyBinds>(chunkHeader).begin();
+				    keyBindsPresets.find(keyBinds) == keyBindsPresets.size())
 				{
 					keyBindsPresets.add({"Custom", keyBinds});
 				}
@@ -310,7 +317,7 @@ void App::deserialize(const SaveFile& save)
 				activeSettingsPreset = chunkHeader.userProperty;
 			}
 			break;
-			case ChunkType::OtherItems:
+			case ChunkType::OtherItems: // TODO?
 			{
 				// const OtherItems& otherItems = *SaveFile::Chunk::DataRange<const OtherItems>(chunkHeader).begin();
 			}
@@ -319,7 +326,7 @@ void App::deserialize(const SaveFile& save)
 		}
 		catch(const std::range_error& exception)
 		{
-			const auto chunkTypeName = magic_enum::enum_name<ChunkType::type>(ChunkType::type{chunkHeader.type});
+			const auto chunkTypeName = magic_enum::enum_name<ChunkType::type>(maybeType.value());
 			::TraceLog(LOG_ERROR, "Deserialization: [%s] %s", chunkTypeName.data(), exception.what());
 		}
 	}
