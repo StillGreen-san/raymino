@@ -187,20 +187,19 @@ SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 		return {0, 0};
 	}
 
-	const auto* inputHeader = static_cast<const SaveFile::Header*>(compressedData);
-	if(!SaveFile::isValid(*inputHeader))
+	const auto& inputHeader = *static_cast<const SaveFile::Header*>(compressedData);
+	if(!SaveFile::isValid(inputHeader))
 	{
 		return {0, 0};
 	}
 
-	std::vector<uint8_t> decompressedData(HeaderSize + inputHeader->userProp3, 0);
-	new(decompressedData.data()) SaveFile::Header{*inputHeader};
+	std::vector<uint8_t> decompressedData(HeaderSize + inputHeader.userProp3, 0);
+	new(decompressedData.data()) SaveFile::Header{inputHeader};
 
-	const int decompressedSize = ::sinflate(&decompressedData[HeaderSize], static_cast<int>(inputHeader->userProp3),
-	    inputHeader + 1, static_cast<int>(size - HeaderSize));
-	// NOLINT(*-pro-bounds-pointer-arithmetic)
+	const int decompressedSize = ::sinflate(&decompressedData[HeaderSize], static_cast<int>(inputHeader.userProp3),
+	    &inputHeader + 1, static_cast<int>(size - HeaderSize)); // NOLINT(*-pro-bounds-pointer-arithmetic)
 
-	if(decompressedSize != static_cast<ptrdiff_t>(inputHeader->userProp3))
+	if(decompressedSize != static_cast<int>(inputHeader.userProp3))
 	{
 		return {0, 0};
 	}
@@ -211,15 +210,13 @@ void App::storeFile(const SaveFile& save)
 {
 	auto deflateState = std::make_unique<::sdefl>();
 	const int saveBufferSize = static_cast<int>(save.size() - HeaderSize);
-	const int deflateBufferSize = ::sdefl_bound(saveBufferSize);
+	const auto deflateBufferSize = static_cast<size_t>(::sdefl_bound(saveBufferSize));
 
-	auto deflateBuffer = std::vector<uint8_t>(HeaderSize + static_cast<size_t>(deflateBufferSize), 0);
+	auto deflateBuffer = std::vector<uint8_t>(HeaderSize + deflateBufferSize, 0);
 	new(deflateBuffer.data()) SaveFile::Header{save.header()};
 
-	const int deflateDataSize = ::sdeflate(deflateState.get(), deflateBuffer.data() + HeaderSize,
-	    // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-	    save.data() + HeaderSize, saveBufferSize,
-	    8); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	const int deflateDataSize =
+	    ::sdeflate(deflateState.get(), &deflateBuffer[HeaderSize], &save[HeaderSize], saveBufferSize, 8);
 	deflateBuffer.resize(HeaderSize + static_cast<size_t>(deflateDataSize));
 
 #if defined(PLATFORM_WEB)
@@ -239,7 +236,7 @@ void App::storeFile(const SaveFile& save)
 		    delete asyncData;
 	    });
 #else
-	::SaveFileData(FILE_PATH, deflateBuffer.data(), static_cast<unsigned int>(deflateBuffer.size()));
+	::SaveFileData(FILE_PATH, deflateBuffer.data(), static_cast<int>(deflateBuffer.size()));
 #endif
 }
 

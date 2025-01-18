@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <stdexcept>
 #include <type_traits>
@@ -145,6 +146,7 @@ public:
 	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, uint32_t bytes);
 
 	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const noexcept;
+	[[nodiscard]] const uint8_t& operator[](size_t index) const noexcept;
 	[[nodiscard]] const uint8_t* data() const noexcept;
 	[[nodiscard]] uint32_t size() const noexcept;
 

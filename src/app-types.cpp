@@ -87,12 +87,9 @@ size_t App::HighScoreEntry::copyInto(const char* inPtr, App::HighScoreEntry::Nam
 	{
 		return 0;
 	}
-	size_t idx = 0;
-	for(; inPtr[idx] != '\0' && idx < outRef.size() - 1; ++idx)
-	{
-		outRef[idx] = inPtr[idx];
-	}
-	outRef[idx] = '\0';
-	return idx;
+	const size_t minLen = std::min(outRef.size() - 1, std::strlen(inPtr));
+	std::copy_n(inPtr, minLen, outRef.data());
+	outRef[minLen] = '\0';
+	return minLen;
 }
 } // namespace raymino

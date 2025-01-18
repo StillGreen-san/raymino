@@ -9,7 +9,7 @@ using namespace raymino; // NOLINT(google-build-using-namespace)
 
 int main(int argc, const char* const argv[])
 {
-	if(argc == 2 && std::strcmp(argv[1], "SGS_EXIT") == 0)
+	if(argc == 2 && std::strcmp(argv[1], "SGS_EXIT") == 0) // NOLINT(*-pro-bounds-pointer-arithmetic)
 	{
 		return 0;
 	}

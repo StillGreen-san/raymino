@@ -14,6 +14,7 @@ TEST_CASE("SaveFile::Chunk::DataRange", "[SaveFile]")
 {
 	constexpr auto isNextToHeader = [](auto iterator, auto& header) -> bool
 	{
+		// NOLINTNEXTLINE(*-pro-bounds-pointer-arithmetic)
 		return static_cast<const void*>(iterator) == static_cast<const void*>((&header) + 1);
 	};
 	{

@@ -1,5 +1,6 @@
 #include "savefile.hpp"
 
+#include <cstddef>
 #include <cstdint>
 #include <utility>
 #include <vector>
@@ -47,6 +48,10 @@ SaveFile::Chunk::Header& SaveFile::appendChunk(uint16_t type, uint16_t flags, ui
 const std::vector<uint8_t>& SaveFile::getBuffer() const noexcept
 {
 	return dataBuffer;
+}
+const uint8_t& SaveFile::operator[](size_t index) const noexcept
+{
+	return dataBuffer[index];
 }
 const uint8_t* SaveFile::data() const noexcept
 {
