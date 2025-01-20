@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <utility>
 #include <vector>
 
@@ -17,25 +18,23 @@ SaveFile::Header& SaveFile::header() noexcept
 }
 SaveFile::Chunk::ConstIterator SaveFile::begin() const noexcept
 {
-	return Chunk::ConstIterator{
-	    *reinterpret_cast<const Chunk::Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-	        &header() + 1)};                     // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	// NOLINTNEXTLINE(*-pro-type-reinterpret-cast)
+	return Chunk::ConstIterator{*reinterpret_cast<const Chunk::Header*>(std::next(&header()))};
 }
 SaveFile::Chunk::ConstIterator SaveFile::end() const noexcept
 {
-	return Chunk::ConstIterator{
-	    *reinterpret_cast<const Chunk::Header*>(     // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-	        dataBuffer.data() + dataBuffer.size())}; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	return Chunk::ConstIterator{*reinterpret_cast<const Chunk::Header*>( // NOLINT(*-pro-type-reinterpret-cast)
+	    std::next(dataBuffer.data(), static_cast<ptrdiff_t>(dataBuffer.size())))};
 }
 SaveFile::Chunk::Iterator SaveFile::begin() noexcept
 {
-	return Chunk::Iterator{*reinterpret_cast<Chunk::Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-	    &header() + 1)};                                      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	// NOLINTNEXTLINE(*-pro-type-reinterpret-cast)
+	return Chunk::Iterator{*reinterpret_cast<Chunk::Header*>(std::next(&header()))};
 }
 SaveFile::Chunk::Iterator SaveFile::end() noexcept
 {
-	return Chunk::Iterator{*reinterpret_cast<Chunk::Header*>( // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-	    dataBuffer.data() + dataBuffer.size())};              // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	return Chunk::Iterator{*reinterpret_cast<Chunk::Header*>( // NOLINT(*-pro-type-reinterpret-cast)
+	    std::next(dataBuffer.data(), static_cast<ptrdiff_t>(dataBuffer.size())))};
 }
 
 SaveFile::Chunk::Header& SaveFile::appendChunk(uint16_t type, uint16_t flags, uint32_t bytes)

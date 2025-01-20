@@ -198,7 +198,7 @@ SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 	new(decompressedData.data()) SaveFile::Header{inputHeader};
 
 	const int decompressedSize = ::sinflate(&decompressedData[HeaderSize], static_cast<int>(inputHeader.userProp3),
-	    &inputHeader + 1, static_cast<int>(size - HeaderSize)); // NOLINT(*-pro-bounds-pointer-arithmetic)
+	    std::next(&inputHeader), static_cast<int>(size - HeaderSize));
 
 	if(decompressedSize != static_cast<int>(inputHeader.userProp3))
 	{
