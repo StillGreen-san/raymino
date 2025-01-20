@@ -47,7 +47,8 @@ inline bool GuiDropdownBox(::Rectangle bounds, const char* text, size_t& active,
 template<typename TContainer>
 bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX) noexcept
 {
-	if(::GuiTextBox(bounds, container.data(), std::min(static_cast<int>(container.size()), maxLen), editMode))
+	const auto textSize = static_cast<int>(std::min(container.size(), static_cast<size_t>(maxLen)));
+	if(::GuiTextBox(bounds, container.data(), textSize, editMode))
 	{
 		editMode = !editMode;
 		return true;
@@ -56,7 +57,7 @@ bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int m
 }
 
 /**
- * @brief changes gui lock status in it scope, resetting it to its previous state on destruction
+ * @brief changes gui lock status in its scope, resetting it to its previous state on destruction
  */
 class ScopedGuiLock
 {
