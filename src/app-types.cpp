@@ -1,22 +1,22 @@
 #include "app.hpp"
 
 #include <algorithm>
-#include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <string_view>
 
 namespace raymino
 {
-bool App::HighScores::add(const char* namePtr, int64_t score, const Settings& settings)
+bool App::HighScores::add(std::string_view name, int64_t score, const Settings& settings)
 {
 	if(entries.empty())
 	{
-		entries.emplace_back(namePtr, score, settings);
+		entries.emplace_back(name, score, settings);
 		return true;
 	}
 	if(score > entries.front().score)
 	{
-		entries.emplace(entries.begin(), namePtr, score, settings);
+		entries.emplace(entries.begin(), name, score, settings);
 		return true;
 	}
 	const auto scoreRangeEnd = std::upper_bound(entries.begin(), entries.end(), score,
@@ -24,7 +24,7 @@ bool App::HighScores::add(const char* namePtr, int64_t score, const Settings& se
 	    {
 		    return score > entry.score;
 	    });
-	const auto entryPos = entries.emplace(scoreRangeEnd, namePtr, score, settings);
+	const auto entryPos = entries.emplace(scoreRangeEnd, name, score, settings);
 	const auto recordPos = std::find_if(entries.begin(), entryPos,
 	    [=](const HighScoreEntry& entry)
 	    {
@@ -73,23 +73,5 @@ bool App::KeyBinds::operator<(const App::KeyBinds& rhs) const noexcept
 int App::KeyBinds::compare(const App::KeyBinds& rhs) const noexcept
 {
 	return std::memcmp(this, &rhs, sizeof(App::KeyBinds));
-}
-
-App::HighScoreEntry::HighScoreEntry(const char* namePtr, int64_t score, const App::Settings& settings) noexcept :
-    name{}, score{score}, settings{settings}
-{
-	copyInto(namePtr, name);
-}
-
-size_t App::HighScoreEntry::copyInto(const char* inPtr, App::HighScoreEntry::NameT& outRef) noexcept
-{
-	if(!inPtr)
-	{
-		return 0;
-	}
-	const size_t minLen = std::min(outRef.size() - 1, std::strlen(inPtr));
-	std::copy_n(inPtr, minLen, outRef.data());
-	outRef[minLen] = '\0';
-	return minLen;
 }
 } // namespace raymino

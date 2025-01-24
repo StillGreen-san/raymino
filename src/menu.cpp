@@ -4,6 +4,7 @@
 #include "dependency_info.hpp"
 #include "gui.hpp"
 #include "scenes.hpp"
+#include "textbuffer.hpp"
 #include "types.hpp"
 
 #include <raygui.h>
@@ -31,14 +32,6 @@ template<>
 std::unique_ptr<IScene> MakeScene<Scene::Menu>(App& app)
 {
 	return std::make_unique<Menu>(app);
-}
-
-template<typename TEnum, typename TContainer>
-void copyEnumName(int fromKey, TContainer& intoBuffer) noexcept
-{
-	const auto name = magic_enum::enum_name(static_cast<TEnum>(fromKey));
-	const auto last = std::copy_n(name.begin(), std::min(name.size(), intoBuffer.size() - 1), intoBuffer.begin());
-	*last = '\0';
 }
 
 template<typename TEnum>
@@ -93,16 +86,16 @@ void Menu::PreDestruct(raymino::App& app)
 
 void Menu::updateKeyBindBuffers(const App::KeyBinds& keyBinds) noexcept
 {
-	copyEnumName<::KeyboardKey>(keyBinds.moveRight, TextBoxMoveRightBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.moveLeft, TextBoxMoveLeftBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.rotateRight, TextBoxRotateRightBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.rotateLeft, TextBoxRotateLeftBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.softDrop, TextBoxSoftDropBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.hardDrop, TextBoxHardDropBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.hold, TextBoxHoldBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.pause, TextBoxPauseBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.restart, TextBoxRestartBuffer);
-	copyEnumName<::KeyboardKey>(keyBinds.menu, TextBoxMenuBuffer);
+	TextBoxMoveRightBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.moveRight));
+	TextBoxMoveLeftBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.moveLeft));
+	TextBoxRotateRightBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.rotateRight));
+	TextBoxRotateLeftBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.rotateLeft));
+	TextBoxSoftDropBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.softDrop));
+	TextBoxHardDropBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.hardDrop));
+	TextBoxHoldBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.hold));
+	TextBoxPauseBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.pause));
+	TextBoxRestartBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.restart));
+	TextBoxMenuBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(keyBinds.menu));
 }
 
 void Menu::readSettings(const App::Settings& settings) noexcept
@@ -268,11 +261,12 @@ void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
 
 void drawEntry(int scoresIdx, const Rectangle& bounds, const App::HighScoreEntry& entry) noexcept
 {
-	std::array<char, 16> buffer{};
-	std::to_chars(&buffer.front(), &buffer.back(), entry.score);
+	using Limits = std::numeric_limits<decltype(entry.score)>;
+	TextBuffer<Limits::digits10 + 1 + Limits::is_signed> buffer;
+	std::to_chars(buffer.data(), buffer.end_ptr(), entry.score);
 	const auto scoreOffset = static_cast<float>(25 * scoresIdx);
-	::GuiLabel({bounds.x + 15, bounds.y + scoreOffset + 5, 65, 24}, entry.name.data());
-	::GuiLabel({bounds.x + 15 + 70, bounds.y + scoreOffset + 5, 65, 24}, buffer.data());
+	::GuiLabel({bounds.x + 15, bounds.y + scoreOffset + 5, 65, 24}, entry.name.c_str());
+	::GuiLabel({bounds.x + 15 + 70, bounds.y + scoreOffset + 5, 65, 24}, buffer.c_str());
 }
 
 template<typename TType, typename TRng, std::enable_if_t<std::is_enum_v<TType>, bool> = true>
@@ -357,7 +351,7 @@ void Menu::UpdateDrawHighscores(App& app) noexcept
 	    {
 		    return true;
 	    });
-	drawClose(MyScoreRect, "Same Name", app, TextBoxPlayerNameBuffer.data(), nullptr,
+	drawClose(MyScoreRect, "Same Name", app, TextBoxPlayerNameBuffer.c_str(), nullptr,
 	    [&](const App::HighScoreEntry& entry)
 	    {
 		    return entry.name == TextBoxPlayerNameBuffer;
@@ -406,7 +400,7 @@ void guiKeyBind(const ::Rectangle& rectLabel, const char* textLabel, const ::Rec
 		const int key = ::GetKeyPressed();
 		if(key != KEY_NULL)
 		{
-			copyEnumName<::KeyboardKey>(key, keyBuffer);
+			keyBuffer = magic_enum::enum_name(static_cast<::KeyboardKey>(key));
 			editMode = false;
 			keyBind = static_cast<int16_t>(key);
 		}

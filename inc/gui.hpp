@@ -1,6 +1,7 @@
 #pragma once
 
 #include "app.hpp"
+#include "textbuffer.hpp"
 #include "types.hpp"
 
 #include <raygui.h>
@@ -44,11 +45,11 @@ inline bool GuiDropdownBox(::Rectangle bounds, const char* text, size_t& active,
 	active = static_cast<size_t>(tmpActive);
 	return result;
 }
-template<typename TContainer>
-bool GuiTextBox(::Rectangle bounds, TContainer& container, bool& editMode, int maxLen = INT_MAX) noexcept
+template<size_t NBufSize>
+bool GuiTextBox(::Rectangle bounds, TextBuffer<NBufSize>& buffer, bool& editMode, int maxLen = INT_MAX) noexcept
 {
-	const auto textSize = static_cast<int>(std::min(container.size(), static_cast<size_t>(maxLen)));
-	if(::GuiTextBox(bounds, container.data(), textSize, editMode))
+	const auto textSize = static_cast<int>(std::min(buffer.size(), static_cast<size_t>(maxLen)));
+	if(::GuiTextBox(bounds, buffer.data(), textSize, editMode))
 	{
 		editMode = !editMode;
 		return true;
@@ -183,7 +184,7 @@ public:
 	 */
 	PresetSelect(const App::Presets<TValue>& presets, size_t active) :
 	    presets{presets}, valueBuffer{presets.get(active).value}, textList{Range{presets.get()}}, activeItem(active),
-	    state{presets.size() != 0 && presets.find(customName) == presets.size() - 1 ? State::Custom : State::Normal}
+	    state{presets.size() != 0 && presets.find(CUSTOM_NAME) == presets.size() - 1 ? State::Custom : State::Normal}
 	{
 	}
 	[[nodiscard]] TValue& getValue() noexcept
@@ -216,8 +217,8 @@ public:
 				}
 				else
 				{
-					textList.add(customName);
-					presets.add({customName, valueBuffer});
+					textList.add(CUSTOM_NAME);
+					presets.add({CUSTOM_NAME, valueBuffer});
 					state = State::Custom;
 				}
 			}
@@ -251,10 +252,10 @@ public:
 			else
 			{
 				state = State::Naming;
-				std::string presetName(customName);
-				presetName.append(1, ' ');
-				presetName.append(std::to_string(std::random_device{}()));
-				std::copy_n(presetName.begin(), std::min(textBuffer.size() - 1, presetName.size()), textBuffer.begin());
+				textBuffer = CUSTOM_NAME;
+				textBuffer += " ";
+				const std::string rngNumber = std::to_string(std::random_device{}());
+				textBuffer += rngNumber;
 				editMode = true;
 			}
 		}
@@ -288,12 +289,12 @@ private:
 
 	App::Presets<TValue> presets;
 	TValue valueBuffer;
-	App::Presets<>::NameT textBuffer{};
+	App::Presets<>::NameT textBuffer;
 	TextList textList;
 	size_t activeItem;
 	bool editMode = false;
 	State state = State::Normal;
-	static constexpr std::string_view customName = "Custom";
+	static constexpr std::string_view CUSTOM_NAME = "Custom";
 };
 
 /**

@@ -426,13 +426,11 @@ void Game::UpdateDraw(App& app)
 	draw(app);
 }
 
-template<typename TContainer>
-size_t hashSeedString(const TContainer& container)
+size_t hashSeedString(const TextBuffer<20>& buffer)
 {
-	const size_t seedLen = std::strlen(container.data());
-	if(seedLen > 0)
+	if(!buffer.empty())
 	{
-		return std::hash<std::string_view>{}({container.data(), seedLen});
+		return std::hash<std::string_view>{}(buffer);
 	}
 	return std::hash<std::random_device::result_type>{}(std::random_device{}());
 }

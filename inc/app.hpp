@@ -5,6 +5,7 @@
 #include "types.hpp"
 
 #include <raylib.h>
+#include <textbuffer.hpp>
 
 #include <algorithm>
 #include <array>
@@ -77,12 +78,11 @@ public:
 
 	struct alignas(int64_t) HighScoreEntry
 	{
-		using NameT = std::array<char, 8>;
-		/**
-		 * @return copied chars without ending \0
-		 */
-		static size_t copyInto(const char* inPtr, NameT& outRef) noexcept;
-		HighScoreEntry(const char* namePtr, int64_t score, const Settings& settings) noexcept;
+		using NameT = TextBuffer<8>;
+		HighScoreEntry(std::string_view name, int64_t score, const Settings& settings) :
+		    name{name}, score{score}, settings{settings}
+		{
+		}
 		NameT name;
 		int64_t score;
 		Settings settings;
@@ -93,7 +93,7 @@ public:
 		/**
 		 * @return true if score == highest for namePtr+settings
 		 */
-		bool add(const char* namePtr, int64_t score, const Settings& settings);
+		bool add(std::string_view name, int64_t score, const Settings& settings);
 	};
 
 	/**
@@ -104,23 +104,18 @@ public:
 	class Presets
 	{
 	public:
-		using NameT = std::array<char, 16>;
+		using NameT = TextBuffer<16>;
 		struct alignas(int64_t) Item
 		{
 			NameT name;
 			TValue value;
-			Item(const NameT& name, const TValue& value) noexcept(std::is_nothrow_copy_constructible_v<TValue>) :
+			Item(std::string_view name, const TValue& value) noexcept(std::is_nothrow_copy_constructible_v<TValue>) :
 			    name{name}, value{value}
 			{
 			}
-			Item(std::string_view name, const TValue& value) noexcept(std::is_nothrow_copy_constructible_v<TValue>) :
-			    name{}, value{value}
-			{
-				std::copy_n(name.begin(), std::min(name.size(), this->name.size() - 1), this->name.begin());
-			}
 			operator std::string_view() const noexcept
 			{
-				return {name.data()};
+				return name;
 			}
 		};
 
@@ -256,7 +251,7 @@ public:
 	uint32_t activeKeyBindsPreset;
 	uint32_t activeSettingsPreset;
 	HighScores highScores;
-	std::array<char, 20> seed;
+	TextBuffer<20> seed;
 
 	/**
 	 * @brief return active KeyBinds preset

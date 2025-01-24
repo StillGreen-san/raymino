@@ -164,19 +164,19 @@ struct Menu : public IScene
 	int SpinnerFieldHeightValue;
 	static constexpr int SpinnerFieldHeightMax = 45;
 
-	App::HighScoreEntry::NameT TextBoxPlayerNameBuffer{};
-	using KeyBufferT = std::array<char, 20>;
-	KeyBufferT TextBoxMoveRightBuffer{};
-	KeyBufferT TextBoxMoveLeftBuffer{};
-	KeyBufferT TextBoxRotateRightBuffer{};
-	KeyBufferT TextBoxRotateLeftBuffer{};
-	KeyBufferT TextBoxSoftDropBuffer{};
-	KeyBufferT TextBoxHardDropBuffer{};
-	KeyBufferT TextBoxHoldBuffer{};
-	KeyBufferT TextBoxPauseBuffer{};
-	KeyBufferT TextBoxRestartBuffer{};
-	KeyBufferT TextBoxMenuBuffer{};
-	decltype(App::seed) TextBoxSeedBuffer{};
+	App::HighScoreEntry::NameT TextBoxPlayerNameBuffer;
+	using KeyBufferT = TextBuffer<20>;
+	KeyBufferT TextBoxMoveRightBuffer;
+	KeyBufferT TextBoxMoveLeftBuffer;
+	KeyBufferT TextBoxRotateRightBuffer;
+	KeyBufferT TextBoxRotateLeftBuffer;
+	KeyBufferT TextBoxSoftDropBuffer;
+	KeyBufferT TextBoxHardDropBuffer;
+	KeyBufferT TextBoxHoldBuffer;
+	KeyBufferT TextBoxPauseBuffer;
+	KeyBufferT TextBoxRestartBuffer;
+	KeyBufferT TextBoxMenuBuffer;
+	decltype(App::seed) TextBoxSeedBuffer;
 
 	PresetSelect<App::KeyBinds> keyBindsPresets;
 	PresetSelect<App::Settings> settingsPresets;
