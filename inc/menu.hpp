@@ -3,6 +3,7 @@
 #include "app.hpp"
 #include "gui.hpp"
 #include "scenes.hpp"
+#include "textbuffer.hpp"
 
 #include <raylib.h>
 
@@ -143,25 +144,25 @@ struct Menu : public IScene
 	bool TextBoxMenuEditMode = false;
 	bool TextBoxSeedEditMode = false;
 
-	int DropdownBoxRotationSystemActive;
-	int DropdownBoxWallKicksActive;
-	int DropdownBoxLockDownActive;
-	int DropdownBoxSoftDropActive;
-	int DropdownBoxInstantDropActive;
-	int DropdownBoxTSpinActive;
-	int DropdownBoxShuffleTypeActive;
-	int DropdownBoxLevelGoalActive;
-	int DropdownBoxScoringSystemActive;
-	int DropdownBoxHoldPieceActive;
-	int DropdownBoxGhostPieceActive;
+	int DropdownBoxRotationSystemActive{};
+	int DropdownBoxWallKicksActive{};
+	int DropdownBoxLockDownActive{};
+	int DropdownBoxSoftDropActive{};
+	int DropdownBoxInstantDropActive{};
+	int DropdownBoxTSpinActive{};
+	int DropdownBoxShuffleTypeActive{};
+	int DropdownBoxLevelGoalActive{};
+	int DropdownBoxScoringSystemActive{};
+	int DropdownBoxHoldPieceActive{};
+	int DropdownBoxGhostPieceActive{};
 	static constexpr int SpinnerPreviewCountMin = 0;
-	int SpinnerPreviewCountValue;
+	int SpinnerPreviewCountValue = SpinnerPreviewCountMin;
 	static constexpr int SpinnerPreviewCountMax = 10;
 	static constexpr int SpinnerFieldWidthMin = 5;
-	int SpinnerFieldWidthValue;
+	int SpinnerFieldWidthValue = SpinnerFieldWidthMin;
 	static constexpr int SpinnerFieldWidthMax = 22;
 	static constexpr int SpinnerFieldHeightMin = 10;
-	int SpinnerFieldHeightValue;
+	int SpinnerFieldHeightValue = SpinnerFieldHeightMin;
 	static constexpr int SpinnerFieldHeightMax = 45;
 
 	App::HighScoreEntry::NameT TextBoxPlayerNameBuffer;

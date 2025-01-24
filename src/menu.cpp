@@ -21,6 +21,7 @@
 #include <random>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 #define MAGIC_ENUM_RANGE_MIN 0   // NOLINT(cppcoreguidelines-macro-usage)
 #define MAGIC_ENUM_RANGE_MAX 350 // NOLINT(cppcoreguidelines-macro-usage)
@@ -47,7 +48,7 @@ TextList enumToTextList()
 	return list;
 }
 
-Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
+Menu::Menu(App& app) :
     DropdownBoxRotationSystemTextList{enumToTextList<RotationSystem>()},
     DropdownBoxWallKicksTextList{enumToTextList<WallKicks>()}, DropdownBoxLockDownTextList{enumToTextList<LockDown>()},
     DropdownBoxSoftDropTextList{enumToTextList<SoftDrop>()},
@@ -320,7 +321,7 @@ void drawClose(const Rectangle& bounds, const char* text, App& app, [[maybe_unus
 	if(::GuiButton({bounds.x + bounds.width - 22, bounds.y - 6, 16, 16}, "X"))
 	{
 		app.highScores.entries.erase(
-		    std::remove_if(app.highScores.entries.begin(), app.highScores.entries.end(), selector),
+		    std::remove_if(app.highScores.entries.begin(), app.highScores.entries.end(), std::move(selector)),
 		    app.highScores.entries.end());
 	}
 #ifndef NDEBUG
