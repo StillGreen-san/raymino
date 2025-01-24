@@ -58,20 +58,8 @@ Menu::Menu(App& app) : // NOLINT(*-member-init) handled by readSettings
     TextBoxSeedBuffer{app.seed}, keyBindsPresets{app.keyBindsPresets, app.activeKeyBindsPreset},
     settingsPresets{app.settingsPresets, app.activeSettingsPreset}
 {
-	const App::Settings& settings = settingsPresets.getValue();
-	const App::KeyBinds& keyBinds = keyBindsPresets.getValue();
-	readSettings(settings);
-	updateKeyBindBuffers(keyBinds);
-	keyBindsPresets.getValue().moveRight = keyBinds.moveRight;
-	keyBindsPresets.getValue().moveLeft = keyBinds.moveLeft;
-	keyBindsPresets.getValue().rotateRight = keyBinds.rotateRight;
-	keyBindsPresets.getValue().rotateLeft = keyBinds.rotateLeft;
-	keyBindsPresets.getValue().softDrop = keyBinds.softDrop;
-	keyBindsPresets.getValue().hardDrop = keyBinds.hardDrop;
-	keyBindsPresets.getValue().hold = keyBinds.hold;
-	keyBindsPresets.getValue().pause = keyBinds.pause;
-	keyBindsPresets.getValue().restart = keyBinds.restart;
-	keyBindsPresets.getValue().menu = keyBinds.menu;
+	readSettings(settingsPresets.getValue());
+	updateKeyBindBuffers(keyBindsPresets.getValue());
 }
 
 void Menu::PreDestruct(raymino::App& app)
