@@ -36,7 +36,7 @@ enable_testing()
 include(Catch)
 
 add_executable(${PROJECT_NAME}-test test/grid.cpp test/basicRotation.cpp test/gameplay.cpp
-		test/app-types.cpp src/ostream.cpp test/savefile.cpp test/gui.cpp)
+		test/app-types.cpp src/ostream.cpp test/savefile.cpp test/gui.cpp test/textbuffer.cpp)
 target_link_libraries(${PROJECT_NAME}-test PRIVATE Catch2::Catch2WithMain ${PROJECT_NAME}-lib)
 if (NOT EMSCRIPTEN)
 	catch_discover_tests(${PROJECT_NAME}-test)
