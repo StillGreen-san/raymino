@@ -199,7 +199,7 @@ void Game::update(App& app)
 	Offset prevTetrominoOffset = currentTetromino;
 
 	gravity.delay =
-	    delays[std::min<size_t>((::IsKeyDown(keyBinds.softDrop) ? 2 : 0) + levelState.currentLevel, maxSpeedLevel)];
+	    DELAYS[std::min<size_t>((::IsKeyDown(keyBinds.softDrop) ? 2 : 0) + levelState.currentLevel, MAX_SPEED_LEVEL)];
 
 	if(const KeyAction::Return moveAction = moveRight.tick(::GetFrameTime()); isKeyPress(moveAction))
 	{
@@ -463,6 +463,7 @@ Game::Game(App& app) :
     holdPieceLocked{false},
     isHighScore{false},
     tSpinFunc{tSpinCheck(app.settings().tSpin)},
+    gravity{DELAYS.front()},
     moveRight{App::Settings::DELAYED_AUTO_SHIFT, App::Settings::AUTO_REPEAT_RATE, app.keyBinds().moveRight,
         app.keyBinds().moveLeft},
     basicRotationFunc{basicRotation(app.settings().rotationSystem)},

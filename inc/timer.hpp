@@ -46,7 +46,7 @@ struct Timer
 	float elapsed = 0;
 };
 
-constexpr std::array delays{
+constexpr std::array DELAYS{
     1.f / 1,
     1.f / 2,
     1.f / 3,
@@ -79,5 +79,5 @@ constexpr std::array delays{
     1.f / 1140,
     1.f / 1200,
 };
-constexpr size_t maxSpeedLevel = delays.size() - 1;
+constexpr size_t MAX_SPEED_LEVEL = DELAYS.size() - 1;
 } // namespace raymino
