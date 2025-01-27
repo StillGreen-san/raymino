@@ -13,6 +13,7 @@ BraceWrapping:
   AfterUnion: true
   BeforeLambdaBody: true
   SplitEmptyNamespace: false
+PackConstructorInitializers: NextLine
 IncludeBlocks: Regroup
 IncludeCategories:
   - Regex: '^".+"'

@@ -75,9 +75,11 @@ App::Presets<App::Settings>::Item SettingsGuideline()
 } // namespace presets
 
 App::App() :
-    playerName{"Mino"}, keyBindsPresets{{"Default", {}}},
+    playerName{"Mino"},
+    keyBindsPresets{{"Default", {}}},
     settingsPresets{{presets::SettingsGuideline(), presets::SettingsNES(), presets::SettingsTGMLike()}},
-    activeKeyBindsPreset{0}, activeSettingsPreset{0}
+    activeKeyBindsPreset{0},
+    activeSettingsPreset{0}
 {
 	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
 	::SetWindowState(FLAG_VSYNC_HINT);
