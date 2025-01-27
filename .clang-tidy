@@ -16,6 +16,7 @@ Checks: >
   -hicpp-uppercase-literal-suffix,
   -hicpp-vararg,
   -llvm-header-guard,
+  -llvm-include-order,
   -llvm-prefer-isa-or-dyn-cast-in-conditionals,
   -llvmlibc-callee-namespace,
   -llvmlibc-implementation-in-namespace,

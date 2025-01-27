@@ -7,6 +7,7 @@
 #include "gui.hpp"
 #include "input.hpp"
 #include "scenes.hpp"
+#include "textbuffer.hpp"
 #include "timer.hpp"
 #include "types.hpp"
 

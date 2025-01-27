@@ -50,13 +50,17 @@ TextList enumToTextList()
 
 Menu::Menu(App& app) :
     DropdownBoxRotationSystemTextList{enumToTextList<RotationSystem>()},
-    DropdownBoxWallKicksTextList{enumToTextList<WallKicks>()}, DropdownBoxLockDownTextList{enumToTextList<LockDown>()},
+    DropdownBoxWallKicksTextList{enumToTextList<WallKicks>()},
+    DropdownBoxLockDownTextList{enumToTextList<LockDown>()},
     DropdownBoxSoftDropTextList{enumToTextList<SoftDrop>()},
-    DropdownBoxInstantDropTextList{enumToTextList<InstantDrop>()}, DropdownBoxTSpinTextList{enumToTextList<TSpin>()},
+    DropdownBoxInstantDropTextList{enumToTextList<InstantDrop>()},
+    DropdownBoxTSpinTextList{enumToTextList<TSpin>()},
     DropdownBoxShuffleTypeTextList{enumToTextList<ShuffleType>()},
     DropdownBoxScoringSystemTextList{enumToTextList<ScoringSystem>()},
-    DropdownBoxLevelGoalTextList{enumToTextList<LevelGoal>()}, TextBoxPlayerNameBuffer{app.playerName},
-    TextBoxSeedBuffer{app.seed}, keyBindsPresets{app.keyBindsPresets, app.activeKeyBindsPreset},
+    DropdownBoxLevelGoalTextList{enumToTextList<LevelGoal>()},
+    TextBoxPlayerNameBuffer{app.playerName},
+    TextBoxSeedBuffer{app.seed},
+    keyBindsPresets{app.keyBindsPresets, app.activeKeyBindsPreset},
     settingsPresets{app.settingsPresets, app.activeSettingsPreset}
 {
 	readSettings(settingsPresets.getValue());

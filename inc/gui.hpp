@@ -183,7 +183,10 @@ public:
 	 * @pre presets was managed by PresetSelect
 	 */
 	PresetSelect(const App::Presets<TValue>& presets, size_t active) :
-	    presets{presets}, valueBuffer{presets.get(active).value}, textList{Range{presets.get()}}, activeItem(active),
+	    presets{presets},
+	    valueBuffer{presets.get(active).value},
+	    textList{Range{presets.get()}},
+	    activeItem(active),
 	    state{presets.size() != 0 && presets.find(CUSTOM_NAME) == presets.size() - 1 ? State::Custom : State::Normal}
 	{
 	}
