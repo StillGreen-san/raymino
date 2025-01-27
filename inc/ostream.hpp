@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cstring_view.hpp"
 #include "gameplay.hpp"
 #include "grid.hpp"
 #include "types.hpp"
@@ -15,4 +16,5 @@ std::ostream& operator<<(std::ostream& ostream, const Offset& value);
 std::ostream& operator<<(std::ostream& ostream, const Grid& value);
 std::ostream& operator<<(std::ostream& ostream, const TSpinCornerCountResult& value);
 std::ostream& operator<<(std::ostream& ostream, const LevelState& value);
+std::ostream& operator<<(std::ostream& ostream, const CStringView& value);
 } // namespace raymino

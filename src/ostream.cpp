@@ -58,4 +58,8 @@ std::ostream& operator<<(std::ostream& ostream, const LevelState& value)
 	ostream << '{' << value.currentLevel << ", " << value.linesCleared << ", " << value.linesToClear << '}';
 	return ostream;
 }
+std::ostream& operator<<(std::ostream& ostream, const CStringView& value)
+{
+	return ostream << value.view();
+}
 } // namespace raymino
