@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include "app.hpp"
+#include "cstring_view.hpp"
 #include "gameplay.hpp"
 #include "graphics.hpp"
 #include "grid.hpp"
@@ -398,12 +399,12 @@ void Game::draw(App& app)
 
 	if(state != State::Running)
 	{
-		const std::string_view statusText = state == State::Paused ? "Paused"
-		                                    : isHighScore          ? "HighScore\nGame Over"
-		                                                           : "Game Over";
+		const CStringView statusText = state == State::Paused ? "Paused"_csv
+		                               : isHighScore          ? "HighScore\nGame Over"_csv
+		                                                      : "Game Over"_csv;
 		const float statusTextSpacing = STATUS_FONT_SIZE / 10.0f;
 		const raylib::Vector2 statusTextSize =
-		    ::MeasureTextEx(::GetFontDefault(), statusText.data(), STATUS_FONT_SIZE, statusTextSpacing);
+		    ::MeasureTextEx(::GetFontDefault(), statusText.c_str(), STATUS_FONT_SIZE, statusTextSpacing);
 		const raylib::Vector2 statusTextBackgroundSize =
 		    statusTextSize + raylib::Vector2{statusTextSpacing * 2, statusTextSpacing * 2};
 		const raylib::Vector2 centerPosition{App::Settings::SCREEN_WIDTH / 2.0f, App::Settings::SCREEN_HEIGHT / 2.0f};
@@ -414,7 +415,7 @@ void Game::draw(App& app)
 		    STATUS_BACKGROUND);
 		const raylib::Vector2 statusTextPosition{
 		    centerPosition.x - (statusTextSize.x / 2), centerPosition.y - (statusTextSize.y / 2)};
-		::DrawTextEx(::GetFontDefault(), statusText.data(), {statusTextPosition.x, statusTextPosition.y},
+		::DrawTextEx(::GetFontDefault(), statusText.c_str(), {statusTextPosition.x, statusTextPosition.y},
 		    STATUS_FONT_SIZE, statusTextSpacing, RED);
 	}
 

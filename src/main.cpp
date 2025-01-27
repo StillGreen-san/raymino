@@ -1,5 +1,7 @@
 #include "app.hpp"
+#include "cstring_view.hpp"
 #include "dependency_info.hpp"
+#include "ostream.hpp"
 
 #include <cstring>
 #include <iomanip>

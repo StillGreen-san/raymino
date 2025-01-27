@@ -1,5 +1,6 @@
 #include "app.hpp"
 
+#include "cstring_view.hpp"
 #include "savefile.hpp"
 #include "scenes.hpp"
 #include "types.hpp"
@@ -328,8 +329,9 @@ void App::deserialize(const SaveFile& save)
 		}
 		catch(const std::range_error& exception)
 		{
-			const auto chunkTypeName = magic_enum::enum_name<ChunkType::type>(maybeType.value());
-			::TraceLog(LOG_ERROR, "Deserialization: [%s] %s", chunkTypeName.data(), exception.what());
+			const auto chunkTypeName =
+			    CStringView::assumeTerminated(magic_enum::enum_name<ChunkType::type>(maybeType.value()), "UNKNOWN"_csv);
+			::TraceLog(LOG_ERROR, "Deserialization: [%s] %s", chunkTypeName.c_str(), exception.what());
 		}
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "app.hpp"
+#include "cstring_view.hpp"
 #include "textbuffer.hpp"
 #include "types.hpp"
 
@@ -142,7 +143,7 @@ public:
 	/**
 	 * @return complete list
 	 */
-	[[nodiscard]] std::string_view get() const noexcept;
+	[[nodiscard]] CStringView get() const noexcept;
 
 	/**
 	 * @return complete list
@@ -237,7 +238,7 @@ public:
 				addItem();
 			}
 		}
-		else if(GuiDropdownBox(pos, textList.get().data(), activeItem, editMode) && !editMode)
+		else if(GuiDropdownBox(pos, textList, activeItem, editMode) && !editMode)
 		{
 			valueBuffer = presets.get(activeItem).value;
 			return true;

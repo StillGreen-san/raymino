@@ -462,16 +462,16 @@ void Menu::UpdateDrawAbout([[maybe_unused]] App& app) noexcept
 	const int prevTextColorProp = ::GuiGetStyle(::GuiControl::LABEL, ::GuiControlProperty::TEXT_COLOR_NORMAL);
 	::GuiSetStyle(::GuiControl::LABEL, ::GuiControlProperty::TEXT_COLOR_NORMAL, ColorToInt(BLUE));
 
-	if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.url.data()))
+	if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.url.c_str()))
 	{
-		::OpenURL(PROJECT_INFO.url.data());
+		::OpenURL(PROJECT_INFO.url.c_str());
 	}
 	float entryYOffset = (entryHeight * 2) + 30;
 	for(const LibraryInfo& dep : DEPENDENCY_INFOS)
 	{
-		if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + entryYOffset, 0, 20}, dep.url.data()))
+		if(::GuiLabelButton({aboutBounds.x + 10, aboutBounds.y + entryYOffset, 0, 20}, dep.url.c_str()))
 		{
-			::OpenURL(dep.url.data());
+			::OpenURL(dep.url.c_str());
 		}
 		entryYOffset += entryHeight;
 	}
@@ -480,11 +480,11 @@ void Menu::UpdateDrawAbout([[maybe_unused]] App& app) noexcept
 
 	::GuiLabel({aboutBounds.x + 20, aboutBounds.y + 54, 0, 20}, "build with:");
 
-	::GuiLabel({aboutBounds.x + 250, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.lic.data());
+	::GuiLabel({aboutBounds.x + 250, aboutBounds.y + 30, 0, 20}, PROJECT_INFO.lic.c_str());
 	entryYOffset = (entryHeight * 2) + 30;
 	for(const LibraryInfo& dep : DEPENDENCY_INFOS)
 	{
-		::GuiLabel({aboutBounds.x + 235, aboutBounds.y + entryYOffset, 0, 20}, dep.lic.data());
+		::GuiLabel({aboutBounds.x + 235, aboutBounds.y + entryYOffset, 0, 20}, dep.lic.c_str());
 		entryYOffset += entryHeight;
 	}
 }

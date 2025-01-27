@@ -1,5 +1,7 @@
 #include "gui.hpp"
 
+#include "cstring_view.hpp"
+
 #include <algorithm>
 #include <cctype>
 #include <cstddef>
@@ -60,9 +62,9 @@ std::string_view TextList::get(size_t index) const noexcept
 	const size_t itemLen = itemEnd == std::string::npos ? list.size() - itemPos : itemEnd - itemPos;
 	return {&list[itemPos], itemLen};
 }
-std::string_view TextList::get() const noexcept
+CStringView TextList::get() const noexcept
 {
-	return list;
+	return CStringView{list};
 }
 TextList::operator const char*() const noexcept
 {
