@@ -47,7 +47,8 @@ struct Menu : public IScene
 {
 	explicit Menu(App& app);
 
-	void UpdateDraw(App& app) override;
+	void Update(App& app) override;
+	void Draw(App& app) override;
 	void PreDestruct(App& app) override;
 
 	void readSettings(const App::Settings& settings) noexcept;

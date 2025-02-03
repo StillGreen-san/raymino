@@ -4,6 +4,7 @@
 #include "scenes.hpp"
 
 #include <raygui.h>
+#include <raylib-cpp.hpp>
 #include <raylib.h>
 
 #include <memory>
@@ -52,9 +53,15 @@ Loading::Loading(App& app)
 
 void Loading::PreDestruct([[maybe_unused]] App& app)
 {
+	// nothing to do
 }
 
-void Loading::UpdateDraw([[maybe_unused]] App& app)
+void Loading::Update([[maybe_unused]] App& app)
+{
+	// nothing to do
+}
+
+void Loading::Draw([[maybe_unused]] App& app)
 {
 	::BeginDrawing();
 

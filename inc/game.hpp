@@ -20,11 +20,9 @@ namespace raymino
 struct Game : IScene
 {
 	explicit Game(App& app);
-	void UpdateDraw(App& app) override;
+	void Update(App& app) override;
+	void Draw(App& app) override;
 	void PreDestruct(App& app) override;
-
-	void update(App& app);
-	void draw(App& app);
 
 	std::deque<size_t> fillIndices(size_t minIndices);
 	[[nodiscard]] int cellSizeExtended() const noexcept;

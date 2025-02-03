@@ -45,6 +45,7 @@ std::unique_ptr<IScene> MakeScene<Scene::Game>(App& app)
 
 void Game::PreDestruct([[maybe_unused]] App& app)
 {
+	// nothing to do
 }
 
 constexpr int HIDDEN_HEIGHT = 4;
@@ -140,7 +141,7 @@ bool isKeyPress(KeyAction::Return keyPress) noexcept
 	return keyPress.value != 0 && keyPress.state != KeyAction::State::Released;
 }
 
-void Game::update(App& app)
+void Game::Update(App& app)
 {
 	const App::KeyBinds& keyBinds = app.keyBinds();
 	const App::Settings& settings = app.settings();
@@ -331,7 +332,7 @@ void Game::update(App& app)
 	}
 }
 
-void Game::draw(App& app)
+void Game::Draw(App& app)
 {
 	::BeginDrawing();
 
@@ -420,12 +421,6 @@ void Game::draw(App& app)
 	}
 
 	::EndDrawing();
-}
-
-void Game::UpdateDraw(App& app)
-{
-	update(app);
-	draw(app);
 }
 
 size_t hashSeedString(const TextBuffer<20>& buffer)

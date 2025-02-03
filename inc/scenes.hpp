@@ -10,9 +10,13 @@ namespace raymino
 struct IScene
 {
 	/**
-	 * @brief called every frame to update & draw the scene
+	 * @brief called every frame before draw to run update logic
 	 */
-	virtual void UpdateDraw(class App& app) = 0;
+	virtual void Update(class App& app) = 0;
+	/**
+	 * @brief called every frame after update to draw everything
+	 */
+	virtual void Draw(class App& app) = 0;
 	/**
 	 * @brief should be called once before destruction
 	 */

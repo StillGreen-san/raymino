@@ -100,7 +100,8 @@ void App::UpdateDraw()
 	{
 		currentScene = std::move(nextScene);
 	}
-	currentScene->UpdateDraw(*this);
+	currentScene->Update(*this);
+	currentScene->Draw(*this);
 }
 
 void App::Run()

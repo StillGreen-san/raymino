@@ -12,7 +12,8 @@ struct Loading : public IScene
 	 */
 	explicit Loading(App& app);
 
-	void UpdateDraw(App& app) override;
+	void Update(App& app) override;
+	void Draw(App& app) override;
 	void PreDestruct(App& app) override;
 };
 } // namespace raymino
