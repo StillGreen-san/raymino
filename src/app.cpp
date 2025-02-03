@@ -17,7 +17,6 @@
 #include <iterator>
 #include <limits>
 #include <memory>
-#include <optional>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -190,7 +189,7 @@ static constexpr auto HeaderSize = sizeof(SaveFile::Header);
 
 SaveFile App::decompressFile(const void* compressedData, uint32_t size)
 {
-	if(size < HeaderSize)
+	if(size < HeaderSize || compressedData == nullptr)
 	{
 		return {0, 0};
 	}
@@ -230,21 +229,21 @@ void App::storeFile(const SaveFile& save)
 #if defined(PLATFORM_WEB)
 	std::vector<uint8_t>* asyncData = new std::vector<uint8_t>(std::move(deflateBuffer));
 	::emscripten_idb_async_store(
-	    IDB_PATH, FILE_PATH, asyncData->data(), static_cast<int>(asyncData->size()), asyncData,
+	    IDB_PATH, SAVE_PATH, asyncData->data(), static_cast<int>(asyncData->size()), asyncData,
 	    [](void* data)
 	    {
 		    auto* asyncData = static_cast<std::vector<uint8_t>*>(data);
-		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File saved successfully", FILE_PATH);
+		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File saved successfully", SAVE_PATH);
 		    delete asyncData;
 	    },
 	    [](void* data)
 	    {
 		    auto* asyncData = static_cast<std::vector<uint8_t>*>(data);
-		    ::TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to save file", FILE_PATH);
+		    ::TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to save file", SAVE_PATH);
 		    delete asyncData;
 	    });
 #else
-	::SaveFileData(FILE_PATH, deflateBuffer.data(), static_cast<int>(deflateBuffer.size()));
+	::SaveFileData(SAVE_PATH, deflateBuffer.data(), static_cast<int>(deflateBuffer.size()));
 #endif
 }
 

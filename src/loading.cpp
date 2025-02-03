@@ -3,8 +3,8 @@
 #include "app.hpp"
 #include "scenes.hpp"
 
+#include <FileData.hpp>
 #include <raygui.h>
-#include <raylib-cpp.hpp>
 #include <raylib.h>
 
 #include <memory>
@@ -25,28 +25,23 @@ Loading::Loading(App& app)
 {
 #if defined(PLATFORM_WEB)
 	::emscripten_idb_async_load(
-	    App::IDB_PATH, App::FILE_PATH, &app,
+	    App::IDB_PATH, App::SAVE_PATH, &app,
 	    [](void* user, void* data, int size)
 	    {
 		    App& app = *static_cast<App*>(user);
 		    app.deserialize(App::decompressFile(data, static_cast<uint32_t>(size)));
 		    app.QueueSceneSwitch(Scene::Menu);
-		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File loaded successfully", App::FILE_PATH);
+		    ::TraceLog(LOG_INFO, "FILEIO: [%s] File loaded successfully", App::SAVE_PATH);
 	    },
 	    [](void* user)
 	    {
 		    App& app = *static_cast<App*>(user);
 		    app.QueueSceneSwitch(Scene::Menu);
-		    ::TraceLog(LOG_INFO, "FILEIO: [%s] Failed to load file", App::FILE_PATH);
+		    ::TraceLog(LOG_INFO, "FILEIO: [%s] Failed to load file", App::SAVE_PATH);
 	    });
 #else
-	int bytes{};
-	unsigned char* fileData = ::LoadFileData(App::FILE_PATH, &bytes);
-	if(fileData)
-	{
-		app.deserialize(App::decompressFile(fileData, bytes));
-		::UnloadFileData(fileData);
-	}
+	const raylib::FileData fileData(App::SAVE_PATH);
+	app.deserialize(App::decompressFile(fileData.GetData(), fileData.GetBytesRead()));
 	app.QueueSceneSwitch(Scene::Menu);
 #endif
 }
