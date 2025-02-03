@@ -9,6 +9,7 @@
 #include <external/sinfl.h>
 #include <magic_enum/magic_enum.hpp>
 #include <raylib.h>
+#include <Window.hpp>
 
 #include <algorithm>
 #include <cstddef>
@@ -80,11 +81,10 @@ App::App() :
     keyBindsPresets{{"Default", {}}},
     settingsPresets{{presets::SettingsGuideline(), presets::SettingsNES(), presets::SettingsTGMLike()}},
     activeKeyBindsPreset{0},
-    activeSettingsPreset{0}
+    activeSettingsPreset{0},
+    window{Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino", FLAG_VSYNC_HINT}
 {
-	::InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "raymino");
-	::SetWindowState(FLAG_VSYNC_HINT);
-	::SetExitKey(KEY_NULL);
+	window.SetExitKey(KEY_NULL);
 	currentScene = MakeScene<Scene::Loading>(*this);
 }
 
@@ -108,7 +108,7 @@ void App::Run()
 #if defined(PLATFORM_WEB)
 	emscripten_set_main_loop_arg(raymino::UpdateDraw, this, 0, 1);
 #else
-	while(!::WindowShouldClose())
+	while(!window.ShouldClose())
 	{
 		raymino::UpdateDraw(this);
 	}

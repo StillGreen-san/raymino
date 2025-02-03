@@ -6,9 +6,9 @@
 
 #include <raylib.h>
 #include <textbuffer.hpp>
+#include <Window.hpp>
 
 #include <algorithm>
-#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <initializer_list>
@@ -299,6 +299,7 @@ public:
 	void deserialize(const SaveFile& save);
 
 private:
+	raylib::Window window;
 	std::unique_ptr<IScene> currentScene;
 	std::unique_ptr<IScene> nextScene = nullptr;
 };
