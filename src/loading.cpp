@@ -63,12 +63,8 @@ void Loading::Update([[maybe_unused]] App& app)
 
 void Loading::Draw([[maybe_unused]] App& app)
 {
-	::BeginDrawing();
-
 	::ClearBackground(::GetColor(static_cast<unsigned>(::GuiGetStyle(DEFAULT, BACKGROUND_COLOR))));
 
 	::DrawText("LOADING", 190, 278, 50, ::GetColor(static_cast<unsigned>(::GuiGetStyle(DEFAULT, TEXT_COLOR_FOCUSED))));
-
-	::EndDrawing();
 }
 } // namespace raymino

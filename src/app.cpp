@@ -101,7 +101,10 @@ void App::UpdateDraw()
 		currentScene = std::move(nextScene);
 	}
 	currentScene->Update(*this);
+
+	window.BeginDrawing();
 	currentScene->Draw(*this);
+	window.EndDrawing();
 }
 
 void App::Run()

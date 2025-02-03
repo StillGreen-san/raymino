@@ -334,8 +334,6 @@ void Game::Update(App& app)
 
 void Game::Draw(App& app)
 {
-	::BeginDrawing();
-
 	::ClearBackground(LIGHTGRAY);
 
 	const raylib::Rectangle playfieldBorderBounds(static_cast<float>(playfieldBounds.x - FIELD_BORDER_WIDTH),
@@ -419,8 +417,6 @@ void Game::Draw(App& app)
 		::DrawTextEx(::GetFontDefault(), statusText.c_str(), {statusTextPosition.x, statusTextPosition.y},
 		    STATUS_FONT_SIZE, statusTextSpacing, RED);
 	}
-
-	::EndDrawing();
 }
 
 size_t hashSeedString(const TextBuffer<20>& buffer)

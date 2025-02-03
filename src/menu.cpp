@@ -134,8 +134,6 @@ void Menu::Update(App& app)
 
 void Menu::Draw(App& app)
 {
-	::BeginDrawing();
-
 	::ClearBackground(::GetColor(static_cast<unsigned>(::GuiGetStyle(DEFAULT, BACKGROUND_COLOR))));
 
 	if(DropdownBoxRotationSystemEditMode || DropdownBoxWallKicksEditMode || DropdownBoxLockDownEditMode ||
@@ -187,8 +185,6 @@ void Menu::Draw(App& app)
 	}
 
 	::GuiUnlock();
-
-	::EndDrawing();
 }
 
 void Menu::UpdateDrawSettings([[maybe_unused]] App& app)
