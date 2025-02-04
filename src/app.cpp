@@ -259,10 +259,10 @@ SaveFile App::serialize() const
 
 	save.appendChunkValue(playerName, ChunkType::PlayerName);
 	save.appendChunkRange(highScores.entries, ChunkType::HighScores);
-	save.appendChunkRange(keyBindsPresets.get().begin() + static_cast<ptrdiff_t>(keyBindsPresets.fixed()),
-	    keyBindsPresets.get().end(), ChunkType::KeyBindsPresets, static_cast<uint16_t>(activeKeyBindsPreset));
-	save.appendChunkRange(settingsPresets.get().begin() + static_cast<ptrdiff_t>(settingsPresets.fixed()),
-	    settingsPresets.get().end(), ChunkType::SettingsPresets, static_cast<uint16_t>(activeSettingsPreset));
+	save.appendChunkRange(keyBindsPresets.adjustableBegin(), keyBindsPresets.adjustableEnd(),
+	    ChunkType::KeyBindsPresets, static_cast<uint16_t>(activeKeyBindsPreset));
+	save.appendChunkRange(settingsPresets.adjustableBegin(), settingsPresets.adjustableEnd(),
+	    ChunkType::SettingsPresets, static_cast<uint16_t>(activeSettingsPreset));
 
 	save.header().userProp3 = save.size() - HeaderSize;
 	return save;

@@ -215,6 +215,22 @@ public:
 			return fixedItems;
 		}
 
+		/**
+		 * @return iterator to the begin of adjustable/nonfixed items
+		 */
+		[[nodiscard]] auto adjustableBegin() const noexcept
+		{
+			return items.begin() + static_cast<ptrdiff_t>(fixed());
+		}
+
+		/**
+		 * @return iterator to the begin of adjustable/nonfixed items
+		 */
+		[[nodiscard]] auto adjustableEnd() const noexcept
+		{
+			return items.end();
+		}
+
 	private:
 		std::vector<Item> items;
 		size_t fixedItems{items.size()};
