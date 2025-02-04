@@ -127,7 +127,7 @@ void Menu::writeSettings(App::Settings& settings) const noexcept
 	settings.fieldHeight = static_cast<uint8_t>(SpinnerFieldHeightValue);
 }
 
-void Menu::Update(App& app)
+void Menu::Update([[maybe_unused]] App& app)
 {
 	// handled in draw due to immediate mode
 }
