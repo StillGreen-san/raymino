@@ -1,6 +1,7 @@
 #include "savefile.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <textbuffer.hpp>
 
 #include <algorithm>
 #include <array>
@@ -90,12 +91,12 @@ TEST_CASE("SaveFile & reset", "[SaveFile]")
 	REQUIRE(save.header().userProp2 == 0);
 }
 
-TEST_CASE("SaveFile::appendChunk", "[SaveFile]")
+TEST_CASE("SaveFile::appendChunkRange", "[SaveFile]")
 {
 	SaveFile save(2, 44);
 	std::vector<int32_t> intVec{1, 2, 3, 4, 5, 6};
 
-	SaveFile::Chunk::Header& header1 = save.appendChunk(intVec.begin(), intVec.end(), 13, 42);
+	SaveFile::Chunk::Header& header1 = save.appendChunkRange(intVec.begin(), intVec.end(), 13, 42);
 	REQUIRE(header1.type == 13);
 	REQUIRE(header1.userProperty == 42);
 	REQUIRE(header1.dataBytes == 24);
@@ -103,17 +104,22 @@ TEST_CASE("SaveFile::appendChunk", "[SaveFile]")
 	REQUIRE(std::equal(intVec.begin(), intVec.end(), range1.begin(), range1.end()));
 
 	intVec.pop_back();
-	const SaveFile::Chunk::Header& header2 = save.appendChunk(intVec.cbegin(), intVec.cend(), 7, 7);
+	const SaveFile::Chunk::Header& header2 = save.appendChunkRange(intVec.cbegin(), intVec.cend(), 7, 7);
 	REQUIRE(header2.type == 7);
 	REQUIRE(header2.userProperty == 7);
 	REQUIRE(header2.dataBytes == 20);
 	const SaveFile::Chunk::DataRange<const int32_t> range2(header2);
 	REQUIRE(std::equal(intVec.cbegin(), intVec.cend(), range2.begin(), range2.end()));
+}
 
-	const SaveFile::Chunk::Header& header3 = save.appendChunk(0, 69, 0);
-	REQUIRE(header3.type == 69);
-	REQUIRE(header3.userProperty == 0);
-	REQUIRE(header3.dataBytes == 0);
-	const SaveFile::Chunk::DataRange<const double> range3(header3);
-	REQUIRE(range3.begin() == range3.end());
+TEST_CASE("SaveFile::appendChunkEmpty", "[SaveFile]")
+{
+	SaveFile save(2, 44);
+
+	const SaveFile::Chunk::Header& header = save.appendChunkEmpty(0, 69, 0);
+	REQUIRE(header.type == 69);
+	REQUIRE(header.userProperty == 0);
+	REQUIRE(header.dataBytes == 0);
+	const SaveFile::Chunk::DataRange<const double> range(header);
+	REQUIRE(range.begin() == range.end());
 }

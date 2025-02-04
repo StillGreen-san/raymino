@@ -127,11 +127,11 @@ public:
 	 * @return Chunk::Header&
 	 */
 	template<typename T>
-	Chunk::Header& appendChunk(T first, T last, uint16_t type, uint16_t flags)
+	Chunk::Header& appendChunkRange(T first, T last, uint16_t type, uint16_t flags)
 	{
 		using TValueType = std::remove_cv_t<std::remove_reference_t<decltype(*first)>>;
 		const uint32_t bytes = static_cast<uint32_t>(std::distance(first, last)) * sizeof(TValueType);
-		Chunk::Header& header = appendChunk(bytes, type, flags);
+		Chunk::Header& header = appendChunkEmpty(bytes, type, flags);
 		std::uninitialized_copy(first, last, Chunk::DataRange<TValueType>(header).begin());
 		return header;
 	}
@@ -143,7 +143,7 @@ public:
 	 * @param flags user property of header
 	 * @return Chunk::Header&
 	 */
-	Chunk::Header& appendChunk(uint32_t bytes, uint16_t type, uint16_t flags);
+	Chunk::Header& appendChunkEmpty(uint32_t bytes, uint16_t type, uint16_t flags);
 
 	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const noexcept;
 	[[nodiscard]] const uint8_t& operator[](size_t index) const noexcept;
