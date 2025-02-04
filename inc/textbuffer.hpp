@@ -147,6 +147,38 @@ public:
 	}
 
 	/**
+	 * @return const iterator to the beginning of the buffer
+	 */
+	[[nodiscard]] auto begin() const
+	{
+		return buffer.begin();
+	}
+
+	/**
+	 * @return const iterator to the end of the buffer
+	 */
+	[[nodiscard]] auto end() const
+	{
+		return buffer.end();
+	}
+
+	/**
+	 * @return const iterator to the beginning of the buffer
+	 */
+	[[nodiscard]] auto cbegin() const
+	{
+		return buffer.cbegin();
+	}
+
+	/**
+	 * @return const iterator to the end of the buffer
+	 */
+	[[nodiscard]] auto cend() const
+	{
+		return buffer.cend();
+	}
+
+	/**
 	 * @return char* to the end of the buffer
 	 */
 	[[nodiscard]] char* end_ptr()
