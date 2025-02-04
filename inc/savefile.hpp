@@ -118,6 +118,36 @@ public:
 	[[nodiscard]] Chunk::Iterator end() noexcept;
 
 	/**
+	 * add chunk filled with data value
+	 * @tparam T type of value
+	 * @param value to store
+	 * @param type of header
+	 * @param flags user property of header
+	 * @return Chunk::Header&
+	 */
+	template<typename T>
+	SaveFile::Chunk::Header& appendChunkValue(T value, uint16_t type, uint16_t flags = 0)
+	{
+		return appendChunkRange(&value, std::next(&value), type, flags);
+	}
+
+	/**
+	 * add chunk filled with data from begin(T) to end(T)
+	 * @tparam T range type
+	 * @param range data range
+	 * @param type of header
+	 * @param flags user property of header
+	 * @return Chunk::Header&
+	 */
+	template<typename T>
+	SaveFile::Chunk::Header& appendChunkRange(const T& range, uint16_t type, uint16_t flags = 0)
+	{
+		using std::begin;
+		using std::end;
+		return appendChunkRange(begin(range), end(range), type, flags);
+	}
+
+	/**
 	 * @brief add chunk filled with data from first to last
 	 * @tparam T iterator type
 	 * @param first data range begin
@@ -127,7 +157,7 @@ public:
 	 * @return Chunk::Header&
 	 */
 	template<typename T>
-	Chunk::Header& appendChunkRange(T first, T last, uint16_t type, uint16_t flags)
+	Chunk::Header& appendChunkRange(T first, T last, uint16_t type, uint16_t flags = 0)
 	{
 		using TValueType = std::remove_cv_t<std::remove_reference_t<decltype(*first)>>;
 		const uint32_t bytes = static_cast<uint32_t>(std::distance(first, last)) * sizeof(TValueType);

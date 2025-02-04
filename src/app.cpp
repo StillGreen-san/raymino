@@ -257,8 +257,8 @@ SaveFile App::serialize() const
 
 	SaveFile save(4, scoreSize + appStateSize + keyBindPresetsSize + settingsPresetsSize);
 
-	save.appendChunkRange(&playerName, std::next(&playerName), ChunkType::PlayerName, 0);
-	save.appendChunkRange(highScores.entries.begin(), highScores.entries.end(), ChunkType::HighScores, 0);
+	save.appendChunkValue(playerName, ChunkType::PlayerName);
+	save.appendChunkRange(highScores.entries, ChunkType::HighScores);
 	save.appendChunkRange(keyBindsPresets.get().begin() + static_cast<ptrdiff_t>(keyBindsPresets.fixed()),
 	    keyBindsPresets.get().end(), ChunkType::KeyBindsPresets, static_cast<uint16_t>(activeKeyBindsPreset));
 	save.appendChunkRange(settingsPresets.get().begin() + static_cast<ptrdiff_t>(settingsPresets.fixed()),

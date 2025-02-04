@@ -104,9 +104,9 @@ TEST_CASE("SaveFile::appendChunkRange", "[SaveFile]")
 	REQUIRE(std::equal(intVec.begin(), intVec.end(), range1.begin(), range1.end()));
 
 	intVec.pop_back();
-	const SaveFile::Chunk::Header& header2 = save.appendChunkRange(intVec.cbegin(), intVec.cend(), 7, 7);
+	const SaveFile::Chunk::Header& header2 = save.appendChunkRange(intVec.cbegin(), intVec.cend(), 7);
 	REQUIRE(header2.type == 7);
-	REQUIRE(header2.userProperty == 7);
+	REQUIRE(header2.userProperty == 0);
 	REQUIRE(header2.dataBytes == 20);
 	const SaveFile::Chunk::DataRange<const int32_t> range2(header2);
 	REQUIRE(std::equal(intVec.cbegin(), intVec.cend(), range2.begin(), range2.end()));
@@ -116,10 +116,35 @@ TEST_CASE("SaveFile::appendChunkEmpty", "[SaveFile]")
 {
 	SaveFile save(2, 44);
 
-	const SaveFile::Chunk::Header& header = save.appendChunkEmpty(0, 69, 0);
+	const SaveFile::Chunk::Header& header = save.appendChunkEmpty(0, 69, 1);
 	REQUIRE(header.type == 69);
-	REQUIRE(header.userProperty == 0);
+	REQUIRE(header.userProperty == 1);
 	REQUIRE(header.dataBytes == 0);
 	const SaveFile::Chunk::DataRange<const double> range(header);
 	REQUIRE(range.begin() == range.end());
+}
+
+TEST_CASE("SaveFile::appendChunkValue", "[SaveFile]")
+{
+	SaveFile save(2, 16);
+
+	{
+		const TextBuffer<8> text("Moin");
+		const SaveFile::Chunk::Header& header = save.appendChunkValue(text, 64);
+		REQUIRE(header.type == 64);
+		REQUIRE(header.userProperty == 0);
+		REQUIRE(header.dataBytes == 8);
+		const SaveFile::Chunk::DataRange<const TextBuffer<8>> range(header);
+		REQUIRE(text == *range.begin());
+	}
+
+	{
+		constexpr uint64_t value = 1337;
+		const SaveFile::Chunk::Header& header = save.appendChunkValue(value, 64, 12);
+		REQUIRE(header.type == 64);
+		REQUIRE(header.userProperty == 12);
+		REQUIRE(header.dataBytes == 8);
+		const SaveFile::Chunk::DataRange<const uint64_t> range(header);
+		REQUIRE(value == *range.begin());
+	}
 }
