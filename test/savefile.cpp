@@ -95,7 +95,7 @@ TEST_CASE("SaveFile::appendChunk", "[SaveFile]")
 	SaveFile save(2, 44);
 	std::vector<int32_t> intVec{1, 2, 3, 4, 5, 6};
 
-	SaveFile::Chunk::Header& header1 = save.appendChunk(13, 42, intVec.begin(), intVec.end());
+	SaveFile::Chunk::Header& header1 = save.appendChunk(intVec.begin(), intVec.end(), 13, 42);
 	REQUIRE(header1.type == 13);
 	REQUIRE(header1.userProperty == 42);
 	REQUIRE(header1.dataBytes == 24);
@@ -103,14 +103,14 @@ TEST_CASE("SaveFile::appendChunk", "[SaveFile]")
 	REQUIRE(std::equal(intVec.begin(), intVec.end(), range1.begin(), range1.end()));
 
 	intVec.pop_back();
-	const SaveFile::Chunk::Header& header2 = save.appendChunk(7, 7, intVec.cbegin(), intVec.cend());
+	const SaveFile::Chunk::Header& header2 = save.appendChunk(intVec.cbegin(), intVec.cend(), 7, 7);
 	REQUIRE(header2.type == 7);
 	REQUIRE(header2.userProperty == 7);
 	REQUIRE(header2.dataBytes == 20);
 	const SaveFile::Chunk::DataRange<const int32_t> range2(header2);
 	REQUIRE(std::equal(intVec.cbegin(), intVec.cend(), range2.begin(), range2.end()));
 
-	const SaveFile::Chunk::Header& header3 = save.appendChunk(69, 0, 0);
+	const SaveFile::Chunk::Header& header3 = save.appendChunk(0, 69, 0);
 	REQUIRE(header3.type == 69);
 	REQUIRE(header3.userProperty == 0);
 	REQUIRE(header3.dataBytes == 0);

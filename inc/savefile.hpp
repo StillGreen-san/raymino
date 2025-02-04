@@ -120,30 +120,30 @@ public:
 	/**
 	 * @brief add chunk filled with data from first to last
 	 * @tparam T iterator type
-	 * @param type of header
-	 * @param flags user property of header
 	 * @param first data range begin
 	 * @param last data range end
+	 * @param type of header
+	 * @param flags user property of header
 	 * @return Chunk::Header&
 	 */
 	template<typename T>
-	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, T first, T last)
+	Chunk::Header& appendChunk(T first, T last, uint16_t type, uint16_t flags)
 	{
 		using TValueType = std::remove_cv_t<std::remove_reference_t<decltype(*first)>>;
 		const uint32_t bytes = static_cast<uint32_t>(std::distance(first, last)) * sizeof(TValueType);
-		Chunk::Header& header = appendChunk(type, flags, bytes);
+		Chunk::Header& header = appendChunk(bytes, type, flags);
 		std::uninitialized_copy(first, last, Chunk::DataRange<TValueType>(header).begin());
 		return header;
 	}
 
 	/**
 	 * @brief add empty chunk (zeroed)
+	 * @param bytes of chunk data
 	 * @param type of header
 	 * @param flags user property of header
-	 * @param bytes of chunk data
 	 * @return Chunk::Header&
 	 */
-	Chunk::Header& appendChunk(uint16_t type, uint16_t flags, uint32_t bytes);
+	Chunk::Header& appendChunk(uint32_t bytes, uint16_t type, uint16_t flags);
 
 	[[nodiscard]] const std::vector<uint8_t>& getBuffer() const noexcept;
 	[[nodiscard]] const uint8_t& operator[](size_t index) const noexcept;

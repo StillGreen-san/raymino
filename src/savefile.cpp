@@ -37,7 +37,7 @@ SaveFile::Chunk::Iterator SaveFile::end() noexcept
 	    std::next(dataBuffer.data(), static_cast<ptrdiff_t>(dataBuffer.size())))};
 }
 
-SaveFile::Chunk::Header& SaveFile::appendChunk(uint16_t type, uint16_t flags, uint32_t bytes)
+SaveFile::Chunk::Header& SaveFile::appendChunk(uint32_t bytes, uint16_t type, uint16_t flags)
 {
 	auto headerPos = dataBuffer.insert(dataBuffer.end(), sizeof(Chunk::Header) + bytes, 0);
 	Chunk::Header& header = *new(&*headerPos) Chunk::Header{type, flags, bytes};
