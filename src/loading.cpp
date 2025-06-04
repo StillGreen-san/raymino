@@ -41,7 +41,7 @@ Loading::Loading(App& app)
 	    });
 #else
 	const raylib::FileData fileData(App::SAVE_PATH);
-	app.deserialize(App::decompressFile(fileData.GetData(), fileData.GetBytesRead()));
+	app.deserialize(App::decompressFile(fileData.GetData(), static_cast<uint32_t>(fileData.GetBytesRead())));
 	app.QueueSceneSwitch(Scene::Menu);
 #endif
 }

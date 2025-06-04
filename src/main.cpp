@@ -22,7 +22,7 @@ int main(int argc, const char* const argv[])
 	for(const LibraryInfo& depInfo : DEPENDENCY_INFOS)
 	{
 		std::cout << depInfo.url;
-		std::cout << std::setw(static_cast<std::streamsize>(DEPENDENCY_INFOS_MAX_URL_LEN - depInfo.url.size()) + 2);
+		std::cout << std::setw(static_cast<int>(DEPENDENCY_INFOS_MAX_URL_LEN - depInfo.url.size()) + 2);
 		std::cout << '[' << depInfo.lic << "]\n";
 	}
 

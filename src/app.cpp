@@ -264,7 +264,7 @@ SaveFile App::serialize() const
 	save.appendChunkRange(settingsPresets.adjustableBegin(), settingsPresets.adjustableEnd(),
 	    ChunkType::SettingsPresets, static_cast<uint16_t>(activeSettingsPreset));
 
-	save.header().userProp3 = save.size() - HeaderSize;
+	save.header().userProp3 = static_cast<uint32_t>(save.size() - HeaderSize);
 	return save;
 }
 
