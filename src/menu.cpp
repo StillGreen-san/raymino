@@ -152,10 +152,7 @@ void Menu::Draw(App& app)
 	{
 		app.QueueSceneSwitch(Scene::Game);
 	}
-	if(GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer, TextBoxPlayerNameEditMode))
-	{
-		TextBoxPlayerNameEditMode = !TextBoxPlayerNameEditMode;
-	}
+	GuiTextBox(TextBoxPlayerNameRect, TextBoxPlayerNameBuffer, TextBoxPlayerNameEditMode);
 	if(::GuiButton(ButtonHighscoresRect, state == State::HighScores ? GroupBoxSettingsText : ButtonHighscoresText))
 	{
 		state = state == State::HighScores ? State::Settings : State::HighScores;
