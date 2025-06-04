@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <iterator>
 #include <tuple>
 
 namespace raymino
