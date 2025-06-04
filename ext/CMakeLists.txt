@@ -36,7 +36,7 @@ CPMAddPackage(
 		GITHUB_REPOSITORY raysan5/rres
 		GIT_TAG a5aeda67a06bfddeab97add7a05cad2aaf40e400 # 2025.01.01
 		SYSTEM YES
-		GIT_SHALLOW YES
+		# GIT_SHALLOW YES # checkout fails with shallow
 		DOWNLOAD_ONLY YES
 )
 add_library(rres)
