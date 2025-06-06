@@ -98,13 +98,13 @@ inline auto find(TContainer& minos, TetrominoType type) noexcept
  * @return Offset that can be applied to Tetromino
  */
 template<RotationSystem TSys>
-Offset basicRotation(const Tetromino& mino, int rotation) noexcept;
+Offset basicRotation(const Tetromino& mino, int rotation);
 
 /**
  * @param tsys RotationSystem
  * @return basicRotation function pointer
  */
-Offset (*basicRotation(RotationSystem tsys) noexcept)(const Tetromino& mino, int rotation) noexcept;
+Offset (*basicRotation(RotationSystem tsys))(const Tetromino& mino, int rotation);
 
 /**
  * @tparam TSys WallKicks to use for kicks
@@ -228,7 +228,7 @@ std::unique_ptr<IScoringSystem> makeScoringSystem();
  * @param tsys ScoringSystem
  * @return makeScoringSystem function pointer
  */
-std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept)();
+std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))();
 
 /**
  * @brief potentially stateful shuffledIndices
@@ -258,8 +258,7 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices(const std::vector<Tetromin
  * @param ttype ShuffleType
  * @return makeShuffledIndices function pointer
  */
-std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
-    const std::vector<Tetromino>& baseMinos);
+std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype))(const std::vector<Tetromino>& baseMinos);
 
 struct LevelState
 {
@@ -282,11 +281,11 @@ struct LevelState
  * @return LevelState
  */
 template<LevelGoal TType>
-LevelState levelUp(ScoreEvent event, uint32_t lines, LevelState state) noexcept;
+LevelState levelUp(ScoreEvent event, uint32_t lines, LevelState state);
 
 /**
  * @param ttype LevelGoal
  * @return levelUp function pointer
  */
-LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, uint32_t lines, LevelState state) noexcept;
+LevelState (*levelUp(LevelGoal ttype))(ScoreEvent event, uint32_t lines, LevelState state);
 } // namespace raymino

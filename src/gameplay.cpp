@@ -12,6 +12,7 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <stdexcept>
 #include <vector>
 
 namespace raymino
@@ -96,13 +97,13 @@ inline Offset flip(const Tetromino& mino, int rotation) noexcept
 }
 
 template<>
-Offset basicRotation<RotationSystem::Super>(const Tetromino& mino, int rotation) noexcept
+Offset basicRotation<RotationSystem::Super>(const Tetromino& mino, int rotation)
 {
 	rotation = mino.type == TetrominoType::O ? 0 : rotation;
 	return {{0, 0}, rotation};
 }
 template<>
-Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation) noexcept
+Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation)
 {
 	rotation %= 4;
 	if(rotation == 0)
@@ -133,14 +134,15 @@ Offset basicRotation<RotationSystem::Sega>(const Tetromino& mino, int rotation) 
 	case TetrominoType::O:
 		return {{0, 0}, 0};
 	}
+	throw std::runtime_error{"Invalid TetrominoType value"};
 }
 template<>
-Offset basicRotation<RotationSystem::Arika>(const Tetromino& mino, int rotation) noexcept
+Offset basicRotation<RotationSystem::Arika>(const Tetromino& mino, int rotation)
 {
 	return basicRotation<RotationSystem::Sega>(mino, rotation);
 }
 template<>
-Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotation) noexcept
+Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotation)
 {
 	rotation %= 4;
 	switch(mino.type)
@@ -157,9 +159,10 @@ Offset basicRotation<RotationSystem::Original>(const Tetromino& mino, int rotati
 	case TetrominoType::O:
 		return {{0, 0}, 0};
 	}
+	throw std::runtime_error{"Invalid TetrominoType value"};
 }
 template<>
-Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int rotation) noexcept
+Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int rotation)
 {
 	rotation %= 4;
 	switch(mino.type)
@@ -176,9 +179,10 @@ Offset basicRotation<RotationSystem::NintendoLeft>(const Tetromino& mino, int ro
 	case TetrominoType::O:
 		return {{0, 0}, 0};
 	}
+	throw std::runtime_error{"Invalid TetrominoType value"};
 }
 template<>
-Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int rotation) noexcept
+Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int rotation)
 {
 	rotation %= 4;
 	switch(mino.type)
@@ -194,14 +198,14 @@ Offset basicRotation<RotationSystem::NintendoRight>(const Tetromino& mino, int r
 	case TetrominoType::O:
 		return {{0, 0}, 0};
 	}
+	throw std::runtime_error{"Invalid TetrominoType value"};
 }
-Offset (*basicRotation(RotationSystem tsys) noexcept)(const Tetromino&, int) noexcept
+Offset (*basicRotation(RotationSystem tsys))(const Tetromino&, int)
 {
 	switch(tsys)
 	{
 	case RotationSystem::Original:
 		return basicRotation<RotationSystem::Original>;
-	default:
 	case RotationSystem::Super:
 		return basicRotation<RotationSystem::Super>;
 	case RotationSystem::Arika:
@@ -213,6 +217,7 @@ Offset (*basicRotation(RotationSystem tsys) noexcept)(const Tetromino&, int) noe
 	case RotationSystem::NintendoRight:
 		return basicRotation<RotationSystem::NintendoRight>;
 	}
+	throw std::runtime_error{"Invalid RotationSystem value"};
 }
 
 Rect findTrueSize(const Grid& grid) noexcept
@@ -815,11 +820,10 @@ std::unique_ptr<IScoringSystem> makeScoringSystem<ScoringSystem::Guideline>()
 {
 	return std::make_unique<Guideline>();
 }
-std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept)()
+std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys))()
 {
 	switch(tsys)
 	{
-	default:
 	case ScoringSystem::Guideline:
 		return makeScoringSystem<ScoringSystem::Guideline>;
 	case ScoringSystem::BPS:
@@ -829,6 +833,7 @@ std::unique_ptr<IScoringSystem> (*makeScoringSystem(ScoringSystem tsys) noexcept
 	case ScoringSystem::Nintendo:
 		return makeScoringSystem<ScoringSystem::Nintendo>;
 	}
+	throw std::runtime_error{"Invalid ScoringSystem value"};
 }
 
 struct Random : IShuffledIndices
@@ -952,7 +957,8 @@ struct TGM35 : TGMH4
 	std::vector<size_t> lru;
 	std::vector<size_t> bag;
 	explicit TGM35(const std::vector<Tetromino>& baseTetrominos) :
-	    TGMH4(baseTetrominos, (baseTetrominos.size() * 5) - 1), lru(baseTetrominos.size(), 0),
+	    TGMH4(baseTetrominos, (baseTetrominos.size() * 5) - 1),
+	    lru(baseTetrominos.size(), 0),
 	    bag(baseTetrominos.size() * 5, 0)
 	{
 		const auto baseSize = static_cast<ptrdiff_t>(baseTetrominos.size());
@@ -1018,12 +1024,10 @@ std::unique_ptr<IShuffledIndices> makeShuffledIndices<ShuffleType::NES>(const st
 {
 	return std::make_unique<NES>(baseMinos.size());
 }
-std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexcept)(
-    const std::vector<Tetromino>& baseMinos)
+std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype))(const std::vector<Tetromino>& baseMinos)
 {
 	switch(ttype)
 	{
-	default:
 	case ShuffleType::Random:
 		return makeShuffledIndices<ShuffleType::Random>;
 	case ShuffleType::SingleBag:
@@ -1039,6 +1043,7 @@ std::unique_ptr<IShuffledIndices> (*makeShuffledIndices(ShuffleType ttype) noexc
 	case ShuffleType::NES:
 		return makeShuffledIndices<ShuffleType::NES>;
 	}
+	throw std::runtime_error{"Invalid ShuffleType value"};
 }
 
 LevelState LevelState::make(LevelGoal ttype) noexcept
@@ -1046,7 +1051,7 @@ LevelState LevelState::make(LevelGoal ttype) noexcept
 	return {1, 0, ttype == LevelGoal::Dynamic ? 5U : 10U};
 }
 template<>
-LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, uint32_t lines, LevelState state) noexcept
+LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, uint32_t lines, LevelState state)
 {
 	switch(event)
 	{
@@ -1067,9 +1072,10 @@ LevelState levelUp<LevelGoal::Fixed>(ScoreEvent event, uint32_t lines, LevelStat
 	case ScoreEvent::HardDrop:
 		return state;
 	}
+	throw std::runtime_error{"Invalid ScoreEvent value"};
 }
 template<>
-LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, uint32_t lines, LevelState state) noexcept
+LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, uint32_t lines, LevelState state)
 {
 	switch(event)
 	{
@@ -1093,16 +1099,17 @@ LevelState levelUp<LevelGoal::Dynamic>(ScoreEvent event, uint32_t lines, LevelSt
 	case ScoreEvent::HardDrop:
 		return state;
 	}
+	throw std::runtime_error{"Invalid ScoreEvent value"};
 }
-LevelState (*levelUp(LevelGoal ttype) noexcept)(ScoreEvent event, uint32_t lines, LevelState state) noexcept
+LevelState (*levelUp(LevelGoal ttype))(ScoreEvent event, uint32_t lines, LevelState state)
 {
 	switch(ttype)
 	{
-	default:
 	case LevelGoal::Fixed:
 		return levelUp<LevelGoal::Fixed>;
 	case LevelGoal::Dynamic:
 		return levelUp<LevelGoal::Dynamic>;
 	}
+	throw std::runtime_error{"Invalid LevelGoal value"};
 }
 } // namespace raymino
