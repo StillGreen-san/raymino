@@ -6,16 +6,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # generate compile_commands.json to make it easier to work with clang based tools
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# enable link time optimization
-include(CheckIPOSupported)
-check_ipo_supported(
-		RESULT ipo_supported
-		OUTPUT ipo_output
-)
-if (ipo_supported)
-	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-else ()
-	message(WARNING "IPO is not supported: ${ipo_output}")
+if (ENABLE_IPO)
+	# enable link time optimization
+	include(CheckIPOSupported)
+	check_ipo_supported(
+			RESULT ipo_supported
+			OUTPUT ipo_output
+	)
+	if (ipo_supported)
+		set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+	else ()
+		message(WARNING "IPO is not supported: ${ipo_output}")
+	endif ()
 endif ()
 
 # colored compiler output

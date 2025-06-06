@@ -14,6 +14,7 @@ endif ()
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPM.cmake)
 add_subdirectory(ext SYSTEM)
 
+option(ENABLE_IPO "Enable interprocedural optimization" ON)
 option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
 option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
