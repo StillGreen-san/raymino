@@ -196,7 +196,7 @@ public:
 
 		[[nodiscard]] Item* tryGet(size_t index) noexcept
 		{
-			return index >= fixed() ? &items[index] : nullptr;
+			return index >= fixed() && index < size() ? &items[index] : nullptr;
 		}
 
 		/**

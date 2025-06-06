@@ -217,7 +217,10 @@ public:
 				if(state == State::Custom)
 				{
 					activeItem -= 1;
-					presets.tryGet(activeItem)->value = valueBuffer;
+					if(auto* item = presets.tryGet(activeItem))
+					{
+						item->value = valueBuffer;
+					}
 				}
 				else
 				{
