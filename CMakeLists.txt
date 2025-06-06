@@ -25,13 +25,18 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(${PROJECT_NAME}-lib src/app-types.cpp src/gameplay.cpp src/grid.cpp src/gui.cpp src/input.cpp
 		src/ostream.cpp src/savefile.cpp)
-target_include_directories(${PROJECT_NAME}-lib PUBLIC inc)
+target_sources(${PROJECT_NAME}-lib PUBLIC FILE_SET HEADERS BASE_DIRS inc
+		FILES inc/app.hpp inc/cstring_view.hpp inc/gameplay.hpp inc/grid.hpp inc/gui.hpp inc/input.hpp
+		inc/ostream.hpp inc/savefile.hpp inc/scenes.hpp inc/textbuffer.hpp inc/timer.hpp inc/types.hpp)
 target_compile_features(${PROJECT_NAME}-lib PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME}-lib PUBLIC raylib::lib raylib::cpp raylib::gui raylib::res)
 
 add_executable(${PROJECT_NAME} WIN32 src/main.cpp src/app.cpp src/game.cpp src/graphics.cpp src/loading.cpp src/menu.cpp)
+target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS inc
+		FILES inc/dependency_info.hpp inc/game.hpp inc/graphics.hpp inc/loading.hpp inc/menu.hpp)
 if (WIN32)
 	target_sources(${PROJECT_NAME} PRIVATE src/windows.cpp)
+	target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS inc FILES inc/windows.hpp)
 endif ()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib magic_enum::magic_enum)
 
