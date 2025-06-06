@@ -11,6 +11,7 @@ configurable tetris build with raylib in C++ for desktop & web
 _(pulled in via [CPM](https://github.com/cpm-cmake) [MIT])_
 
 - [raylib](https://github.com/raysan5/raylib) [Zlib]
+    - [#build-and-installation](https://github.com/raysan5/raylib?tab=readme-ov-file#build-and-installation)
 - [raylib-cpp](https://github.com/RobLoach/raylib-cpp) [Zlib]
 - [raygui](https://github.com/raysan5/raygui) [Zlib]
 - [rres](https://github.com/raysan5/rres) [MIT] (currently unused)
