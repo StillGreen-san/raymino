@@ -4,7 +4,7 @@ configurable tetris build with raylib in C++ for desktop & web
 
 [play web version here](https://sgs.moe/raymino)
 
-![Animated Picture](raymino.png)
+![preview pictures](raymino.png)
 
 ## dependencies
 
