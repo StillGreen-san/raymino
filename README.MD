@@ -31,7 +31,7 @@ on windows you also need [ninja](https://ninja-build.org/)
 
 ```
 mkdir build-web
-emcmake cmake -S . -B build-web -DPLATFORM=Web
+emcmake cmake -S . -B build-web
 cmake --build build-web --config release --target raymino
 ```
 
